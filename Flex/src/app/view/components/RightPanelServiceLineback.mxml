@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx"
+					xmlns:components="app.view.components.*" 
+					xmlns:subComponents="app.view.components.subComponents.*"
+					width="100%" height="100%" label="勤务回溯">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+		
+	<fx:Script>
+		<![CDATA[
+			import app.AppFunction;
+			import app.event.AppEvent;
+			import app.model.dict.DicDepartment;
+			import app.model.dict.DicPatrolPoint;
+			import app.model.dict.DicPatrolZone;
+			import app.model.vo.AppConfigVO;
+			import app.model.vo.GPSVO;
+			import app.model.vo.PathVO;
+			
+			import mx.containers.Grid;
+			
+			import spark.events.GridEvent;
+			import spark.events.GridSelectionEvent;
+			import spark.events.IndexChangeEvent;
+						
+			public static const PATROLZONE:String = "patrolzone";
+			public static const PATROLPOINT:String = "patrolpoint";
+			//public static const POLICECHANGE:String = "policechange";
+			public static const POLICECLICK:String = "policeclick";
+			public static const POLICEDOUBLECLICK:String = "policedoubleclick";
+			public static const PATHCLICK:String = "pathclick";
+			public static const PATHDOUBLECLICK:String = "pathdoubleclick";
+			
+			[Bindable]public var endTime:Date = new Date;
+			[Bindable]public var beginTime:Date = new Date(endTime.time - 60*60*1000);
+						
+			[Bindable]public var listDept:ArrayCollection = null;
+			[Bindable]public var listDeptItem:DicDepartment = null;
+			
+			[Bindable]public var listPatrolZone:ArrayCollection = null;
+			[Bindable]public var listPatrolZoneItem:* = null;
+			
+			[Bindable]public var listPatrolPoint:ArrayCollection = null;
+			[Bindable]public var listPatrolPointItem:* = null;
+			
+			[Bindable]public var listPolice:ArrayCollection = new ArrayCollection;
+			[Bindable]public var listPoliceItem:GPSVO = null;
+			
+			[Bindable]public var listPath:ArrayCollection = new ArrayCollection;	
+			[Bindable]public var listPathItem:PathVO = null;		
+			
+			public function get radius():Number
+			{
+				return Number(comboRadius.textInput.text);
+			}
+						
+			protected function comboDept_changeHandler(event:IndexChangeEvent):void
+			{
+				listDeptItem = (event.currentTarget as DropDownList).selectedItem;
+				
+				listPatrolZone.refresh();			
+				if(listPatrolZone.length > 0)
+				{
+					listPatrolZoneItem = listPatrolZone[0];
+					comboPatrolZone.selectedItem = listPatrolZoneItem;
+				}
+				
+				listPatrolPoint.refresh();
+				if(listPatrolPoint.length > 0)
+				{
+					listPatrolPointItem = listPatrolPoint[0];
+					comboPatrolPoint.selectedItem = listPatrolPointItem;
+				}
+			}			
+			
+			protected function paneltimespan_changeHandler(event:Event):void
+			{
+				var timeSpan:PanelTimeSpan = event.currentTarget as PanelTimeSpan;
+				beginTime = timeSpan.beginTime;
+				endTime = timeSpan.endTime;
+			}				
+			
+			protected function comboPartrolZone_changeHandler(event:IndexChangeEvent):void
+			{
+				listPatrolZoneItem = (event.currentTarget as ComboBox).selectedItem as DicPatrolZone;
+				
+				listPatrolPoint.refresh();
+				if(listPatrolPoint.length > 0)
+				{
+					listPatrolPointItem = listPatrolPoint[0];
+					comboPatrolPoint.selectedItem = listPatrolPointItem;
+				}
+			}
+			
+			protected function comboPatrolPoint_changeHandler(event:IndexChangeEvent):void
+			{
+				listPatrolPointItem = (event.currentTarget as ComboBox).selectedItem as DicPatrolPoint;
+			}			
+						
+			protected function gridPolice_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listPoliceItem = event.item as GPSVO;
+					dispatchEvent(new Event(POLICECLICK));
+				}				
+			}
+			
+			protected function gridPolice_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listPoliceItem = event.item as GPSVO;
+					dispatchEvent(new Event(POLICEDOUBLECLICK));
+				}
+			}
+			
+			protected function gridPath_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listPathItem = event.item as PathVO;
+					dispatchEvent(new Event(PATHCLICK));
+				}				
+			}
+			
+			protected function gridPath_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listPathItem = event.item as PathVO;
+					dispatchEvent(new Event(PATHDOUBLECLICK));
+				}				
+			}
+			
+		]]>
+	</fx:Script>
+		
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="回溯设置" width="100%">
+		<subComponents:PanelTimeSpan gap="2"
+									 change="paneltimespan_changeHandler(event)"
+									 beginTime="{beginTime}" 
+									 endTime="{endTime}"
+									 width="100%"/>
+		<s:HGroup width="100%" verticalAlign="middle" gap="2">
+			<s:Label text="搜索半径："/>
+			<s:ComboBox id="comboRadius" selectedIndex="1" restrict="0-9" openOnInput="false">
+				<s:ArrayCollection>
+					<fx:Number>50</fx:Number>
+					<fx:Number>100</fx:Number>
+					<fx:Number>200</fx:Number>
+					<fx:Number>500</fx:Number>
+				</s:ArrayCollection>
+			</s:ComboBox>
+		</s:HGroup>		
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="路线回溯" width="100%">
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="　　　单位："/>
+			<s:DropDownList width="100%"
+							change="comboDept_changeHandler(event)"
+							dataProvider="{listDept}" 
+							selectedItem="{listDeptItem}"
+							enabled="{AppConfigVO.Auth == '1'}" 
+							labelField="label"/>
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="　巡区列表："/>
+			<s:ComboBox width="100%" id="comboPatrolZone"
+						change="comboPartrolZone_changeHandler(event)"
+						dataProvider="{listPatrolZone}" 
+						selectedItem="{listPatrolZoneItem}"
+						labelField="label"/>
+			<s:Button height="25" width="25" 
+					  buttonDown="dispatchEvent(new Event(PATROLZONE))"
+					  icon="assets/image/b_find.png"
+					  skinClass="app.view.components.skin.skinButton"/>	
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="必到点列表："/>
+			<s:ComboBox width="100%" id="comboPatrolPoint"
+						change="comboPatrolPoint_changeHandler(event)"
+						dataProvider="{listPatrolPoint}" 
+						selectedItem="{listPatrolPointItem}"
+						labelField="label"/>
+			<s:Button height="25" width="25"
+					  buttonDown="dispatchEvent(new Event(PATROLPOINT))"
+					  icon="assets/image/b_find.png"
+					  skinClass="app.view.components.skin.skinButton"/>	
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+							 height="100%" minButtonShow="false"
+							 panelTitle="勤务列表({listPolice.length})" width="100%">		
+		<subComponents:GridPolice width="100%" height="100%" checkVisible="false"
+								  doubleClickEnabled="true" 
+								  gridClick="gridPolice_gridClickHandler(event)" 
+								  gridDoubleClick="gridPolice_gridDoubleClickHandler(event)"
+								  dataProvider="{listPolice}"/>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" id="panelPatrol"
+							 height="100%" minButtonShow="false"
+							 panelTitle="姓名/车牌：{(listPoliceItem == null)?'':listPoliceItem.gpsName}({listPath.length})" width="100%">
+		<s:DataGrid width="100%" height="100%" 
+					gridClick="gridPath_gridClickHandler(event)" 
+					gridDoubleClick="gridPath_gridDoubleClickHandler(event)"
+					doubleClickEnabled="true" dataProvider="{listPath}"
+					alternatingRowColors="[0xEEEEEE,0xFFFFFF]">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="beginTime" headerText="起始时间" labelFunction="AppFunction.labelDateTime"></s:GridColumn>
+					<s:GridColumn dataField="endTime" headerText="结束时间" labelFunction="AppFunction.labelDateTime"></s:GridColumn>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>
+	</components:BaseSubPanel>
+</s:NavigatorContent>

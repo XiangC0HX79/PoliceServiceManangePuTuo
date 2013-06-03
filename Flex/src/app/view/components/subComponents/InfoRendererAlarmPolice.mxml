@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer  xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="mx.core.IDataRenderer" backgroundColor="0xEEEEEE">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[			
+			import app.event.AppEvent;
+			import app.model.vo.AlarmPoliceVO;
+			
+			import mx.events.FlexEvent;
+			private var _data:Object;
+			
+			[Bindable]
+			// implement IDataRenderer
+			public function get data():Object
+			{
+				return _data;
+			}
+			
+			public function set data(value:Object):void
+			{
+				_data = value;
+			}
+			
+			protected function btnComfirm_buttonDownHandler(event:FlexEvent):void
+			{
+				dispatchEvent(new AppEvent(AppEvent.POLICEARRIVECONFIRM,data,true));
+			}
+			
+			protected function btnCancel_buttonDownHandler(event:FlexEvent):void
+			{
+				dispatchEvent(new AppEvent(AppEvent.POLICEARRIVECANCEL,data,true));
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="2"/>
+	</s:layout>
+	<s:Label  paddingBottom="5"
+			  paddingLeft="5"
+			  paddingRight="5"
+			  paddingTop="5"
+			  text="我已到达警情{data.alarmID}现场附近。"/>
+	
+	<s:HGroup horizontalAlign="center" width="100%">
+		<s:Button label="确定" id="btnComfirm" buttonDown="btnComfirm_buttonDownHandler(event)"
+				  icon="@Embed('assets/image/b_ok.png')"
+				  skinClass="app.view.components.skin.skinButton"/>
+		<s:Button label="取消" id="btnCancel" buttonDown="btnCancel_buttonDownHandler(event)"
+				  icon="@Embed('assets/image/b_cancel.png')"
+				  skinClass="app.view.components.skin.skinButton"/>
+	</s:HGroup>
+</s:SkinnableContainer >

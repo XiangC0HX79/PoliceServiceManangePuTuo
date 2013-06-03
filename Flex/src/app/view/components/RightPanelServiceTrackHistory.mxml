@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark"  
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:subComponents="app.view.components.subComponents.*"
+	xmlns:components="app.view.components.*"
+	width="100%" height="100%" label="轨迹回放">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+		
+	<fx:Script>
+		<![CDATA[
+			import app.event.AppEvent;
+			import app.model.vo.AppConfigVO;
+			import app.model.vo.GPSVO;
+			
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			import spark.formatters.DateTimeFormatter;
+			
+			public static const SEARCH:String = "search";
+			
+			public static const FLASHTRACK:String = "flashtrack";
+			public static const LOCATETRACK:String = "locatetrack";
+			
+			public static const SPEED:String = "speed";
+			
+			public static const PLAY:String = "play";
+			public static const PAUSE:String = "pause";
+			public static const STOP:String = "stop";
+			
+			public static const SLIDE:String = "slide";
+						
+			[Bindable]public var endTime:Date = new Date;
+			[Bindable]public var beginTime:Date = new Date(endTime.time - 60*60*1000);
+			
+			[Bindable]public var textPoliceNo:String = "";
+			
+			[Bindable]public var listDept:ArrayCollection = null;
+			[Bindable]public var listDeptItem:* = null;
+			
+			[Bindable]public var listPath:ArrayCollection;
+			[Bindable]public var listPathItem:GPSVO = null;		
+			
+			[Bindable]
+			public var listPolice:ArrayCollection = new ArrayCollection;
+			
+			public function get speed():Number
+			{			
+				var result:Number = 60;
+				
+				switch(buttonBarSpeed.selectedIndex)
+				{
+					case 0:
+						result = 30;
+						break;
+					case 1:
+						result = 60;
+						break;
+					case 2:
+						result = 150;
+						break;
+					case 3:
+						result = 300;
+						break;
+				}
+				
+				return result;
+			}
+			
+			protected function inputPoliceNo_changeHandler(event:TextOperationEvent):void
+			{
+				textPoliceNo = (event.currentTarget as TextInput).text;
+			}
+			
+			protected function comboDept_changeHandler(event:IndexChangeEvent):void
+			{
+				listDeptItem = (event.currentTarget as DropDownList).selectedItem;
+			}			
+			
+			private function slider_dataTipFormatFunction(value:Number):String
+			{
+				var formatter:DateTimeFormatter = new DateTimeFormatter;
+				formatter.dateTimePattern =  "yyyy-MM-dd HH:mm:ss";
+				return formatter.format(new Date(value));
+			}
+			
+			protected function paneltimespan_changeHandler(event:Event):void
+			{
+				var timeSpan:PanelTimeSpan = event.currentTarget as PanelTimeSpan;
+				beginTime = timeSpan.beginTime;
+				endTime = timeSpan.endTime;
+			}			
+			
+			protected function gridPolice_gridClickHandler(event:GridEvent):void
+			{
+				if((event.item != null) && (event.columnIndex > 0))
+				{
+					var gps:GPSVO = event.item as GPSVO;
+					if(gps.selected)
+					{
+						dispatchEvent(new AppEvent(FLASHTRACK,gps));
+					}
+				}
+			}
+			
+			protected function gridPolice_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if((event.item != null) && (event.columnIndex > 0))
+				{
+					var gps:GPSVO = event.item as GPSVO;
+					if(gps.selected)
+					{
+						dispatchEvent(new AppEvent(LOCATETRACK,gps));
+					}
+				}
+			}		
+			
+			protected function gridPath_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					dispatchEvent(new AppEvent(AppEvent.LOCATEGPS,event.item,true));
+				}				
+			}
+		]]>
+	</fx:Script>	
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="回放轨迹查询" width="100%">		
+		<subComponents:PanelTimeSpan gap="2" 
+									 change="paneltimespan_changeHandler(event)"
+									 beginTime="{beginTime}" 
+									 endTime="{endTime}"
+									 width="100%"/>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="警号/车牌/姓名/电台编号/呼号："/>
+			<s:TextInput width="100%" text="{textPoliceNo}"
+						 change="inputPoliceNo_changeHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="单　 　位："/>
+			<s:DropDownList width="100%" 
+							change="comboDept_changeHandler(event)"
+							dataProvider="{listDept}" 
+							selectedItem="{listDeptItem}"
+							enabled="{AppConfigVO.Auth == '1'}" 
+							labelField="label"/>
+			<s:Button label="查询 "
+					  icon="assets/image/b_find.png" 
+					  buttonDown="{dispatchEvent(new Event(SEARCH));}"
+					  skinClass="app.view.components.skin.skinButton"/>		
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="历史轨迹播放" width="100%">	
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="播放速度："/>				
+			<s:ButtonBar width="100%" requireSelection="true" id="buttonBarSpeed" selectedIndex="1" 
+						 change="dispatchEvent(new Event(SPEED))"
+						 skinClass="app.view.components.skin.skinButtonBarTrackSpeed">					
+				<s:ArrayCollection>
+					<fx:String>1 X</fx:String>
+					<fx:String>2 X</fx:String>
+					<fx:String>4 X</fx:String>
+					<fx:String>8 X</fx:String>
+				</s:ArrayCollection>
+			</s:ButtonBar>
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="轨迹时间："/>				
+			<s:HSlider width="100%" id="slider"
+					   change="dispatchEvent(new Event(SLIDE))" 
+					   dataTipFormatFunction="slider_dataTipFormatFunction"/>				
+		</s:HGroup>			
+		<s:HGroup width="100%" horizontalAlign="center">	
+			<s:Button buttonDown="dispatchEvent(new Event(PLAY))" 
+					  label="播放"
+					  icon="assets/image/b_play.png"
+					  skinClass="app.view.components.skin.skinButton"/>		
+			<s:Button buttonDown="dispatchEvent(new Event(PAUSE))" 
+					  label="暂停"
+					  icon="assets/image/b_pause.png"
+					  skinClass="app.view.components.skin.skinButton"/>		
+			<s:Button buttonDown="dispatchEvent(new Event(STOP))" 
+					  label="停止"
+					  icon="assets/image/b_stop.png"
+					  skinClass="app.view.components.skin.skinButton"/>				
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="回放人员列表({listPolice.length})" width="100%" height="100%" minButtonShow="false">	
+		<s:HGroup width="100%" verticalAlign="middle" color="0xFF0000">
+			<s:Label text="注　　意："/>
+			<s:Label text="最多只能选择4名回放人员。"/>
+		</s:HGroup>		
+		<subComponents:GridPolice width="100%" height="100%" 
+								  doubleClickEnabled="true" 
+								  gridClick="gridPolice_gridClickHandler(event)" 
+								  gridDoubleClick="gridPolice_gridDoubleClickHandler(event)"
+								  dataProvider="{listPolice}"/>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="轨迹点列表：" width="100%">	
+		<s:DataGrid width="100%" requestedRowCount="4"
+					gridClick="gridPath_gridClickHandler(event)" 
+					doubleClickEnabled="true" dataProvider="{listPath}"
+					alternatingRowColors="[0xEEEEEE,0xFFFFFF]">
+			<s:columns>
+				<s:ArrayList>					
+					<s:GridColumn dataField="gpsName" headerText="姓名/车牌" width="90"></s:GridColumn>	
+					<s:GridColumn dataField="serviceStatusName" headerText="状态" width="50"></s:GridColumn>
+					<s:GridColumn dataField="departmentNAME" headerText="所属单位" width="120"></s:GridColumn>
+					<s:GridColumn dataField="gpsDateFormat" headerText="时间" width="150"></s:GridColumn>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>
+	</components:BaseSubPanel>
+</s:NavigatorContent>

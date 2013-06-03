@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import app.model.vo.AlarmInfoVO;
+						
+			public static const CORRECT:String = "correct";
+			public static const UNDO:String = "undo";
+			public static const FOCUS:String = "focus";
+			public static const HIDE:String = "hide";
+			
+			[Bindable]public var alarm:AlarmInfoVO = null;
+			
+			[Bindable]public var labelFocus:String = "";
+			
+			[Bindable]public var labelHide:String = "";
+			
+			/* [Bindable]
+			public function get alarm():AlarmInfoVO{return _alarm;}
+			public function set alarm(value:AlarmInfoVO):void
+			{
+				_alarm = value;		
+				
+				btnAlarmFocus.label = _alarm.isFocus?"取消关注":"关注警情";
+				btnAlarmHide.label = _alarm.isMapShow?"隐藏警情":"显示警情";
+			} */
+		]]>
+	</fx:Script>
+	<s:VGroup id="groupInfo" gap="2" rowHeight="20" variableRowHeight="false" minWidth="300">
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="时　　间：" fontWeight="bold"/>
+			<s:Label text="{alarm.timeFormat}"/>
+		</s:SkinnableContainer>		
+		<s:HGroup verticalAlign="middle" width="100%">
+			<s:Label text="地　　址：" fontWeight="bold"/>
+			<s:Label text="{alarm.address}"/>
+		</s:HGroup>	
+		 
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="警情类别：" fontWeight="bold"/>
+			<s:Label text="{alarm.type}" width="100%"/>
+			<s:Label text="所属辖区：" fontWeight="bold"/>
+			<s:Label text="{alarm.deptName}" width="100%"/>
+		</s:SkinnableContainer>		
+		<s:HGroup verticalAlign="middle" width="100%">
+			<s:Label text="　报警人：" fontWeight="bold"/>
+			<s:Label text="{alarm.name}" width="100%"/>
+			<s:Label text="电　　话：" fontWeight="bold"/>
+			<s:Label text="{alarm.phone}" width="100%"/>
+		</s:HGroup>		
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="警情内容：" fontWeight="bold"/>
+			<s:Label text="{alarm.info}"/>
+		</s:SkinnableContainer>		
+		
+		<s:HGroup width="100%" horizontalAlign="center" gap="2">
+			<s:Button label="修正位置"
+					  buttonDown="{dispatchEvent(new Event(CORRECT));}"
+					  icon="@Embed('assets/image/b_cross.png')"
+					  skinClass="app.view.components.skin.skinButton"/>
+			<s:Button label="取消修正"
+					  buttonDown="{dispatchEvent(new Event(UNDO));}"
+					  icon="@Embed('assets/image/b_undo.png')"
+					  skinClass="app.view.components.skin.skinButton"/>
+		</s:HGroup>		
+		<s:HGroup width="100%" horizontalAlign="center" gap="2">
+			<s:Button label="{labelFocus}"
+					  buttonDown="{dispatchEvent(new Event(FOCUS));}"
+					  icon="@Embed('assets/image/b_alarm_set.png')"
+					  skinClass="app.view.components.skin.skinButton"/>
+			<s:Button label="{labelHide}"
+					  buttonDown="{dispatchEvent(new Event(HIDE));}"
+					  icon="@Embed('assets/image/b_eye.png')"
+					  skinClass="app.view.components.skin.skinButton"/>
+		</s:HGroup>		
+	</s:VGroup>
+</s:NavigatorContent>

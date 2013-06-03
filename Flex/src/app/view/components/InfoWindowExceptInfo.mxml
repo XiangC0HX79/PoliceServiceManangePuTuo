@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.vo.ServiceExceptVO;
+			
+			[Bindable]public var info:ServiceExceptVO = null;
+		]]>
+	</fx:Script>
+	<s:VGroup gap="2" rowHeight="20" variableRowHeight="false" width="300">
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="电台编号：" fontWeight="bold"/>
+			<s:Label text="{info.GpsIDOrZoneID}" width="100%" color="0x0000FF" fontWeight="bold"/>
+			<s:Label text="名称：" fontWeight="bold"/>
+			<s:Label text="{info.GPSNameOrZoneName}" width="100%"/>
+		</s:SkinnableContainer>
+				
+		<s:SkinnableContainer width="100%">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="描　　述：" fontWeight="bold"/>
+			<s:Label text="{info.UnNormalDesc}"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="报警时间：" fontWeight="bold"/>
+			<s:Label text="{info.ReportDateTimeFormat}"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="异常时间：" fontWeight="bold"/>
+			<s:Label text="{info.UnNormalDate}"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="勤务状态：" fontWeight="bold"/>
+			<s:Label text="{info.gps.serviceStatusName}" width="100%" color="0x0000FF" fontWeight="bold"/>
+			<s:Label text="班　　次：" fontWeight="bold"/>
+			<s:Label text="{info.gps.runName}" width="100%"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="开始时间：" fontWeight="bold"/>
+			<s:Label text="{info.gps.runStartTimeFormat}"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="结束时间：" fontWeight="bold"/>
+			<s:Label text="{info.gps.runEndTimeFormat}"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="巡　　区：" fontWeight="bold"/>
+			<s:Label text="{info.gps.patrolZoneName}" width="100%"/>
+			<s:Label text="方　　式：" fontWeight="bold"/>
+			<s:Label text="{info.gps.patrolTypeName}" width="100%"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="车　　牌：" fontWeight="bold"/>
+			<s:Label text="{info.gps.carNo}" width="100%"/>
+			<s:Label text="所属部门：" fontWeight="bold"/>
+			<s:Label text="{info.gps.departmentNAME}" width="100%"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="呼　　号：" fontWeight="bold"/>
+			<s:Label text="{info.gps.callNo}" width="100%"/>
+			<s:Label text="电　　话：" fontWeight="bold"/>
+			<s:Label text="{info.gps.phone}" width="100%"/>
+		</s:SkinnableContainer>
+				
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="状态变更时间：" fontWeight="bold"/>
+			<s:Label text="{info.gps.stateChangeTimeFormat}" id="labelStateChangeTimeFormat"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="GPS 接收时间：" fontWeight="bold"/>
+			<s:Label text="{info.gps.gpsDateFormat}"/>
+		</s:SkinnableContainer>
+	</s:VGroup>
+</s:NavigatorContent>

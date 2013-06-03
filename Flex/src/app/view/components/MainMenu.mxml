@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  xmlns:subComponents="app.view.components.subComponents.*"
+		  creationComplete="creationCompleteHandler(event)" gap="0" mouseDown="hgroup1_mouseDownHandler(event)"
+		  paddingTop="5" paddingLeft="20" paddingRight="20" paddingBottom="5">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.vo.AppConfigVO;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.core.SpriteVisualElement;
+			
+			public static const NONE:String = "none";
+			
+			public static const SERVICEOVERVIEW:String = "勤务概览";
+									
+			public static const SERVICESEARCH:String = "警力搜索";
+						
+			public static const ALARMINFO:String = "警情管理";
+						
+			public static const TODAYSERVICE:String = "今日勤务";
+						
+			public static const SERVICETRACKREALTIME:String = "执勤跟踪";
+						
+			public static const SERVICETRACKHISTORY:String = "轨迹回放";
+						
+			public static const SERVICECALL:String = "勤务点名";
+						
+			public static const SERVICEEXCEPT:String = "异常勤务";
+						
+			public static const SERVICELINEBACK:String = "路线回溯";
+			
+			public static const TODAYQUEST:String = "今日任务";
+			
+			public static const ALARMSTATIS:String = "警情统计";
+			
+			public static const WARNING:String = "分色预警";
+			
+			public static const MENUCLICK:String = "menuclick";
+			
+			public var menu:String = "";
+			
+			public var dictMenu:Dictionary = new Dictionary;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				//绘制托盘背景
+				
+				this.graphics.lineStyle(3,0xFFFFFF);
+				
+				var matr:Matrix = new Matrix();
+				matr.createGradientBox(this.width, this.height, Math.PI / 2, 0, 0);
+				
+				this.graphics.beginGradientFill(GradientType.LINEAR,
+					[0xCCCCCC,0xCCCCCC,0xCCCCCC],
+					[0.9,0.5,0.9],
+					[0,128,255],
+					matr
+					)
+				
+				var commands:Vector.<int> = new Vector.<int>();
+				commands.push(1, 2,  
+					2, 2, 2, 2, 2, 2,2,2, 2, 2, 
+					2,2,
+					2, 2, 2, 2, 2, 2,2,2, 2, 2, 
+					2);
+				
+				var coord:Vector.<Number> = new Vector.<Number>();
+				coord.push(0,0, 
+					this.width,0, 
+					
+					this.width - 12,this.height - 8, 					
+					this.width - 13,this.height - 7, 
+					this.width - 13,this.height - 6, 					
+					this.width - 14,this.height - 5, 
+					this.width - 14,this.height - 4, 					
+					this.width - 15,this.height - 3, 					
+					this.width - 16,this.height - 2, 
+					this.width - 17,this.height - 2, 					
+					this.width - 18,this.height - 1, 
+					this.width - 19,this.height - 1, 
+					
+					this.width - 20,this.height, 
+					20,this.height,
+					
+					19,this.height - 1, 
+					18,this.height - 1, 
+					17,this.height - 2, 
+					16,this.height - 2, 
+					15,this.height - 3, 
+					14,this.height - 4, 
+					14,this.height - 5,  
+					13,this.height - 6, 
+					13,this.height - 7, 
+					12,this.height - 8, 
+					
+					0,0
+				);
+				this.graphics.drawPath(commands,coord);
+				
+				dictMenu[SERVICEOVERVIEW]	= this.getChildAt(0);
+				dictMenu[SERVICESEARCH] 	= this.getChildAt(1);
+				dictMenu[SERVICECALL] 		= this.getChildAt(2);
+				dictMenu[SERVICETRACKREALTIME] = this.getChildAt(3);
+				dictMenu[SERVICETRACKHISTORY] = this.getChildAt(4);
+				dictMenu[SERVICELINEBACK] 	= this.getChildAt(5);
+				dictMenu[TODAYSERVICE] 		= this.getChildAt(6);
+				dictMenu[ALARMINFO] 		= this.getChildAt(7);
+				dictMenu[SERVICEEXCEPT] 	= this.getChildAt(8);
+				dictMenu[TODAYQUEST] 		= this.getChildAt(9);
+				dictMenu[WARNING] 			= this.getChildAt(10);
+				
+				for each(var moduleHide:String in AppConfigVO.moduleHideArr)
+				{
+					if((dictMenu[moduleHide] != undefined)
+						&& this.containsElement(dictMenu[moduleHide]))
+					{
+						this.removeElement(dictMenu[moduleHide]);
+					}
+				}
+			}
+			
+			//阻止地图对于菜单点击事件的响应
+			protected function hgroup1_mouseDownHandler(event:MouseEvent):void
+			{
+				event.stopPropagation();
+			}
+			
+			protected function imagebutton1_buttonDownHandler(event:FlexEvent):void
+			{				
+				for(var key:String in dictMenu)
+				{
+					if(dictMenu[key] == event.currentTarget)
+					{
+						this.menu = key;
+						break;
+					}
+				}
+				
+				dispatchEvent(new Event(MENUCLICK));
+			}			
+		]]>
+	</fx:Script>
+	
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon1a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon1b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon2a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon2b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon3a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon3b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon4a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon4b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon10a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon10b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon5a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon5b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon7a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon7b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon8a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon8b.png')"
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<!--<subComponents:ImageButton buttonDown="{menu = ALARMSTATIS;dispatchEvent(new Event(MENUCLICK));}"
+								width="65" height="65"
+								upIcon="@Embed('assets/image/menu/icon11a.png')" 
+								overIcon="@Embed('assets/image/menu/icon11b.png')" 
+								skinClass="app.view.components.skin.skinImageButtonMenu"/>-->
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon9a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon9b.png')"
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon6a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon6b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon12a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon12b.png')"
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+</s:HGroup>

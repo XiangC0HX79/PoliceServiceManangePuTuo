@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="true" 
+				toolTip="GPS接收时间：&#10;{data.gpsDateFormat}"
+				doubleClickEnabled="true"
+				click="{dispatchEvent(new AppEvent(AppEvent.GRIDITEMCLICK,data,true));}" 
+				doubleClick="{dispatchEvent(new AppEvent(AppEvent.GRIDITEMDOUBLECLICK,data,true));}">	
+	
+	<fx:Script>
+		<![CDATA[
+			import app.event.AppEvent;
+		]]>
+	</fx:Script>
+	
+	<s:VGroup horizontalAlign="center" gap="0" paddingBottom="5" paddingTop="5">
+		<s:Label text="{data.gpsName}" fontSize="12"/>
+		<s:Image width="40" height="40" source="{data.imageSource}"/>
+	</s:VGroup>
+</s:ItemRenderer>

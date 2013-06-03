@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:subComponents="app.view.components.subComponents.*" gap="10"
+		 mouseDown="vgroup1_mouseDownHandler(event)" creationComplete="init()">
+	
+	<fx:Metadata>
+		[Event(name="toolclick",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.vo.AppConfigVO;
+			import app.view.components.subComponents.ImageButton;
+			
+			import mx.events.FlexEvent;
+			
+			public static const PAN:String = "平移";
+						
+			public static const ZOOMIN:String = "放大";
+						
+			public static const ZOOMOUT:String = "缩小";
+						
+			public static const FULLEXTENT:String = "全景";
+						
+			public static const NEXTVIEW:String = "后一视图";
+						
+			public static const PREVIEW:String = "前一视图";
+						
+			public static const MEASURELENGTH:String = "测量长度";
+						
+			public static const MEASUREAREA:String = "测量面积";
+						
+			public static const CLEARMAP:String = "清屏";
+						
+			public static const REFRESHGPS:String = "刷新GPS";
+			
+			public static const IMAGESHOW:String = "显示遥感";
+			public static const IMAGEHIDE:String = "隐藏遥感";
+			
+			public static const PRINT:String = "打印";
+			
+			public static const STATIS:String = "当前GPS在线警力";
+			
+			public var tool:String = "";
+			
+			private function init():void
+			{
+				switch(AppConfigVO.district)
+				{
+					/* case "普陀区":
+						this.removeElement(image);
+						break; */
+					
+					case "闵行区":
+						break;
+					
+					default:
+						this.removeElement(image);
+						break;
+				}
+			}
+			
+			protected function tool_buttonDownHandler(event:FlexEvent):void
+			{
+				var imgButton:ImageButton = event.currentTarget as ImageButton;
+				
+				tool = imgButton.toolTip;
+				
+				dispatchEvent(event);
+			}			
+						
+			protected function image_buttonDownHandler(event:FlexEvent):void
+			{
+				var imgButton:ImageButton = event.currentTarget as ImageButton;
+				
+				tool = imgButton.toolTip;
+				
+				dispatchEvent(event);
+				
+				if(image.toolTip == IMAGESHOW)
+				{
+					image.toolTip = IMAGEHIDE;
+				}
+				else
+				{
+					image.toolTip = IMAGESHOW;
+				}
+			}
+			
+			//阻止地图对于工具栏点击事件的响应
+			protected function vgroup1_mouseDownHandler(event:MouseEvent):void
+			{
+				event.stopPropagation();
+			}			
+		]]>
+	</fx:Script>
+		
+	<subComponents:ImageButton id="pan" width="30" height="30" toolTip="{PAN}"
+							   upIcon="@Embed('assets/image/tool/map_pan_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_pan_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="zoomin" width="30" height="30" toolTip="{ZOOMIN}"
+							   upIcon="@Embed('assets/image/tool/map_zoomin_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_zoomin_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="zoomout" width="30" height="30" toolTip="{ZOOMOUT}"
+							   upIcon="@Embed('assets/image/tool/map_zoomout_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_zoomout_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="fullextent" width="30" height="30" toolTip="{FULLEXTENT}"
+							   upIcon="@Embed('assets/image/tool/map_fullextent_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_fullextent_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="nextview" width="30" height="30" toolTip="{NEXTVIEW}"
+							   upIcon="@Embed('assets/image/tool/map_nextview_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_nextview_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="preview" width="30" height="30" toolTip="{PREVIEW}"
+							   upIcon="@Embed('assets/image/tool/map_preview_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_preview_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="measurelength" width="30" height="30" toolTip="{MEASURELENGTH}"
+							   upIcon="@Embed('assets/image/tool/map_measurelength_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_measurelength_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="measurearea" width="30" height="30" toolTip="{MEASUREAREA}"
+							   upIcon="@Embed('assets/image/tool/map_measurearea_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_measurearea_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="clear" width="30" height="30" toolTip="{CLEARMAP}"
+							   upIcon="@Embed('assets/image/tool/map_clear_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_clear_on.gif')"
+			  buttonDown="tool_buttonDownHandler(event)"
+			  skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="refresh" width="30" height="30" toolTip="{REFRESHGPS}"
+							   upIcon="@Embed('assets/image/tool/map_refresh_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_refresh_on.gif')"
+							   buttonDown="tool_buttonDownHandler(event)"
+							   skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton width="30" height="30" toolTip="{STATIS}"
+							   upIcon="@Embed('assets/image/tool/map_statis_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_statis_on.gif')"
+							   buttonDown="tool_buttonDownHandler(event)"
+							   skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="print" width="30" height="30" toolTip="{PRINT}"
+							   upIcon="@Embed('assets/image/tool/map_print_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_print_on.gif')"
+							   buttonDown="tool_buttonDownHandler(event)"
+							   skinClass="app.view.components.skin.skinImageButtonTool"/>
+	<subComponents:ImageButton id="image" width="30" height="30" toolTip="{IMAGESHOW}"
+							   upIcon="@Embed('assets/image/tool/map_image_off.gif')"
+							   overIcon="@Embed('assets/image/tool/map_image_on.gif')" 
+							   buttonDown="image_buttonDownHandler(event)"
+							   skinClass="app.view.components.skin.skinImageButtonTool"/>
+</s:HGroup>

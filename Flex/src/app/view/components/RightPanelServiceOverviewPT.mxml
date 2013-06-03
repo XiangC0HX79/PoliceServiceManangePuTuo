@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:subComponents="app.view.components.subComponents.*"
+	xmlns:components="app.view.components.*"
+	width="100%" height="100%" label="勤务概览">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.dict.DicDepartment;
+			import app.model.dict.DicKind;
+			import app.model.dict.DicPoliceType;
+			import app.model.dict.DicServiceStatus;
+			import app.model.dict.DicServiceType;
+			import app.model.vo.AppConfigVO;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			import spark.components.supportClasses.ItemRenderer;
+			import spark.events.RendererExistenceEvent;
+			
+			public static const UPDATE:String = "update";
+						
+			[Bindable]public var listPoliceType:ArrayCollection = null;
+			[Bindable]public var listServiceType:ArrayCollection = null;
+			[Bindable]public var listServiceStatus:ArrayCollection = null;
+			[Bindable]public var listDept:ArrayCollection = null;
+			
+			[Bindable]public var listLayer:ArrayCollection = null;
+			[Bindable]public var listKind:ArrayCollection = null;
+			//[Bindable]public var checkPatrolZone:Boolean = false;
+			//[Bindable]public var checkPatrolPoint:Boolean = false;
+			
+			protected function rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onRendererClick);
+			}
+			
+			private function onRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				itemRenderer.data.isMapShow = !itemRenderer.data.isMapShow;				
+				dispatchEvent(new Event(UPDATE));
+			}
+			
+			protected function listServiceStatus_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onServiceStatusRendererClick);
+			}
+			
+			private function onServiceStatusRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				var data:Object = itemRenderer.data;				
+				
+				data.isMapShow = !data.isMapShow;
+				
+				if(data != DicServiceStatus.ALL)
+				{
+					var allShow:Boolean = true;
+					for each(var item:DicServiceStatus in DicServiceStatus.list)
+					{
+						if(!item.isMapShow)
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicServiceStatus.ALL.isMapShow = allShow;
+				}
+				else
+				{					
+					for each(item in DicServiceStatus.list)
+					{
+						item.isMapShow = DicServiceStatus.ALL.isMapShow;
+					}
+				}
+				
+				dispatchEvent(new Event(UPDATE));
+			}
+			
+			protected function kind_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onKindRendererClick);
+			}
+			
+			private function onKindRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				var data:Object = itemRenderer.data;				
+				
+				data.isMapShow = !data.isMapShow;
+				
+				if(data != DicKind.ALL)
+				{
+					var allShow:Boolean = true;
+					for each(var item:DicKind in DicKind.list)
+					{
+						if((!item.isMapShow) && (item != DicKind.ALL))
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicKind.ALL.isMapShow = allShow;
+				}
+				else
+				{					
+					for each(item in DicKind.list)
+					{
+						item.isMapShow = DicKind.ALL.isMapShow;
+					}
+				}
+				
+				dispatchEvent(new Event(UPDATE));
+			}
+			
+			protected function listDepartment_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onDeptRendererClick);
+			}
+			
+			private function onDeptRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				var data:Object = itemRenderer.data;		
+				
+				data.isMapShow = !data.isMapShow;
+				
+				if(data == DicDepartment.TRAFFIC)
+				{
+					var allShow:Boolean = true;
+					
+					for each(var item:DicDepartment in DicDepartment.list)
+					{
+						if(item.ZB == 125)
+							item.isMapShow = data.isMapShow;
+					}			
+					
+					for each(item in DicDepartment.list)
+					{
+						if(!item.isMapShow)
+						{
+							allShow = false;
+							break;
+						}
+					}
+					
+					DicDepartment.ALL.isMapShow = allShow;
+				}
+				else if(data != DicDepartment.ALL)
+				{
+					allShow = true;
+					for each(item in DicDepartment.list)
+					{
+						if(!item.isMapShow)
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicDepartment.ALL.isMapShow = allShow;
+				}
+				else
+				{					
+					for each(item in DicDepartment.list)
+					{
+						item.isMapShow = DicDepartment.ALL.isMapShow;
+					}
+					
+					DicDepartment.TRAFFIC.isMapShow = DicDepartment.ALL.isMapShow;
+				}
+				
+				dispatchEvent(new Event(RightPanelServiceOverview.UPDATE,true));
+			}
+			
+			protected function rendererLayerAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onRendererLayerClick);
+			}
+			
+			private function onRendererLayerClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				itemRenderer.data.selected = !itemRenderer.data.selected;				
+				dispatchEvent(new Event(UPDATE));
+			}
+			
+			/* protected function checkPatrolZone_changeHandler(event:Event):void
+			{
+				checkPatrolZone = !checkPatrolZone;
+				dispatchEvent(new Event(UPDATE));
+			}
+			
+			protected function checkPatrolPoint_changeHandler(event:Event):void
+			{
+				checkPatrolPoint = !checkPatrolPoint;
+				dispatchEvent(new Event(UPDATE));
+			}		 */	
+			
+			protected function defaultButtonDownHandler(event:FlexEvent):void
+			{
+				for each(var policeType:DicPoliceType in DicPoliceType.dict)
+				{
+					policeType.isMapShow = true;
+				}
+				
+				for each(var serviceType:DicServiceType in DicServiceType.listOverview)
+				{
+					serviceType.isMapShow = serviceType.isGisShow;
+				}
+				
+				for each(var serviceStatus:DicServiceStatus in DicServiceStatus.dict)
+				{
+					serviceStatus.isMapShow = true;
+				}
+				
+				for each(var department:DicDepartment in DicDepartment.dict)
+				{				
+					department.isMapShow = department.isGisShow;
+				}
+				
+				//checkPatrolZone = false;
+				//checkPatrolPoint = false;
+				
+				dispatchEvent(new Event(UPDATE));
+			}			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="警力类型" width="100%" horizontalScrollPolicy="off">		
+		<s:DataGroup width="290" dataProvider="{listPoliceType}" 
+					 rendererAdd="rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererOverviewPoliceType">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth" 
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="警种" width="100%" horizontalScrollPolicy="off">		
+		<s:DataGroup width="290" dataProvider="{listKind}" 
+					 rendererAdd="kind_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererOverviewKind">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth" 
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="勤务类型" width="100%" horizontalScrollPolicy="off">	
+		<s:DataGroup width="290" dataProvider="{listServiceType}" 
+					 rendererAdd="rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererOverviewServiceType">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth"
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="勤务状态" width="100%" horizontalScrollPolicy="off">	
+		<s:DataGroup width="290" dataProvider="{listServiceStatus}" 
+					 rendererAdd="listServiceStatus_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererOverviewServiceStatus">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth" 
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" minButtonShow="false"
+							 panelTitle="单位列表" 
+							 width="100%" height="100%"  
+							 maxHeight="{tileLayout.rowCount * (tileLayout.rowHeight + tileLayout.verticalGap) + 40}"
+							 horizontalScrollPolicy="off">	
+		<s:DataGroup width="290" dataProvider="{listDept}" 
+					 rendererAdd="listDepartment_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererOverviewDepartment">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth" id="tileLayout" 
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+		
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="其他" width="100%" horizontalScrollPolicy="off">			
+		<s:DataGroup width="290" dataProvider="{listLayer}" 
+					 rendererAdd="rendererLayerAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererOverviewLayer">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth" 
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<s:HGroup width="100%" horizontalAlign="center">
+		<s:Button label="默认" icon="assets/image/b_default.png" 
+				  buttonDown="defaultButtonDownHandler(event)"
+				  skinClass="app.view.components.skin.skinButton"/>		
+	</s:HGroup>
+</s:NavigatorContent>

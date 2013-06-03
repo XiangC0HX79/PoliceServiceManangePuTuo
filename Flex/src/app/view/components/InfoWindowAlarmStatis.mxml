@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.dict.DicPatrolZone;
+			
+			public static const DIS:String = "dis";
+			
+			[Bindable]public var alarmStatis:DicPatrolZone;
+			
+			[Bindable]public var deptName:String;
+			[Bindable]public var statisName:String;
+			[Bindable]public var level:String;
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:VGroup id="groupInfo" gap="2" rowHeight="20" variableRowHeight="false">
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="所属单位：" fontWeight="bold"/>
+			<s:Label text="{deptName}"/>
+		</s:SkinnableContainer>		
+		<s:HGroup verticalAlign="middle">
+			<s:Label text="名　　称：" fontWeight="bold"/>
+			<s:Label text="{statisName}"/>
+		</s:HGroup>	
+		 
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="预警等级：" fontWeight="bold"/>
+			<s:Label text="{level}"/>
+		</s:SkinnableContainer>		
+		<s:HGroup verticalAlign="middle">
+			<s:Label text="对应数据：" fontWeight="bold"/>
+			<s:Label text="盗窃非机动车：10 抢劫：5"/>
+		</s:HGroup>	
+		
+		<s:HGroup width="100%" horizontalAlign="center" gap="2">
+			<s:Button label="显示具体案件点" buttonDown="dispatchEvent(new Event(DIS))"
+					  icon="@Embed('assets/image/b_cross.png')"
+					  skinClass="app.view.components.skin.skinButton"/>
+			<s:Button label="查询巡逻警力分布"
+					  icon="@Embed('assets/image/b_undo.png')"
+					  skinClass="app.view.components.skin.skinButton"/>
+		</s:HGroup>	
+	</s:VGroup>
+</s:NavigatorContent>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="100%"
+				doubleClickEnabled="true">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:VGroup horizontalAlign="center" width="100%" gap="2" paddingTop="10" paddingBottom="10">
+		<s:Label text="{data.gpsName}" color="{data.todayCalled?0xFF:0x0}"/>
+		<s:Image source="{data.graphicSource}"/>
+	</s:VGroup>
+</s:ItemRenderer>

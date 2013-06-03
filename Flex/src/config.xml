@@ -1,0 +1,26 @@
+<Config>
+	<MapConfig>
+		<!--<InitialExtent>
+			<xmin>-17506.466803</xmin>
+			<ymin>-4231.684133</ymin>
+			<xmax>2885.059615</xmax>
+			<ymax>10047.633127</ymax>
+		</InitialExtent>	-->
+		<MapUrl>http://192.168.1.5/ArcGIS/rest/services/</MapUrl>
+		<MapName>FXGAXM</MapName>
+		<ImageName>MHGAYG</ImageName>
+	</MapConfig>
+	<AppConfig>
+			<Debug>1</Debug>
+			<District>奉贤区</District>	
+			<Scale>0.5/0.5/0.6/0.8</Scale>	
+			<ScaleVisible>0.6</ScaleVisible>
+			<WebServiceUrl>http://218.242.45.170/PTGAWebServcie/Service.asmx?wsdl</WebServiceUrl>
+			<Image>
+				<Vehicle w="40" h="25"/>
+				<People w="40" h="40"/>
+				<Status w="20" h="20"/>
+			</Image>
+			<ModuleHide>今日任务</ModuleHide>
+	</AppConfig>
+</Config>

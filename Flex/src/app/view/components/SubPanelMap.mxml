@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:BasePopupPanel
+		 xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="app.view.components.*"
+		 width="400" height="300" 
+		 borderColor="#FFFFFF" 
+		 skinAlpha="0.5"
+		 skinColor="#000000"
+		 enableMinimizeButton="false" 
+		 enableIcon="false" 
+		 panelTitle="{gps.gpsName}"
+		 skinClass="app.view.components.skin.skinBasePopupPanel" 
+		 xmlns:esri="http://www.esri.com/2008/ags">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.vo.GPSNewVO;
+			import app.event.AppEvent;
+			
+			[Bindable]public var gps:GPSNewVO;
+			
+			protected function bordercontainer_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new AppEvent(AppEvent.FLASHGPS,gps,true));
+			}
+			
+			protected function bordercontainer_doubleClickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new AppEvent(AppEvent.LOCATEGPS,gps,true));
+			}			
+		]]>
+	</fx:Script>
+	
+	<s:BorderContainer width="100%" height="100%" doubleClickEnabled="true"
+					   click="bordercontainer_clickHandler(event)" 
+					   doubleClick="bordercontainer_doubleClickHandler(event)">
+		<esri:Map id="map" logoVisible="false" scaleBarVisible="false" zoomSliderVisible="false" mapNavigationEnabled="false">
+			<esri:ArcGISTiledMapServiceLayer id="tileLayer"/>		
+			<esri:GraphicsLayer>
+				<esri:Graphic id="gr"/>
+			</esri:GraphicsLayer>
+		</esri:Map>
+	</s:BorderContainer>
+</components:BasePopupPanel>

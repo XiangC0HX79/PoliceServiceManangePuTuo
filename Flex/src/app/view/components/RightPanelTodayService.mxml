@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx"
+					xmlns:components="app.view.components.*"
+					width="100%" height="100%" label="今日勤务">	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 --> 
+		<mx:SolidColor id="sc1" color="yellow" alpha=".8"/>
+		<mx:SolidColor id="sc2" color="0xCCCCCC" alpha=".6"/>
+		<mx:SolidColor id="sc3" color="0xFFCC66" alpha=".6"/>
+		
+		<!-- Define custom Strokes for the columns. -->
+		<mx:SolidColorStroke id="s1" color="yellow" weight="2"/>
+		<mx:SolidColorStroke id="s2" color="0xCCCCCC" weight="2"/>
+		<mx:SolidColorStroke id="s3" color="0xFFCC66" weight="2"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.dict.DicDepartment;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.IndexChangedEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			public static const ACCORDIONINIT:String = "accordioninit";
+			
+			public static const SEARCH:String = "search";
+			
+			[Bindable] public var listDept:ArrayCollection = null;
+			[Bindable] public var listDeptItem:DicDepartment = null;
+			
+			[Bindable] public var labelSum:String = "";
+			[Bindable] public var labelValid:String = "";
+			[Bindable] public var labelNormal:String = "";
+			
+			[Bindable] public var listService:ArrayCollection = new ArrayCollection;
+			[Bindable] public var listGPS:ArrayCollection = new ArrayCollection;
+			
+			[Bindable] public var tabNaviIndex:Number = 0;
+			
+			private function labelFunction(data:Object, field:String, index:Number, percentValue:Number):String 
+			{
+				return data.type + "(" + data.count + ")";
+			}
+			
+			protected function comboDept_changeHandler(event:IndexChangeEvent):void
+			{
+				listDeptItem = (event.currentTarget as DropDownList).selectedItem;
+				
+				dispatchEvent(new Event(SEARCH));
+			}		
+			
+			protected function accordion_createHandle(event:FlexEvent):void
+			{
+				dispatchEvent(new Event(ACCORDIONINIT));				
+			}
+			
+			protected function tabNavi_changeHandler(event:IndexChangedEvent):void
+			{
+				tabNaviIndex = event.newIndex;
+				
+				if(tabNaviIndex == 0)
+				{
+					listDept = DicDepartment.listOverview;
+					
+					comboDept.selectedItem = listDeptItem;	
+				}
+				else
+				{
+					listDept = DicDepartment.list;
+					if(listDeptItem != DicDepartment.ALL)
+					{
+						comboDept.selectedItem = listDeptItem;
+					}
+					else
+					{
+						comboDept.selectedIndex = 0;
+					}
+				}
+				
+				listDeptItem = comboDept.selectedItem;
+					
+				dispatchEvent(new Event(SEARCH));
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="选择单位" width="100%">		
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="单位："/>
+			<s:DropDownList width="100%" id="comboDept"
+							change="comboDept_changeHandler(event)"
+							dataProvider="{listDept}"
+							selectedItem="{listDeptItem}"
+							labelField="label"/>
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<mx:TabNavigator width="100%" height="100%" paddingTop="0" 
+					 selectedIndex="{tabNaviIndex}"
+					 change="tabNavi_changeHandler(event)">
+		<s:NavigatorContent width="100%" height="100%" label="实时统计">
+			<s:VGroup width="100%" height="100%">				
+				<s:Group width="100%" height="100%">							
+					<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+											 panelTitle="勤务GPS统计" width="100%" 
+											 minButtonShow="false" height="100%">	
+						<s:HGroup width="100%" verticalAlign="middle" height="20" paddingLeft="10">
+							<s:Label text="总警力："/>
+							<s:Label text="{labelSum}" width="100%"/>
+							<s:Label text="有效警力："/>
+							<s:Label text="{labelValid}" width="100%"/>
+							<s:Label text="正常GPS："/>
+							<s:Label text="{labelNormal}" width="100%"/>	
+						</s:HGroup>			
+						<mx:ColumnChart width="100%" height="100%" 
+										id="chartService" dataProvider="{listService}"
+										fontSize="12" verticalAxisRatio="0">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis categoryField="type"/>
+							</mx:horizontalAxis>
+							<mx:series>
+								<mx:ColumnSeries displayName="安排" yField="sum"
+												 labelField="sum" labelPosition="outside"
+												 fill="{sc2}"
+												 stroke="{s2}"/>
+								<mx:ColumnSeries displayName="正常" yField="normal" 
+												 labelField="normal" labelPosition="outside"
+												 fill="{sc1}"
+												 stroke="{s1}"/>
+							</mx:series>
+						</mx:ColumnChart>
+					</components:BaseSubPanel>
+					<mx:Legend dataProvider="{chartService}" top="2" height="20" right="10"/>						
+				</s:Group>
+				
+				<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+										 panelTitle="今日GPS统计" width="100%" 
+										 minButtonShow="false" height="100%">	
+					<mx:PieChart dataProvider="{listGPS}" width="100%" height="100%" fontSize="12">
+						<mx:series>
+							<mx:PieSeries nameField="type" 
+										  labelFunction="labelFunction"
+										  field="count"
+										  labelPosition="insideWithCallout" />
+						</mx:series>
+					</mx:PieChart>
+				</components:BaseSubPanel>
+			</s:VGroup>
+		</s:NavigatorContent>
+		<s:NavigatorContent width="100%" height="100%" label="警力列表">
+			<s:VGroup width="100%" height="100%">
+				<mx:Accordion id="accordion" width="100%" height="100%" 
+							  creationComplete="accordion_createHandle(event)">
+				</mx:Accordion>				
+			</s:VGroup>
+		</s:NavigatorContent>
+	</mx:TabNavigator>
+</s:NavigatorContent>

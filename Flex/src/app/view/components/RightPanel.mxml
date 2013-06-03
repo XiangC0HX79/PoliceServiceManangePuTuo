@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="app.view.components.*" width="0"
+		 height="100%" resizeEffect="Resize">
+	
+	<fx:Script>
+		<![CDATA[
+			public static const CLOSE:String = "close";
+			public static const MINH:Number = 700;
+			
+			[Bindable]public var panelTitle:String = "";
+			
+			protected function closeButton_clickHandler(event:MouseEvent):void
+			{
+				this.width = 0;
+				
+				dispatchEvent(new Event(CLOSE));
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:Group id="groupHeader" left="0" width="20" top="0" bottom="0">	
+		<s:Rect left="0" right="0" top="0" bottom="0" 
+				bottomLeftRadiusX="10" topLeftRadiusX="10">
+			<s:fill>
+				<s:LinearGradient>
+					<s:GradientEntry color="0x8CE609" alpha="1" ratio="0"/>
+					<s:GradientEntry color="0xAEFB65" alpha="1" ratio="1"/>
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		
+		<s:Image id="closeButton" y="8" horizontalCenter="0"
+				 buttonMode="true"
+				 useHandCursor="true" click="closeButton_clickHandler(event)"
+				 source="@Embed('assets/image/w_close_2.png')"/>
+		
+		<s:Label y="35" width="100%" fontWeight="bold"
+				 horizontalCenter="0" text="{panelTitle}" 
+				 textAlign="center"/>
+	</s:Group>
+	
+	<s:Rect left="{groupHeader.width}" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:LinearGradient>
+				<s:GradientEntry ratio="0" 
+								 color="0xDBFFCA"/>
+				<s:GradientEntry ratio="1" 
+								 color="0xE8FFFC"/>
+			</s:LinearGradient>
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xAEFB65"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Scroller left="{groupHeader.width}" right="0" top="0" bottom="0">	
+		<s:Group>			
+			<mx:ViewStack id="viewstack1" left="3"  top="5" right="3" bottom="3" minHeight="700"/>
+		</s:Group>
+	</s:Scroller>
+</s:Group>

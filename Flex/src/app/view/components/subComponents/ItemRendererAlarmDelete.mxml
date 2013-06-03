@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx" click="griditemrenderer_clickHandler(event)">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.event.AppEvent;
+			
+			protected function griditemrenderer_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(AppEvent.ITEMCLICK,true));
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center"/>
+	</s:layout>
+	<s:Image height="12" width="12" 
+			 buttonMode="true" useHandCursor="true" toolTip="删除警员" 
+			 source="@Embed('assets/image/b_alarm_delete.png')"/>
+</s:GridItemRenderer>

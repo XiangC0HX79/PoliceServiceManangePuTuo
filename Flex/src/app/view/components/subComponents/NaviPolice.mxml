@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="app.view.components.*"
+		 width="100%" height="100%">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+			
+	<fx:Script>
+		<![CDATA[
+			import app.event.AppEvent;
+			import app.model.vo.TaskPoliceVO;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.GridEvent;
+			
+			[Bindable]public var list:ArrayCollection;
+			
+			private function labelPlainclothes(item:TaskPoliceVO, column:GridColumn):String
+			{
+				return item.isPlainclothes?'是':'否';
+			}
+			
+			protected function gridPolice_gridClickHandler(event:GridEvent):void
+			{
+				var taskPolice:TaskPoliceVO = event.item as TaskPoliceVO;
+				if((taskPolice != null) && (taskPolice.gps != null))
+				{
+					dispatchEvent(new AppEvent(AppEvent.FLASHGPS,taskPolice.gps,true));
+				}
+			}
+			
+			protected function gridPolice_gridDoubleClickHandler(event:GridEvent):void
+			{
+				var taskPolice:TaskPoliceVO = event.item as TaskPoliceVO;
+				if((taskPolice != null) && (taskPolice.gps != null))
+				{
+					dispatchEvent(new AppEvent(AppEvent.LOCATEGPS,taskPolice.gps,true));
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:DataGrid minHeight="0" alternatingRowColors="[0xEEEEEE,0xFFFFFF]" dataProvider="{list}" 
+				doubleClickEnabled="true"
+				gridClick="gridPolice_gridClickHandler(event)" width="100%" height="100%"
+				gridDoubleClick="gridPolice_gridDoubleClickHandler(event)">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="postName" headerText="岗位" width="100"></s:GridColumn>
+				<s:GridColumn labelFunction="labelPlainclothes" headerText="便衣" width="60"></s:GridColumn>
+				<s:GridColumn dataField="gps.gpsName" headerText="姓名" width="90"></s:GridColumn>
+				<s:GridColumn dataField="gps.policeNo" headerText="警号" width="60"></s:GridColumn>
+				<s:GridColumn dataField="gps.radioNo" headerText="电台编号" width="70"></s:GridColumn>								
+				<s:GridColumn dataField="gps.callNo" headerText="呼号" width="60"></s:GridColumn>
+				<s:GridColumn dataField="gps.phone" headerText="电话" width="120"></s:GridColumn>
+				<!--<s:GridColumn dataField="gps.departmentNAME" headerText="所属单位" width="120"></s:GridColumn>-->
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
+</s:NavigatorContent>

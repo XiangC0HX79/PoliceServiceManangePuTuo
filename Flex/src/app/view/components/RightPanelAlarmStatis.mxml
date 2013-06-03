@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent  xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					 xmlns:s="library://ns.adobe.com/flex/spark" 
+					 xmlns:mx="library://ns.adobe.com/flex/mx"
+					 xmlns:subComponents="app.view.components.subComponents.*" 
+					 xmlns:components="app.view.components.*"
+					 width="100%" height="100%" label="警情统计">
+	<fx:Script>
+		<![CDATA[
+			public static const ALARMSTATIS:String = "alarmstatis";
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:RadioButtonGroup id="area"/>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="时间设定" width="100%">
+		<s:HGroup width="100%">			
+			<subComponents:PanelTimeSpan gap="2"
+										 width="100%"/>
+		</s:HGroup>
+	</components:BaseSubPanel>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="警情类型设定" width="100%">
+		<s:HGroup width="100%">
+				<s:CheckBox label="盗窃非机动车"/>
+				<s:CheckBox label="入室盗窃"/>
+		</s:HGroup>
+	</components:BaseSubPanel>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="区域设定" width="100%">
+		<s:HGroup width="100%">
+			<s:RadioButton label="按重点区域" groupName="area" selected="true"/>
+			<s:RadioButton label="按巡区" groupName="area"/>
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:CheckBox label="全部"/>
+			<s:CheckBox label="A重点区域"/>
+			<s:CheckBox label="B重点区域"/>
+		</s:HGroup>
+		<s:HGroup width="100%" horizontalAlign="center" gap="2">
+			<s:Button label="统计" height="16" buttonDown="dispatchEvent(new Event(ALARMSTATIS))"
+					  icon="assets/image/b_cross.png"
+					  skinClass="app.view.components.skin.skinButton"/>
+			<s:Button label="取消" height="16"
+					  icon="assets/image/b_undo.png"
+					  skinClass="app.view.components.skin.skinButton"/>
+		</s:HGroup>		
+	</components:BaseSubPanel>
+</s:NavigatorContent>

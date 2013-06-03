@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.dict.DicGPSImage;
+			import app.model.dict.DicPoliceType;
+									
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				
+				var policeType:DicPoliceType = data as DicPoliceType;
+				if(policeType != null)
+				{
+					image.source = DicGPSImage.getImageClass(policeType.id);
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:HorizontalLayout verticalAlign="middle" gap="0"/>
+	</s:layout>
+	
+	<s:CheckBox mouseEnabled="false" selected="{data.isMapShow}"/>
+	<s:Image id="image" width="30" height="30"/>
+	<s:Label text="{data.label}"/>
+</s:ItemRenderer>

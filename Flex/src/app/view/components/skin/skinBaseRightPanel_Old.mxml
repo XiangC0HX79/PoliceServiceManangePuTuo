@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		resizeEffect="Resize"
+		width.open="{300 + groupHeader.width}" 
+		width.close="0">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("app.view.components.BaseRightPanel")]
+	</fx:Metadata>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="open" />
+		<s:State name="min" />
+		<s:State name="close" />
+		<s:State name="disabled" />
+		<s:State name="normal" />
+	</s:states>
+	
+	<!-- SkinParts
+	name=contentGroup, type=spark.components.Group, required=false
+	name=closeButton, type=spark.components.Image, required=true
+	-->
+	
+	<s:Group id="groupHeader" left="0" width="20" top="0" bottom="0">	
+		<s:Rect left="0" right="0" top="0" bottom="0" 
+				bottomLeftRadiusX="10" topLeftRadiusX="10">
+			<s:fill>
+				<s:LinearGradient>
+					<s:GradientEntry color="0x8CE609" alpha="1" ratio="0"/>
+					<s:GradientEntry color="0xAEFB65" alpha="1" ratio="1"/>
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		
+		<s:Image id="closeButton" y="8" horizontalCenter="0"
+				 buttonMode="true"
+				 useHandCursor="true" 
+				 source="@Embed('assets/image/w_close_2.png')"/>
+		
+		<s:Label y="35" width="100%" fontWeight="bold"
+				 horizontalCenter="0" text="{hostComponent.panelTitle}" 
+				 textAlign="center"/>
+	</s:Group>
+	
+	<s:Rect left="{groupHeader.width}" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:LinearGradient>
+				<s:GradientEntry ratio="0" 
+								 color="0xDBFFCA"/>
+				<s:GradientEntry ratio="1" 
+								 color="0xE8FFFC"/>
+			</s:LinearGradient>
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xAEFB65"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Group id="contentGroup" 
+			 left="{groupHeader.width + getStyle('paddingLeft')}" 
+			 right="{getStyle('paddingRight')}" 
+			 top="{getStyle('paddingTop')}" 
+			 bottom="{getStyle('paddingBottom')}">
+	</s:Group>
+</s:Skin>

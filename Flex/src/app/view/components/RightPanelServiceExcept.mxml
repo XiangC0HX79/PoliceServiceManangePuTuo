@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent  xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					 xmlns:s="library://ns.adobe.com/flex/spark" 
+					 xmlns:mx="library://ns.adobe.com/flex/mx"
+					 xmlns:subComponents="app.view.components.subComponents.*" 
+					 xmlns:components="app.view.components.*"
+					 width="100%" height="100%" label="异常勤务">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+		
+	<fx:Script>
+		<![CDATA[
+			import app.model.dict.DicPatrolZone;
+			import app.model.vo.AppConfigVO;
+			import app.model.vo.GPSNewVO;
+			import app.model.vo.ServiceExceptVO;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			
+			public static const SEARCH:String = "search";
+			
+			public static const GRIDCLICK:String = "gridclick";
+			public static const GRIDDOUBLECLICK:String = "griddoubleclick";
+			
+			[Bindable] public var listDept:ArrayCollection = null;
+			[Bindable] public var listDeptItem:* = null;
+			
+			[Bindable]public var listExcept:ArrayCollection = new ArrayCollection;
+			[Bindable]public var listExceptItem:* = null;
+						
+			private function labelType(item:Object, column:GridColumn):String
+			{
+				var except:ServiceExceptVO = item as ServiceExceptVO;
+				return except.exceptLabel;
+			}			
+			
+			protected function comboDept_changeHandler(event:IndexChangeEvent):void
+			{
+				listDeptItem = (event.currentTarget as DropDownList).selectedItem;
+				
+				dispatchEvent(new Event(SEARCH));
+			}			
+			
+			protected function datagrid1_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listExceptItem = event.item;
+					dispatchEvent(new Event(GRIDCLICK));
+				}
+			}
+			
+			protected function datagrid1_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listExceptItem = event.item;
+					dispatchEvent(new Event(GRIDDOUBLECLICK));
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="选择单位" width="100%">		
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="单　　位："/>
+			<s:DropDownList width="100%" 
+							enabled="{AppConfigVO.Auth == '1'}"
+							change="comboDept_changeHandler(event)"
+							dataProvider="{listDept}" 
+							selectedItem="{listDeptItem}"
+							labelField="label"/>
+			<s:Button height="25" width="25" 
+					  icon="assets/image/b_refresh.png"
+					  buttonDown="dispatchEvent(new Event(SEARCH))"
+					  skinClass="app.view.components.skin.skinButton"/>	
+		</s:HGroup>
+	</components:BaseSubPanel>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+							 height="100%" minButtonShow="false"
+							 panelTitle="异常勤务列表({listExcept.length})" width="100%">
+		<s:DataGrid height="100%" width="100%"  
+					dataProvider="{listExcept}" 
+					gridDoubleClick="datagrid1_gridDoubleClickHandler(event)"
+					gridClick="datagrid1_gridClickHandler(event)"
+					doubleClickEnabled="true"
+					alternatingRowColors="[0xEEEEEE,0xFFFFFF]">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn headerText="类型" labelFunction="labelType" width="80"></s:GridColumn>
+					<s:GridColumn headerText="报警时间" dataField="ReportDateTimeFormat" width="140"></s:GridColumn>
+					<s:GridColumn headerText="单位" dataField="DepName" width="150"></s:GridColumn>
+					<s:GridColumn headerText="描述" dataField="UnNormalDesc" width="200"></s:GridColumn>					
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>		
+	</components:BaseSubPanel>		
+</s:NavigatorContent>

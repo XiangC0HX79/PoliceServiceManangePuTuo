@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="app.view.components.*" creationPolicy="all"
+		 width="100%" height="100%" label="{task.taskName}">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.vo.TaskVO;
+			
+			[Bindable]public var task:TaskVO;
+			
+			[Bindable]public var policeCount:Number = 0;
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 minButtonShow="false" contentGap="5"
+							 panelTitle="任务详情" width="100%">	
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="任务名称："/>
+			<s:Label text="{task.taskName}"/>
+		</s:SkinnableContainer>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="通讯频点："/>
+			<s:Label text="{task.commChanel}"/>
+		</s:HGroup>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="现场指挥点："/>
+			<s:Label text="{task.sceneCommand}"/>
+		</s:SkinnableContainer>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="联系方式："/>
+			<s:Label text="{task.contactWay}"/>
+		</s:HGroup>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="组织指挥："/>
+			<s:Label text="{task.commander}"/>
+		</s:SkinnableContainer>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="开始时间："/>
+			<s:Label text="{task.startDateString}"/>
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" height="100%"
+							 minButtonShow="false"
+							 panelTitle="警力列表({policeCount})" width="100%">	
+		<mx:Accordion id="accordion" width="100%" height="100%"/>
+	</components:BaseSubPanel>
+</s:NavigatorContent>

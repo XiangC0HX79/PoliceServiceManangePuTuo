@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" clipAndEnableScrolling="true">
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.vo.AlarmInfoVO;
+			
+			override public function prepare(hasBeenRecycled:Boolean):void 
+			{
+				if(data != null)
+				{
+					lblData.text = data[column.dataField];
+					
+					var alarm:AlarmInfoVO = data as AlarmInfoVO;
+					if(!alarm.isMapShow)
+					{
+						lblData.setStyle("color",0x888888);
+					}
+					else if(alarm.isFocus)
+					{
+						lblData.setStyle("color",0xFF0000);
+					} 
+					else
+					{
+						lblData.setStyle("color",0x000000);
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Label id="lblData" top="9" left="7"/>
+	
+</s:GridItemRenderer>

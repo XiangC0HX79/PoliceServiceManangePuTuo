@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx"
+					xmlns:subComponents="app.view.components.subComponents.*" 
+					xmlns:components="app.view.components.*" 
+					xmlns:esri="http://www.esri.com/2008/ags"
+					width="100%" height="100%" 
+					currentState="cur"
+					label="警情信息">
+	<fx:Script>
+		<![CDATA[
+			import app.event.AppEvent;
+			import app.model.dict.DicAlarmType;
+			import app.model.dict.DicDepartment;
+			import app.model.vo.AlarmInfoVO;
+			import app.model.vo.AlarmPoliceVO;
+			import app.model.vo.AppConfigVO;
+			import app.model.vo.GPSNewVO;
+			import app.view.components.subComponents.ItemRendererAlarmPoliceType;
+			import app.view.components.subComponents.ItemRendererCheck;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Text;
+			import mx.events.FlexEvent;
+			
+			import spark.components.gridClasses.GridItemRenderer;
+			import spark.events.GridEvent;
+			import spark.events.GridSelectionEvent;
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			import spark.skins.spark.DefaultGridItemRenderer;
+			
+			public static const SEARCHCUR:String = "searchcur";
+			public static const SEARCHHIS:String = "searchhis";
+			
+			public static const ALARMVISIBLE:String = "alarmvisible";
+			public static const ALARMFOCUS:String = "alarmfocus";
+			
+			public static const ALARMCLICK:String = "alarmclick";
+			public static const ALARMDOUBLECLICK:String = "alarmdoubleclick";
+			
+			public static const ALARMPOLICECLICK:String = "alarmpoliceclick";
+			public static const ALARMPOLICEDOUBLECLICK:String = "alarmpolicedoubleclick";
+			
+			public static const ALARMCHANGE:String = "alarmchange";
+			
+			public static const ALARMCORRECT:String = "alarmcorrect";
+			public static const ALARMUNDO:String = "alarmundo";
+			
+			public static const ALARMSHOWSELECT:String = "alarmshowselect";			
+			
+			public static const POLICESELECT:String = "policeselect";
+			
+			public static const POLICECONFIRM:String = "policeconfirm";			
+						
+			public static const EDITNEWTYPE:String = "editnewtype";		
+			
+			public static const FLASHELE:String = "flashelepolice";
+			public static const LOCATEELE:String = "locateelepolice";
+						
+			[Bindable]public var endTime:Date = new Date;
+			[Bindable]public var beginTime:Date = new Date(endTime.time - 60*60*1000);
+			
+			[Bindable]public var listDept:ArrayCollection = null;
+			[Bindable]public var listDeptItem:DicDepartment = null;
+			
+			[Bindable]public var listAlarmType:ArrayCollection = null;
+			[Bindable]public var listAlarmTypeSecond:ArrayCollection = new ArrayCollection;
+			
+			[Bindable]public var listAlarmTypeItem:DicAlarmType = null;
+			
+			[Bindable]public var treeAlarmType:XML;
+			
+			[Bindable]public var listAlarm:ArrayCollection = new ArrayCollection;
+			[Bindable]public var listAlarmItem:AlarmInfoVO = null;
+						
+			[Bindable]public var listPolice:ArrayCollection = new ArrayCollection;	
+			[Bindable]public var listElePolice:ArrayCollection;		
+			
+			[Bindable]public var dis:String = "200";
+			
+			private function alarmPoliceTypeLabelFunction(item:Object, column:GridColumn):String
+			{				
+				if(item != null)
+				{
+					if(item.type == "1")
+					{
+						return "接收警情";
+					}
+					else if(item.type == "2")
+					{
+						return "到达现场";
+					}
+					else
+					{
+						return item.type;
+					}
+				}
+				
+				return "";
+			} 
+			
+			private function alarmPoliceTypeItemRendererFunction(item:AlarmPoliceVO, column:GridColumn):IFactory
+			{
+				if((item != null) && (item.type == "0"))
+					return new ClassFactory(ItemRendererAlarmPoliceType);
+				else
+					return new ClassFactory(DefaultGridItemRenderer);
+			}
+			
+			protected function radioButtonGroupAlarmType_changeHandler(event:Event):void
+			{
+				listAlarm.removeAll();
+				listAlarmItem = null;
+				
+				if(radioButtonGroupAlarmType.selectedValue == "his")
+				{
+					endTime = new Date;
+					beginTime =  new Date(endTime.time - 60*60*1000);
+					
+					this.currentState = "his"
+					
+					dispatchEvent(new Event(SEARCHHIS));
+				}
+				else
+				{
+					this.currentState = "cur";	
+					
+					dispatchEvent(new Event(SEARCHCUR));	
+				}
+			}
+			
+			protected function comboDept_changeHandler(event:IndexChangeEvent):void
+			{
+				listDeptItem = (event.currentTarget as DropDownList).selectedItem;
+				
+				if(radioButtonGroupAlarmType.selectedValue == "his")
+				{
+					dispatchEvent(new Event(SEARCHHIS));
+				}
+				else
+				{
+					dispatchEvent(new Event(SEARCHCUR));
+				}
+			}			
+			
+			protected function comboAlarmType_changeHandler(event:IndexChangeEvent):void
+			{				
+				listAlarmTypeSecond.removeAll();
+				listAlarmTypeSecond.addItem(DicAlarmType.ALL);
+				
+				var alarmType:DicAlarmType = (event.currentTarget as DropDownList).selectedItem;
+				
+				for each(var item:DicAlarmType in DicAlarmType.listLevelSecond)
+				{
+					if(item.pid == alarmType.id)
+					{
+						listAlarmTypeSecond.addItem(item);
+					}
+				}
+				
+				listAlarmTypeItem = alarmType;
+				
+				dispatchEvent(new Event(SEARCHHIS));
+			}		
+			
+			protected function comboAlarmTypeSecond_changeHandler(event:IndexChangeEvent):void
+			{	
+				var alarmType:DicAlarmType = (event.currentTarget as DropDownList).selectedItem;
+				
+				listAlarmTypeItem = (alarmType.label == "所有类别")?comboAlarmType.selectedItem:alarmType;
+				
+				dispatchEvent(new Event(SEARCHHIS));
+			}		
+			
+			protected function paneltimespan_changeHandler(event:Event):void
+			{
+				var timeSpan:PanelTimeSpan = event.currentTarget as PanelTimeSpan;
+				beginTime = timeSpan.beginTime;
+				endTime = timeSpan.endTime;
+			}			
+			
+			protected function gridAlarm_selectionChangeHandler(event:GridSelectionEvent):void
+			{
+				if(radioButtonGroupAlarmType.selectedValue == "cur")
+				{
+					var dataGrid:DataGrid = event.currentTarget as DataGrid;
+					listAlarmItem = dataGrid.selectedItem as AlarmInfoVO;
+										
+					dispatchEvent(new Event(ALARMCHANGE));	
+				}
+			}
+			
+			protected function gridAlarm_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listAlarmItem = event.item as AlarmInfoVO;
+					if(event.columnIndex == 0)
+					{
+						listAlarmItem.isMapShow = !listAlarmItem.isMapShow;
+						
+						dispatchEvent(new Event(ALARMVISIBLE));
+					}
+					else if(event.columnIndex == 1)
+					{
+						listAlarmItem.isFocus = !listAlarmItem.isFocus;
+						
+						dispatchEvent(new Event(ALARMFOCUS));
+					}
+					else if(listAlarmItem.isMapShow)
+					{
+						dispatchEvent(new Event(ALARMCLICK));
+					}
+				}
+			}
+			
+			protected function gridAlarm_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if((event.item != null) && (event.columnIndex > 1))
+				{
+					listAlarmItem = event.item as AlarmInfoVO;
+					
+					if(listAlarmItem.isMapShow)
+					{
+						dispatchEvent(new Event(ALARMDOUBLECLICK));
+					}
+				}
+			}
+			
+			protected function gridAlarmPolice_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null) 
+				{
+					var alarmPolice:AlarmPoliceVO = event.item as AlarmPoliceVO;
+					
+					if(event.columnIndex == 0)
+						dispatchEvent(new AppEvent(POLICESELECT,event.item));
+					else
+						dispatchEvent(new AppEvent(AppEvent.FLASHGPS,alarmPolice.gps,true));
+				}
+			}
+			
+			protected function gridAlarmPolice_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if((event.item != null) && (event.columnIndex != 0))
+				{
+					var alarmPolice:AlarmPoliceVO = event.item as AlarmPoliceVO;
+					
+					dispatchEvent(new AppEvent(AppEvent.LOCATEGPS,alarmPolice.gps,true));
+				}
+			}
+			
+			private function alarmPoliceServiceTypeLabelFunction(item:Object, column:GridColumn):String
+			{
+				var police:GPSNewVO = (item as AlarmPoliceVO).gps;
+				if(police.serviceType != null)
+				{
+					return police.serviceType.label;
+				}
+				else
+				{
+					return "";
+				}
+			}					
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->		
+		<s:RadioButtonGroup id="radioButtonGroupAlarmType"
+							change="radioButtonGroupAlarmType_changeHandler(event)"/>
+	</fx:Declarations>
+	
+	<fx:Binding destination="textRange.text" source="dis" twoWay="true"/>
+	
+	<s:states>
+		<s:State name="cur"/>
+		<s:State name="his"/>
+	</s:states>
+	
+	<s:VGroup width="100%" height="100%">		
+		<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+								 panelTitle="警情选择" width="100%">		
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="单　　位："/>
+				<s:DropDownList width="100%" 
+								change="comboDept_changeHandler(event)"
+								dataProvider="{listDept}" 
+								selectedItem="{listDeptItem}"
+								enabled="{AppConfigVO.Auth == '1'}"
+								labelField="label"/>
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle" includeIn="his">
+				<s:Label text="警情大类："/>
+				<s:DropDownList id="comboAlarmType" width="100%" requireSelection="true"
+								change="comboAlarmType_changeHandler(event)"
+								dataProvider="{listAlarmType}" 
+								labelField="label"/>
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle" includeIn="his">
+				<s:Label text="警情小类："/>
+				<s:DropDownList id="comboAlarmTypeSecond" width="100%" requireSelection="true"
+								change="comboAlarmTypeSecond_changeHandler(event)"
+								dataProvider="{listAlarmTypeSecond}" 
+								labelField="label"/>
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="时　　间："/>
+				<s:RadioButton label="实时警情" groupName="radioButtonGroupAlarmType" selected="true" value="cur"/>
+				<s:RadioButton label="历史警情" groupName="radioButtonGroupAlarmType" value="his"/>
+			</s:HGroup>
+		</components:BaseSubPanel>
+		
+		<components:BaseSubPanel includeIn="his" 
+								 skinClass="app.view.components.skin.skinBaseSubPanel"
+								 id="panelDateSelect"
+								 panelTitle="警情查询" width="100%">
+			<s:HGroup width="100%" verticalAlign="bottom" gap="2">			
+				<subComponents:PanelTimeSpan gap="2"
+											 change="paneltimespan_changeHandler(event)"
+											 beginTime="{beginTime}" 
+											 endTime="{endTime}"
+											 width="100%"/>
+				<s:Button height="24" width="24" buttonDown="dispatchEvent(new Event(SEARCHHIS));"
+						  icon="assets/image/b_find.png"
+						  skinClass="app.view.components.skin.skinButton"/>
+			</s:HGroup>
+		</components:BaseSubPanel>
+		
+		<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+								 minButtonShow="false"
+								 panelTitle="警情列表({listAlarm.length})" 
+								 minHeight="0"
+								 width="100%" height="100%">		
+			
+			<s:DataGrid width="100%" height="100%" id="gridAlarm"
+						dataProvider="{listAlarm}" 
+						selectionChange="gridAlarm_selectionChangeHandler(event)" 
+						gridClick="gridAlarm_gridClickHandler(event)" 
+						gridDoubleClick="gridAlarm_gridDoubleClickHandler(event)"
+						doubleClickEnabled="true"
+						alternatingRowColors="[0xEEEEEE,0xFFFFFF]"
+						itemRenderer="app.view.components.subComponents.GridItemRendererAlarm"> 
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn itemRenderer="app.view.components.subComponents.GridItemRendererAlarmMapShow"/>
+						<s:GridColumn itemRenderer="app.view.components.subComponents.GridItemRendererAlarmMapFocus"/>
+						<s:GridColumn visible="{radioButtonGroupAlarmType.selectedValue == 'his'}" 
+									  headerRenderer="app.view.components.subComponents.HeadRendererCheck"
+									  itemRenderer="app.view.components.subComponents.GridItemRendererAlarmSelect"/>
+						<s:GridColumn dataField="timeFormat" headerText="时间" width="70"/>
+						<s:GridColumn dataField="address" headerText="地点" width="220"/>
+						<s:GridColumn dataField="id" headerText="警情单号" width="150"/>
+						<s:GridColumn dataField="phone" headerText="报警电话" width="100"/>
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>
+			
+			<s:HGroup excludeFrom="cur" width="100%" horizontalAlign="center">			
+				<s:Button label="警情撒点" buttonDown="dispatchEvent(new Event(ALARMSHOWSELECT))"
+						  icon="assets/image/b_alarm_set.png" height="25"
+						  skinClass="app.view.components.skin.skinButton"/>
+			</s:HGroup>
+		</components:BaseSubPanel>
+		
+		<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+								 panelTitle="警情详情 " width="100%">
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="警情单号："/>
+				<s:Label text="{listAlarmItem.id}"/>
+			</s:SkinnableContainer>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="时　　间："/>
+				<s:Label text="{listAlarmItem.datetimeFormat}"/>
+			</s:HGroup>
+			
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="警情类别："/>
+				<s:Label text="{listAlarmItem.type}" width="100%"/>
+				<s:Label text="所属辖区："/>
+				<s:Label text="{listAlarmItem.deptName}" width="100%"/>
+			</s:SkinnableContainer>
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="警情类别（新）："/>				
+				<s:Label width="100%" text="{listAlarmItem.newType}"/>
+				<s:Button label="修改" height="16" buttonDown="{if(listAlarmItem != null) panelNewAlarmType.visible = true;}"
+						  skinClass="app.view.components.skin.skinButton"/>
+			</s:SkinnableContainer>
+			
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="　报警人："/>
+				<s:Label text="{listAlarmItem.name}" width="100%"/>
+				<s:Label text="报警电话："/>
+				<s:Label text="{listAlarmItem.phone}" width="100%"/>
+			</s:HGroup>
+			
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="联系电话："/>
+				<s:Label text="{listAlarmItem.contactphone}"/>
+			</s:SkinnableContainer>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="地　　址："/>
+				<s:Label text="{listAlarmItem.address}"/>
+			</s:HGroup>
+			
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="警情内容："/>
+				<s:Label text="{listAlarmItem.info}"/>
+			</s:SkinnableContainer>
+			<s:HGroup width="100%" horizontalAlign="center" gap="2">
+				<s:Button label="修正位置" height="16"
+						  buttonDown="dispatchEvent(new Event(ALARMCORRECT));"
+						  icon="assets/image/b_cross.png"
+						  skinClass="app.view.components.skin.skinButton"/>
+				<s:Button label="取消修正"
+						  buttonDown="dispatchEvent(new Event(ALARMUNDO));"
+						  height="16"
+						  icon="assets/image/b_undo.png"
+						  skinClass="app.view.components.skin.skinButton"/>
+			</s:HGroup>		
+		</components:BaseSubPanel>
+		
+		<mx:TabNavigator excludeFrom="his" width="100%" paddingTop="0">
+			<s:NavigatorContent label="处警人员列表">
+				<s:layout>
+					<s:VerticalLayout/>
+				</s:layout>
+				<s:DataGrid width="100%" height="100%" id="gridAlarmPolice" requestedRowCount="4"
+							gridClick="gridAlarmPolice_gridClickHandler(event)"
+							gridDoubleClick="gridAlarmPolice_gridDoubleClickHandler(event)"
+							doubleClickEnabled="true"
+							alternatingRowColors="[0xEEEEEE,0xFFFFFF]">					
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="selected" headerText="选择"
+										  itemRenderer="app.view.components.subComponents.ItemRendererCheck"
+										  resizable="false" sortable="false" width="40"></s:GridColumn>
+							<s:GridColumn dataField="gps.gpsName" headerText="姓名" width="90"></s:GridColumn>
+							<s:GridColumn dataField="gps.policeNo" headerText="警号" width="70"></s:GridColumn>
+							<s:GridColumn dataField="timeFormat" headerText="出警时间" width="80"></s:GridColumn>
+							<s:GridColumn dataField="gps.serviceStatusName" headerText="状态" width="50"></s:GridColumn>
+							<s:GridColumn labelFunction="alarmPoliceServiceTypeLabelFunction" headerText="勤务类型" width="120"></s:GridColumn>
+						</s:ArrayList>
+					</s:columns>
+				</s:DataGrid>
+				<s:HGroup width="100%" horizontalAlign="center">
+					<s:Button label="确定" buttonDown="dispatchEvent(new Event(POLICECONFIRM))"
+							  icon="assets/image/b_ok.png"
+							  skinClass="app.view.components.skin.skinButton"/>
+				</s:HGroup>		
+			</s:NavigatorContent>
+			<s:NavigatorContent label="摄像头列表">
+				<s:layout>
+					<s:VerticalLayout/>
+				</s:layout>
+				<s:HGroup verticalAlign="middle" paddingTop="5" paddingLeft="5">					
+					<s:Label text="范围："/>
+					<s:TextInput id="textRange" width="100%"
+								 change="dispatchEvent(new Event(ALARMCHANGE));"
+								 restrict="0-9"/>
+					<s:Label text="米"/>
+				</s:HGroup>
+				<s:DataGrid id="gridElePolice" width="100%" height="100%"
+							alternatingRowColors="[0xEEEEEE,0xFFFFFF]"
+							doubleClickEnabled="true" dataProvider="{listElePolice}"
+							gridClick="dispatchEvent(new Event(FLASHELE));" 
+							gridDoubleClick="dispatchEvent(new Event(LOCATEELE));">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="code" headerText="编号" width="60"></s:GridColumn>					
+							<s:GridColumn dataField="department.label" headerText="所属单位" width="120"></s:GridColumn>
+							<s:GridColumn dataField="name" headerText="名称" width="200"></s:GridColumn>		
+						</s:ArrayList>
+					</s:columns>
+				</s:DataGrid>
+			</s:NavigatorContent>
+		</mx:TabNavigator>
+		<!--<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+								 excludeFrom="his" 
+								 panelTitle="处警人员列表" 
+								 width="100%" id="panelAlarmPolice">
+			<s:DataGrid width="100%" height="100%" id="gridAlarmPolice" requestedRowCount="4"
+						gridClick="gridAlarmPolice_gridClickHandler(event)"
+						gridDoubleClick="gridAlarmPolice_gridDoubleClickHandler(event)"
+						doubleClickEnabled="true"
+						alternatingRowColors="[0xEEEEEE,0xFFFFFF]">					
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn dataField="selected" headerText="选择"
+									  itemRenderer="app.view.components.subComponents.ItemRendererCheck"
+									  resizable="false" sortable="false" width="40"></s:GridColumn>
+						<s:GridColumn dataField="gps.gpsName" headerText="姓名" width="90"></s:GridColumn>
+						<s:GridColumn dataField="gps.policeNo" headerText="警号" width="70"></s:GridColumn>
+						<s:GridColumn dataField="timeFormat" headerText="出警时间" width="80"></s:GridColumn>
+						<s:GridColumn dataField="gps.serviceStatusName" headerText="状态" width="50"></s:GridColumn>
+						<s:GridColumn labelFunction="alarmPoliceServiceTypeLabelFunction" headerText="勤务类型" width="120"></s:GridColumn>
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>
+			<s:HGroup width="100%" horizontalAlign="center">
+				<s:Button label="确定" buttonDown="dispatchEvent(new Event(POLICECONFIRM))"
+						  icon="assets/image/b_ok.png"
+						  skinClass="app.view.components.skin.skinButton"/>
+			</s:HGroup>		
+		</components:BaseSubPanel>-->
+	</s:VGroup>
+	<components:BaseSubPanel id="panelNewAlarmType" skinClass="app.view.components.skin.skinBaseSubPanel" 
+							 minButtonShow="false" visible="false"
+							 panelTitle="新警情类型选择" 
+							 width="100%" height="100%">
+		<mx:Tree id="treeAlarm" width="100%" height="100%" dataProvider="{treeAlarmType}" labelField="@label">
+			
+		</mx:Tree>
+		<s:HGroup width="100%" horizontalAlign="center">
+			<s:Button label="确定" buttonDown="dispatchEvent(new Event(EDITNEWTYPE));"
+					  icon="assets/image/b_ok.png"
+					  skinClass="app.view.components.skin.skinButton"/>
+			<s:Button label="取消" buttonDown="{panelNewAlarmType.visible = false}"
+					  icon="assets/image/b_cancel.png"
+					  skinClass="app.view.components.skin.skinButton"/>
+		</s:HGroup>		
+	</components:BaseSubPanel>
+</s:NavigatorContent>

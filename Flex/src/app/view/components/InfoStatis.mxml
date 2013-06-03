@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 mouseDown="hgroup1_mouseDownHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 creationComplete="creationCompleteHandler(event)">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.core.SpriteVisualElement;
+			[Bindable]public var countTatol:Number = 0;
+			[Bindable]public var countVisible:Number = 0;
+			[Bindable]public var countTraffic:Number = 0;
+			[Bindable]public var countPeople:Number = 0;
+			[Bindable]public var countVehicle:Number = 0;
+			[Bindable]public var countOffice:Number = 0;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				var backSprite:SpriteVisualElement = new SpriteVisualElement;
+				this.addElementAt(backSprite,0);
+				
+				//绘制背景
+				backSprite.graphics.lineStyle(3,0xFFFFFF);
+				
+				var matr:Matrix = new Matrix();
+				matr.createGradientBox(this.width, this.height, Math.PI / 2, 0, 0);
+				
+				backSprite.graphics.beginGradientFill(GradientType.LINEAR,
+					[0xCCCCCC,0xCCCCCC,0xCCCCCC],
+					[0.9,0.5,0.9],
+					[0,128,255],
+					matr
+				);
+				
+				backSprite.graphics.drawRoundRectComplex(0,0,this.width,this.height,5,5,5,5);
+			}
+			
+			//阻止地图对于菜单点击事件的响应
+			protected function hgroup1_mouseDownHandler(event:MouseEvent):void
+			{
+				event.stopPropagation();
+			}			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+		<s:HGroup horizontalAlign="center" width="100%">
+			<s:Label text="当前GPS在线警力" fontWeight="bold"/>
+		</s:HGroup>
+		<s:HGroup>
+			<s:Label text="总　数："/>
+			<s:Label text="{countTatol}"/>
+		</s:HGroup>
+		<s:HGroup>
+			<s:Label text="交　警："/>
+			<s:Label text="{countTraffic}"/>
+		</s:HGroup>
+		<s:HGroup>
+			<s:Label text="派出所："/>
+			<s:Label text="{countPeople}"/>
+		</s:HGroup>
+		<s:HGroup>
+			<s:Label text="其　他："/>
+			<s:Label text="{countOffice}"/>
+		</s:HGroup>	
+		<s:HGroup>
+			<s:Label text="图上警力：{countVisible}" fontWeight="bold"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

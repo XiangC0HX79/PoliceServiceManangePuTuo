@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:RadioButtonGroup id="radioButtonGroupCorrect"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import app.model.vo.AppConfigVO;
+			import app.model.vo.GPSNewVO;
+			
+			import mx.core.IVisualElementContainer;
+			import mx.events.FlexEvent;
+			
+			public static const ANSWER:String = "answer";
+			public static const NOANSWER:String = "noanswer";
+			
+			[Bindable]public var carInfo:GPSNewVO = null;
+			
+			[Bindable]public var textCall:String = "";
+			
+			protected function btnCall_buttonDownHandler(event:FlexEvent):void
+			{
+				this.currentState = (this.currentState == "min")?"max":"min";
+			}			
+			
+			protected function btnCall_creationCompleteHandler(event:FlexEvent):void
+			{				
+				if(AppConfigVO.district.indexOf('奉贤') < 0)
+				{
+					(btnCall.parent as IVisualElementContainer).removeElement(btnCall);
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="min"/>
+		<s:State name="max"/>
+	</s:states>
+	
+	<s:VGroup>
+		<s:VGroup gap="2" rowHeight="20" variableRowHeight="false" width="300">
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="电台编号：" fontWeight="bold"/>
+				<s:Label text="{carInfo.gpsSimCard}" width="100%" color="0x0000FF" fontWeight="bold"/>
+				<s:Label text="所属部门：" fontWeight="bold"/>
+				<s:Label text="{carInfo.departmentNAME}" width="100%"/>
+			</s:SkinnableContainer>
+			
+		    <s:SkinnableContainer width="100%">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="呼　　号：" fontWeight="bold"/>
+				<s:Label text="{carInfo.callNo}" width="100%"/>
+				<s:Label text="电　　话：" fontWeight="bold"/>
+				<s:Label text="{carInfo.phone}" width="100%"/>
+			</s:SkinnableContainer>
+			
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="GPS接收时间：" fontWeight="bold"/>
+				<s:Label text="{carInfo.gpsDateFormat}"/>
+			</s:SkinnableContainer>
+			
+			<s:HGroup width="100%" horizontalAlign="center">
+				<s:Button label="勤务点名" id="btnCall" creationComplete="btnCall_creationCompleteHandler(event)"
+						  buttonDown="btnCall_buttonDownHandler(event)"
+						  icon="assets/image/b_call.png"
+						  skinClass="app.view.components.skin.skinButton"/>
+				<s:Button label="执勤跟踪" id="btnTrackRealtime"
+						  icon="assets/image/b_trackR.png"
+						  skinClass="app.view.components.skin.skinButton"/>		
+				<s:Button label="轨迹回放" id="btnTrackHistory"
+						  icon="assets/image/b_trackH.png"
+						  skinClass="app.view.components.skin.skinButton"/>					
+				<!--<s:Button label="指令发送"/>-->
+			</s:HGroup>
+		</s:VGroup>
+		
+		<s:VGroup includeIn="max" width="100%" 
+				  gap="2"
+				  rowHeight="20" variableRowHeight="false">
+			<s:Group width="100%">
+				<s:Rect left="2" right="2" top="2" bottom="2" radiusX="3">
+					<s:fill>
+						<s:LinearGradient rotation="90">
+							<s:GradientEntry color="0xF0F3F8" alpha="1" ratio="0"/>
+							<s:GradientEntry color="0xA9C9F0" alpha="1" ratio="1"/>
+						</s:LinearGradient>
+					</s:fill>
+				</s:Rect>
+				<s:Rect left="1" right="1" top="1" bottom="1" radiusX="3">
+					<s:stroke>
+						<s:SolidColorStroke color="0xFFFFFF" weight="1"/>
+					</s:stroke>
+				</s:Rect>
+				<s:Rect left="0" right="0" top="0" bottom="0" radiusX="3">
+					<s:stroke>
+						<s:SolidColorStroke color="0xA9C9F0" weight="1"/>
+					</s:stroke>
+				</s:Rect>
+				<s:Label paddingLeft="10" verticalCenter="0" 
+						 width="100%" text="勤务点名" fontWeight="bold"/>
+			</s:Group>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="正　　确：" fontWeight="bold"/>
+				<s:RadioButton label="是" group="{radioButtonGroupCorrect}" value="1" selected="true"/>
+				<s:RadioButton label="否" group="{radioButtonGroupCorrect}" value="0"/>
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="备　　注：" fontWeight="bold"/>
+				<s:TextInput id="txtCall" width="100%" height="100%" text="{textCall}"/>
+			</s:HGroup>
+			<s:HGroup horizontalAlign="center" width="100%">
+				<s:Button label="应答" width="30%"
+						  buttonDown="{dispatchEvent(new Event(ANSWER));}"
+						  icon="assets/image/b_ok.png"
+						  skinClass="app.view.components.skin.skinButton"/>		
+				<s:Button label="未应答" width="30%"
+						  buttonDown="{dispatchEvent(new Event(NOANSWER));}"
+						  icon="assets/image/b_cancel.png"
+						  skinClass="app.view.components.skin.skinButton"/>		
+			</s:HGroup>
+		</s:VGroup>		
+	</s:VGroup>		
+</s:NavigatorContent>

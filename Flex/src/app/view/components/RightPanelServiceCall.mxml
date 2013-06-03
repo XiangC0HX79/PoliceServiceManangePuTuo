@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx"
+					xmlns:components="app.view.components.*"
+					width="100%" height="100%" label="勤务点名">		
+	<fx:Script>
+		<![CDATA[
+			import app.event.AppEvent;
+			import app.model.vo.AppConfigVO;
+			import app.model.vo.CallVO;
+			import app.model.vo.GPSNewVO;
+			import app.view.components.subComponents.ItemRendererServiceType;
+			
+			import mx.collections.ArrayCollection;
+			import mx.core.IVisualElement;
+			import mx.events.FlexEvent;
+			
+			import spark.components.ComboBox;
+			import spark.components.supportClasses.ItemRenderer;
+			import spark.events.IndexChangeEvent;
+			import spark.events.RendererExistenceEvent;
+			
+			public static const SEARCH:String = "search";
+			public static const GETCALL:String = "getcall";
+			public static const ANSWER:String = "answer";
+			public static const NOANSWER:String = "noanswer";
+			public static const ONLYCALL:String = "onlycall";
+			
+			[Bindable] public var listDept:ArrayCollection = null;
+			[Bindable] public var listDeptItem:* = null;
+			
+			[Bindable] public var listServiceType:ArrayCollection = null;
+			
+			[Bindable] public var listPolice:ArrayCollection = new ArrayCollection;
+			[Bindable] public var listPoliceItem:* = null;
+			
+			[Bindable] public var textLastCallTime:String = "";		
+			[Bindable] public var textDemo:String = "";			
+			
+			[Bindable] public var listCallHistory:ArrayCollection = new ArrayCollection;
+			
+			public var dictSelect:Dictionary = new Dictionary;
+			
+			protected function gridServiceType_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var v:IVisualElement = event.renderer;
+				v.addEventListener(MouseEvent.CLICK,handleServiceTypeClick);
+			}
+			
+			private function handleServiceTypeClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRendererServiceType = event.currentTarget as ItemRendererServiceType;
+				itemRenderer.valueDisplay.selected = !itemRenderer.valueDisplay.selected;
+				dictSelect[itemRenderer.data] = itemRenderer.valueDisplay.selected;
+				
+				dispatchEvent(new Event(SEARCH));
+			}
+			
+			protected function comboDept_changeHandler(event:IndexChangeEvent):void
+			{
+				listDeptItem = (event.currentTarget as DropDownList).selectedItem;
+				
+				dispatchEvent(new Event(SEARCH));
+			}			
+			
+			protected function gridPolice_changeHandler(event:IndexChangeEvent):void
+			{
+				dispatchEvent(new Event(GETCALL));
+			}			
+			
+			protected function gridPolice_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var v:IVisualElement = event.renderer;
+				v.addEventListener(MouseEvent.CLICK,handlePoliceClick);
+				v.addEventListener(MouseEvent.DOUBLE_CLICK,handlePoliceDoubleClick);
+			}
+			
+			private function handlePoliceClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;
+				var gps:GPSNewVO = itemRenderer.data as GPSNewVO;
+				dispatchEvent(new AppEvent(AppEvent.FLASHGPS,gps,true));
+				/*var gps:GPSNewVO = itemRenderer.data as GPSNewVO;
+				if(gps.inService || gps.gpsValid)
+				{
+					dispatchEvent(new AppEvent(AppEvent.FLASHGPS,gps,true));
+				}
+				 else
+				{
+					dispatchEvent(new Event(ONLYCALL));
+				} */
+			}
+			
+			private function handlePoliceDoubleClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;
+				var gps:GPSNewVO = itemRenderer.data as GPSNewVO;
+				dispatchEvent(new AppEvent(AppEvent.LOCATEGPS,gps,true));
+				
+				/*var gps:GPSNewVO = itemRenderer.data as GPSNewVO;
+				if(gps.inService || gps.gpsValid)
+				{
+					dispatchEvent(new AppEvent(AppEvent.LOCATEGPS,gps,true));
+				}
+				else
+				{
+					dispatchEvent(new Event(ONLYCALL));
+				}*/
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Binding destination="listPoliceItem" source="gridPolice.selectedItem" twoWay="true"/>
+	<fx:Binding destination="textDemo" source="inputDemo.text" twoWay="true"/>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="警力查询" width="100%">	
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="单　　位："/>
+			<s:DropDownList width="100%"
+							enabled="{AppConfigVO.Auth == '1'}"
+							change="comboDept_changeHandler(event)"
+							dataProvider="{listDept}" 
+							selectedItem="{listDeptItem}"/>
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+							 horizontalScrollPolicy="off"
+							 panelTitle="勤务类型" width="100%">		
+		<s:DataGroup width="290"
+					 dataProvider="{listServiceType}" 
+					 rendererAdd="gridServiceType_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererServiceType">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth"
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<s:HGroup width="100%" height="100%">
+		<components:BaseSubPanel height="100%" panelTitle="警力列表({listPolice.length})" 
+								 minButtonShow="false"
+								 skinClass="app.view.components.skin.skinBaseSubPanel">	
+			<s:List width="100" height="100%" dataProvider="{listPolice}" 
+					borderVisible="false" id="gridPolice"
+					change="gridPolice_changeHandler(event)"
+					rendererAdd="gridPolice_rendererAddHandler(event)"
+					itemRenderer="app.view.components.subComponents.ItemRendererCallPolice" 
+					doubleClickEnabled="true">
+			</s:List>
+		</components:BaseSubPanel>
+		
+		<s:VGroup width="100%" height="100%">
+			<components:BaseSubPanel panelTitle="警员信息" width="100%"
+									 skinClass="app.view.components.skin.skinBaseSubPanel">
+				<s:HGroup>
+					<s:Label text="警　　号："/>
+					<s:Label text="{listPoliceItem.policeNo}"/>
+				</s:HGroup>
+				<s:HGroup>
+					<s:Label text="单　　位："/>
+					<s:Label text="{listPoliceItem.departmentNAME}"/>
+				</s:HGroup>
+				<s:HGroup>
+					<s:Label text="电台编号："/>
+					<s:Label text="{listPoliceItem.radioNo}"/>
+				</s:HGroup>
+				<s:Label text="GPS最近信号时间："/>
+				<s:Label text="{listPoliceItem.gpsDateFormat}"/>
+				<s:Label text="上次点名时间："/>
+				<s:Label text="{textLastCallTime}"/>
+			</components:BaseSubPanel>		
+			
+			<components:BaseSubPanel panelTitle="警员点名" width="100%"
+									 skinClass="app.view.components.skin.skinBaseSubPanel">
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="备注："/>
+					<s:TextInput id="inputDemo" width="100%" text="{textDemo}"/>
+				</s:HGroup>
+				<s:HGroup horizontalAlign="center" width="100%">
+					<s:Button label="应答" buttonDown="dispatchEvent(new Event(ANSWER))"
+							  icon="assets/image/b_ok.png"
+							  skinClass="app.view.components.skin.skinButton"/>		
+					<s:Button label="未应答" buttonDown="dispatchEvent(new Event(NOANSWER))"
+							  icon="assets/image/b_cancel.png"
+							  skinClass="app.view.components.skin.skinButton"/>		
+				</s:HGroup>
+			</components:BaseSubPanel>	
+			
+			<components:BaseSubPanel panelTitle="点名历史({listCallHistory.length})" width="100%" 
+									 height="100%" minButtonShow="false"
+									 skinClass="app.view.components.skin.skinBaseSubPanel">				
+				<s:DataGrid width="100%" height="100%" fontSize="12" 
+							dataProvider="{listCallHistory}" minHeight="0"
+							selectionMode="none" alternatingRowColors="[0xEEEEEE,0xFFFFFF]">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="isResponse" headerText="应答" width="40"></s:GridColumn>
+							<s:GridColumn dataField="callDateFormat" headerText="点名时间" width="150"></s:GridColumn>
+							<s:GridColumn dataField="callName" headerText="点名人" width="60"></s:GridColumn>
+							<s:GridColumn dataField="memo" headerText="备注" width="100"></s:GridColumn>
+						</s:ArrayList>
+					</s:columns>
+				</s:DataGrid>
+			</components:BaseSubPanel>	
+		</s:VGroup>
+	</s:HGroup>
+</s:NavigatorContent>

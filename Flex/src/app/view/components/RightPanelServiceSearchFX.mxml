@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:subComponents="app.view.components.subComponents.*" 
+	xmlns:components="app.view.components.*"
+	width="100%" height="100%" label="警力搜索" xmlns:swfInputs="com.nonstatics.swfInputs.*">
+			
+	<fx:Script>
+		<![CDATA[
+			import app.AppFunction;
+			import app.event.AppEvent;
+			import app.model.dict.DicDepartment;
+			import app.model.dict.DicPatrolZone;
+			import app.model.dict.DicRoad;
+			import app.model.vo.AppConfigVO;
+			
+			import flash.utils.setTimeout;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.components.ComboBox;
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			public static const COMBOTEXTCHANGE:String = "combotextchange";
+							
+			public static const CROSSROADCHANGE:String = "crossroadchange";		
+						
+			public static const ADDRESSTEXTCHANGE:String = "addresstextchange";
+			
+			public static const RADIOCUSTOMCHANGE:String = "radioGroupCustomChange";
+			
+			public static const MAPLOCATE:String = "maplocate";
+			public static const MAPSEARCH:String = "mapsearch";
+			
+			public static const GRAPHICCHANGE:String = "graphicchange";
+						
+			public static const SEARCH:String = "search";
+			public static const SEARCHELE:String = "searchele";
+			
+			public static const FLASHELE:String = "flashelepolice";
+			public static const LOCATEELE:String = "locateelepolice";
+			
+			[Bindable]public var textPoliceNo:String = "";
+			[Bindable]public var textElePoliceNo:String = "";
+			[Bindable]public var patrolZoneName:String = "";	
+			
+			[Bindable]public var listDept:ArrayCollection= null;	
+			[Bindable]public var listDeptItem:DicDepartment = null;		
+			[Bindable]public var listEleDeptItem:DicDepartment = null;		
+			
+			[Bindable]public var listPatrolZone:ArrayCollection= null;
+			
+			[Bindable]public var listRoad1:ArrayCollection = null;	
+			[Bindable]public var listRoad2:ArrayCollection = null;	
+			[Bindable]public var listRoad3:ArrayCollection = null;		
+			
+			[Bindable]public var listAddress:ArrayCollection = new ArrayCollection;	
+																		
+			[Bindable]public var listPolice:ArrayCollection = new ArrayCollection;	
+			[Bindable]public var listElePolice:ArrayCollection = new ArrayCollection;	
+			
+			[Bindable]public var graphicIndex:Number = -1;	
+			
+			public function get radius():Number
+			{
+				var r:Number = 1000;
+				if(radioGroupRadius.selectedValue != "custom")
+				{
+					r = Number(radioGroupRadius.selectedValue);
+				}
+				else
+				{
+					r = Number(textRadius.text);
+				}			
+				return r;
+			}			
+			
+			public function get policeSex():String
+			{
+				if(radioGroupSex != null)
+				{
+					if(radioGroupSex.selectedValue == "男")
+						return "1";
+					else if(radioGroupSex.selectedValue == "女")
+						return "2";
+				}
+				
+				return "";
+			}		
+			
+			protected function textRadius_clickHandler(event:MouseEvent):void
+			{
+				radioGroupRadius.selectedValue = "custom";
+			}
+			
+			protected function radioGroupRadius_changeHandler(event:Event):void
+			{
+				if(radioGroupRadius.selectedValue == "custom")
+				{
+					textRadius.setFocus();
+				}
+				
+				dispatchEvent(new Event(GRAPHICCHANGE));
+			}
+			
+			protected function gridPolice_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					dispatchEvent(new AppEvent(AppEvent.FLASHGPS,event.item,true));
+				}
+			}
+			
+			protected function gridPolice_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					dispatchEvent(new AppEvent(AppEvent.LOCATEGPS,event.item,true));
+				}
+			}
+						
+			protected function comboDept_changeHandler(event:IndexChangeEvent):void
+			{
+				listDeptItem = (event.currentTarget as DropDownList).selectedItem;
+				
+				listPatrolZone.refresh();
+				
+				patrolZoneName = "";
+				
+				dispatchEvent(new Event(SEARCH));
+			}			
+			
+			protected function comboEleDept_changeHandler(event:IndexChangeEvent):void
+			{
+				listEleDeptItem = (event.currentTarget as DropDownList).selectedItem;
+				
+				dispatchEvent(new Event(SEARCHELE));
+			}		
+			
+			protected function comboPatrolZone_changeHandler(event:IndexChangeEvent):void
+			{				
+				var partrolZone:DicPatrolZone = (event.currentTarget as ComboBox).selectedItem as DicPatrolZone;
+				if(partrolZone != null)
+				{
+					if(partrolZone != DicPatrolZone.ALL)
+					{
+						patrolZoneName = partrolZone.label;
+					}
+					else
+					{
+						patrolZoneName = "";
+					}
+					
+					dispatchEvent(new Event(SEARCH));
+				}
+			}
+			
+			protected function comboPatrolZone_textchangeHandler(event:Event):void
+			{
+				patrolZoneName = (event.currentTarget as ComboBox).textInput.text;
+				
+				dispatchEvent(new Event(SEARCH));
+			}
+			
+			protected function inputPoliceNo_changeHandler(event:TextOperationEvent):void
+			{
+				textPoliceNo = (event.currentTarget as TextInput).text;
+					
+				dispatchEvent(new Event(SEARCH));
+			}								
+			
+			protected function inputElePoliceNo_changeHandler(event:TextOperationEvent):void
+			{
+				textElePoliceNo = (event.currentTarget as TextInput).text;
+				
+				dispatchEvent(new Event(SEARCHELE));
+			}			
+			
+			protected function comboRoad2_textchangeHandler(event:Event):void
+			{
+				dispatchEvent(new AppEvent(COMBOTEXTCHANGE,comboRoad2));			
+				
+				flash.utils.setTimeout(dispatchEvent,100,new Event(CROSSROADCHANGE));
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:RadioButtonGroup id="radioGroupRadius" change="radioGroupRadius_changeHandler(event)"/>
+		<s:RadioButtonGroup id="radioGroupCustom" change="dispatchEvent(new Event(ADDRESSTEXTCHANGE));"/>
+		<s:RadioButtonGroup id="radioGroupSex" change="dispatchEvent(new Event(SEARCH));"/>
+	</fx:Declarations>
+	
+	<fx:Binding destination="graphicIndex" source="barGraphicSearch.selectedIndex" twoWay="true"/>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="搜索半径" width="100%">	
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:RadioButton label="500米" value="500" groupName="radioGroupRadius" width="25%"/>
+			<s:RadioButton label="1000米" value="1000" selected="true" groupName="radioGroupRadius" width="25%"/>
+			<s:RadioButton label="1500米" value="1500" groupName="radioGroupRadius" width="25%"/>
+			<s:RadioButton label="2000米" value="2000" groupName="radioGroupRadius" width="25%"/>
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:RadioButton label="2500米" value="2500" groupName="radioGroupRadius" width="25%"/>
+			<s:HGroup verticalAlign="middle" width="75%">
+				<s:RadioButton id="rbCustom" label="自定义" value="custom" groupName="radioGroupRadius"/>
+				<s:TextInput id="textRadius" width="100%" 
+							 change="dispatchEvent(new Event(GRAPHICCHANGE));"
+							 click="textRadius_clickHandler(event)"
+							 editable="{rbCustom.selected}" 
+							 restrict="0-9"/>
+				<s:Label text="米"/>
+			</s:HGroup>
+			<s:Spacer/>
+			<s:Spacer/>
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="地图操作" width="100%">	
+		<mx:TabNavigator id="viewLocator" width="100%" backgroundAlpha="0"
+						 paddingBottom="2" paddingLeft="2" paddingRight="2" paddingTop="2">
+			<s:NavigatorContent label="道路">
+				<s:HGroup width="100%" verticalAlign="middle" height="52">
+					<s:Label text="道路名："/>
+					<components:BaseComboBox id="comboRoad1"
+						width="100%" labelField="roadName" 
+						textchange="dispatchEvent(new AppEvent(COMBOTEXTCHANGE,comboRoad1));"
+						itemMatchingFunction="AppFunction.matchingFunction"
+						prompt="请输入道路名称或者拼音首拼。"
+						dataProvider="{listRoad1}"/>
+				</s:HGroup>		
+			</s:NavigatorContent>
+			<s:NavigatorContent label="交叉路">
+				<s:VGroup width="100%" rowHeight="24">
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label text="道路名："/>
+						<components:BaseComboBox id="comboRoad2"
+							change="dispatchEvent(new Event(CROSSROADCHANGE));"
+							textchange="comboRoad2_textchangeHandler(event)"
+							width="100%" height="100%" 
+							labelField="roadName"
+							prompt="请输入道路名称或者拼音首拼。"
+							dataProvider="{listRoad2}"
+							itemMatchingFunction="AppFunction.matchingFunction"/>
+					</s:HGroup>
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label text="交叉路："/>
+						<components:BaseComboBox id="comboCrossRoad" 
+										labelField="roadName" 
+										textchange="dispatchEvent(new AppEvent(COMBOTEXTCHANGE,comboCrossRoad));"
+										width="100%" height="100%" enabled="false"
+										itemMatchingFunction="AppFunction.matchingFunction"/>	
+					</s:HGroup>					
+				</s:VGroup>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="门牌号">
+				<s:VGroup width="100%" rowHeight="24">
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label text="　 道路名："/>
+						<components:BaseComboBox id="comboRoad3" width="100%" height="100%" 
+									textchange="dispatchEvent(new AppEvent(COMBOTEXTCHANGE,comboRoad3));"
+									labelField="roadName"
+									prompt="请输入道路名称或者拼音首拼。"
+									dataProvider="{listRoad3}"
+									itemMatchingFunction="AppFunction.matchingFunction"/>
+					</s:HGroup>
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label text="弄号/小区："/>
+						<s:TextInput id="comboAlley" width="100%" height="100%"/>
+						<s:Label text="门牌号："/>
+						<s:TextInput id="comboAlleyDoor" width="40" height="100%"
+									 restrict="0-9"/>
+					</s:HGroup>
+				</s:VGroup>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="自定义">
+				<s:VGroup width="100%" rowHeight="24">
+					<s:HGroup width="100%" verticalAlign="middle" paddingLeft="5">					
+						<s:RadioButton label="所有" selected="true" groupName="radioGroupCustom"/>
+						<!--<s:RadioButton label="小区" selected="false" groupName="radioGroupCustom"/>-->
+						<s:RadioButton label="学校" selected="false" groupName="radioGroupCustom"/>
+						<s:RadioButton label="医院" selected="false" groupName="radioGroupCustom"/>
+						<s:RadioButton label="政府机关" selected="false" groupName="radioGroupCustom"/>
+					</s:HGroup>
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label text="名称："/>
+						<components:BaseComboBox id="comboAddress" openOnInput="false"
+									enter="dispatchEvent(new Event(ADDRESSTEXTCHANGE));"
+									width="100%" height="100%"
+									labelField="name" 
+									dataProvider="{listAddress}"
+									prompt="请输入地址名称。"
+									itemMatchingFunction="AppFunction.matchingFunction"/>
+					</s:HGroup>
+				</s:VGroup>
+			</s:NavigatorContent>
+		</mx:TabNavigator>	
+		<s:HGroup width="100%" horizontalAlign="center">
+			<s:Button label="定位"
+					  buttonDown="dispatchEvent(new Event(MAPLOCATE));"
+					  icon="assets/image/b_locate.png"
+					  skinClass="app.view.components.skin.skinButton"/>		
+			<s:Button label="搜索"
+					  buttonDown="dispatchEvent(new Event(MAPSEARCH));"
+					  icon="assets/image/b_find.png"
+					  skinClass="app.view.components.skin.skinButton"/>		
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="警力搜索（图形）" width="100%">	
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="图形搜索："/>
+			<s:ButtonBar id="barGraphicSearch"
+						 change="dispatchEvent(new Event(GRAPHICCHANGE));"
+						 height="30" width="90"
+						 skinClass="app.view.components.skin.skinButtonBarGraphicSearch">
+				<s:ArrayCollection>
+					<fx:String>CIRCLE</fx:String>
+					<fx:String>RECT</fx:String>
+					<fx:String>POLYGON</fx:String>
+				</s:ArrayCollection>
+			</s:ButtonBar>
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<mx:TabNavigator width="100%" height="100%" paddingTop="0">
+		<s:NavigatorContent label="勤务信息">
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			
+			<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+									 panelTitle="勤务搜索" width="100%">			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="警号/车牌/姓名/电台编号/呼号："/>
+					<s:TextInput width="100%" 
+								 change="inputPoliceNo_changeHandler(event)"/>
+				</s:HGroup>
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="单　 　位："/>
+					<s:DropDownList width="100%"
+									change="comboDept_changeHandler(event)"
+									dataProvider="{listDept}" 
+									selectedItem="{listDeptItem}"
+									labelField="label"/>
+				</s:HGroup>
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="巡　 　区："/>
+					<components:BaseComboBox width="100%"
+											 dataProvider="{listPatrolZone}" 
+											 change="comboPatrolZone_changeHandler(event)" 
+											 textchange="comboPatrolZone_textchangeHandler(event)"
+											 labelField="label"/>	
+				</s:HGroup>
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="性　 　别："/>
+					<s:RadioButton label="所有" groupName="radioGroupSex" selected="true"/>
+					<s:RadioButton label="男" groupName="radioGroupSex"/>
+					<s:RadioButton label="女" groupName="radioGroupSex"/>
+					<s:Spacer width="100%"/>
+					<s:Button label="搜索"
+							  buttonDown="dispatchEvent(new Event(SEARCH));"
+							  icon="assets/image/b_find.png"
+							  skinClass="app.view.components.skin.skinButton"/>		
+				</s:HGroup>
+			</components:BaseSubPanel>
+			
+			<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+									 panelTitle="勤务列表({listPolice.length})" 
+									 width="100%" height="100%" minButtonShow="false">		
+				<subComponents:GridPolice id="gridPolice" checkVisible="false"
+										  width="100%" height="100%" 
+										  doubleClickEnabled="true" 
+										  gridClick="gridPolice_gridClickHandler(event)" 
+										  gridDoubleClick="gridPolice_gridDoubleClickHandler(event)"
+										  dataProvider="{listPolice}"/>
+			</components:BaseSubPanel>
+		</s:NavigatorContent>
+		<s:NavigatorContent width="100%" height="100%" label="摄像头信息">			
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			
+			<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+									 panelTitle="摄像头搜索" width="100%">			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="编号/名称："/>
+					<s:TextInput width="100%" 
+								 change="inputElePoliceNo_changeHandler(event)"/>
+				</s:HGroup>
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="单　 　位："/>
+					<s:DropDownList width="100%"
+									change="comboEleDept_changeHandler(event)"
+									dataProvider="{listDept}" 
+									selectedItem="{listEleDeptItem}"
+									labelField="label"/>
+					<s:Spacer width="10"/>
+					<s:Button label="搜索"
+							  buttonDown="dispatchEvent(new Event(SEARCHELE));"
+							  icon="assets/image/b_find.png"
+							  skinClass="app.view.components.skin.skinButton"/>		
+				</s:HGroup>
+			</components:BaseSubPanel>
+			
+			<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+									 panelTitle="摄像头列表({listElePolice.length})" 
+									 width="100%" height="100%" minButtonShow="false">		
+				<s:DataGrid id="gridElePolice" width="100%" height="100%"
+							alternatingRowColors="[0xEEEEEE,0xFFFFFF]"
+							doubleClickEnabled="true" 
+							gridClick="dispatchEvent(new Event(FLASHELE));" 
+							gridDoubleClick="dispatchEvent(new Event(LOCATEELE));"
+							dataProvider="{listElePolice}">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="code" headerText="编号" width="60"></s:GridColumn>					
+							<s:GridColumn dataField="department.label" headerText="所属单位" width="120"></s:GridColumn>
+							<s:GridColumn dataField="name" headerText="名称" width="200"></s:GridColumn>		
+						</s:ArrayList>
+					</s:columns>
+				</s:DataGrid>
+			</components:BaseSubPanel>
+		</s:NavigatorContent>
+	</mx:TabNavigator>
+</s:NavigatorContent>

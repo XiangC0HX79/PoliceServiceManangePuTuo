@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400">
+	
+	<fx:Metadata>
+		[Event(name="change",type ="flash.events.Event")]  
+	</fx:Metadata>
+		
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import app.event.AppEvent;
+			
+			import mx.charts.chartClasses.DataDescription;
+			import mx.events.CalendarLayoutChangeEvent;
+			
+			import spark.formatters.DateTimeFormatter;
+						
+			private var _beginTime:Date = new Date;
+			[Bindable]
+			public function get beginTime():Date{return _beginTime;}
+			public function set beginTime(value:Date):void
+			{
+				_beginTime = value;
+				
+				beginDate.selectedDate = _beginTime;
+				beginHour.value = _beginTime.hours;
+				beginMin.value = _beginTime.minutes;
+			}
+			
+			private var _endTime:Date = new Date;
+			[Bindable]
+			public function get endTime():Date{return _endTime;}
+			public function set endTime(value:Date):void
+			{
+				_endTime = value;
+				
+				endDate.selectedDate = _endTime;
+				endHour.value = _endTime.hours;
+				endMin.value = _endTime.minutes;
+			}
+			
+			protected function beginDateChange():void
+			{
+				var tempBeginTime:Date = new Date(
+					beginDate.selectedDate.fullYear, 
+					beginDate.selectedDate.month, 
+					beginDate.selectedDate.date, 
+					beginHour.value,
+					beginMin.value
+				);
+				
+				var tempEndTime:Date = new Date(
+					endDate.selectedDate.fullYear, 
+					endDate.selectedDate.month, 
+					endDate.selectedDate.date, 
+					endHour.value,
+					endMin.value
+				);
+				
+				if(tempBeginTime.time > tempEndTime.time)
+				{	
+					tempBeginTime = new Date(tempBeginTime.time + 8*60*60*1000);
+					
+					endDate.selectedDate = new Date(tempBeginTime.time);
+					
+					endHour.value = tempBeginTime.hours;
+					
+					endMin.value = tempBeginTime.minutes;
+				}
+				
+				change();
+			}
+			
+			protected function change():void
+			{
+				var tempBeginTime:Date = new Date(
+					beginDate.selectedDate.fullYear, 
+					beginDate.selectedDate.month, 
+					beginDate.selectedDate.date, 
+					beginHour.value,
+					beginMin.value
+					);
+				
+				var tempEndTime:Date = new Date(
+					endDate.selectedDate.fullYear, 
+					endDate.selectedDate.month, 
+					endDate.selectedDate.date, 
+					endHour.value,
+					endMin.value
+				);
+				
+				_beginTime = tempBeginTime;
+				_endTime = tempEndTime;
+				
+				dispatchEvent(new Event(Event.CHANGE));
+			}
+			
+		]]>
+	</fx:Script>
+	<s:HGroup width="100%" verticalAlign="middle" gap="2">
+		<s:Label text="开始时间："/>
+		<mx:DateField id="beginDate" selectedDate="{new Date}" width="100%"
+					  dayNames="['日', '一', '二', '三', '四', '五', '六']"
+					  formatString="YYYY-MM-DD"
+					  monthNames="['一月', '二月', '三月', '四月', '五月',
+					  '六月', '七月', '八月', '九月', '十月', '十一月',
+					  '十二月']" change="beginDateChange()"/>
+		<s:NumericStepper id="beginHour" width="40" maximum="23" change="beginDateChange()"
+						  skinClass="app.view.components.skin.skinNumericStepperDateSelect" value="9"/>
+		<s:NumericStepper id="beginMin" width="40" maximum="59"	change="beginDateChange()"
+						  skinClass="app.view.components.skin.skinNumericStepperDateSelect"/>
+	</s:HGroup>
+	<s:HGroup width="100%" verticalAlign="middle" gap="2">
+		<s:Label text="结束时间："/>
+		<mx:DateField id="endDate" selectedDate="{new Date}" width="100%"
+					  dayNames="['日', '一', '二', '三', '四', '五', '六']"
+					  formatString="YYYY-MM-DD"
+					  monthNames="['一月', '二月', '三月', '四月', '五月',
+					  '六月', '七月', '八月', '九月', '十月', '十一月',
+					  '十二月']" change="change()"/>
+		<s:NumericStepper width="40" id="endHour" maximum="23" value="17" change="change()"
+						  skinClass="app.view.components.skin.skinNumericStepperDateSelect"/>
+		<s:NumericStepper id="endMin" width="40" maximum="59" change="change()"
+						  skinClass="app.view.components.skin.skinNumericStepperDateSelect"/>
+	</s:HGroup>
+</s:VGroup>

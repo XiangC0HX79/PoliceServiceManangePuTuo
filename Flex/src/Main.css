@@ -1,0 +1,50 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace esri "http://www.esri.com/2008/ags";
+
+/* The "header" of the InfoWindow */
+esri|InfoWindowLabel
+{ 	
+	color:#0000FF;
+	paddingLeft: 10;
+	fontSize:13;
+	fontFamily:"黑体";
+	font-weight:"bold";
+}
+
+esri|InfoWindow
+{
+	border-color:#BBBBBB;
+	border-thickness: 2;
+	background-color: #EEEEEE;
+}
+
+esri|Navigation
+{
+	skinClass: ClassReference("app.view.components.skin.skinNavigation");
+}
+
+s|ButtonBarButton
+{
+	paddingLeft: 0;
+}
+
+.WidgetTitle
+{
+	fontWeight: bold;
+	color: #FFFFFF;
+}
+
+.callTabStyle
+{
+	fontSize: 11;
+	paddingLeft: 0;
+	paddingRight: 0;
+}
+
+global
+{
+	font-size: 12;
+}
+	

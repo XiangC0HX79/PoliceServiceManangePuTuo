@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:DataGrid xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			xmlns:s="library://ns.adobe.com/flex/spark" 
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			minHeight="0" alternatingRowColors="[0xEEEEEE,0xFFFFFF]">
+		
+	<fx:Script>
+		<![CDATA[
+			import app.event.AppEvent;
+			import app.model.dict.DicPoliceType;
+			import app.model.vo.GPSVO;
+			
+			import mx.controls.dataGridClasses.DataGridColumn;
+			
+			import spark.events.GridEvent;
+													
+			[Bindable]private var _checkVisible:Boolean = true;			
+			public function set checkVisible(val:Boolean):void 
+			{
+				_checkVisible = val;
+             }
+	         public function get checkVisible():Boolean
+	         {
+		         return _checkVisible;
+		     }
+						
+			private function radioNo(item:Object, column:GridColumn):String
+			{
+				var gps:GPSVO = item as GPSVO;
+				if(gps.policeType == DicPoliceType.VEHICLE)
+				{
+					return gps.gpsSimCard;
+				}
+				else
+				{
+					return gps.radioNo;
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:columns>
+		<s:ArrayList>
+			<s:GridColumn visible="{_checkVisible}" headerText="选择" dataField="selected"
+						  itemRenderer="app.view.components.subComponents.ItemRendererCheck"
+						  resizable="false"
+						  sortable="false" width="45"></s:GridColumn>
+			<s:GridColumn dataField="gpsName" headerText="姓名/车牌" width="90"></s:GridColumn>
+			<s:GridColumn dataField="policeNo" headerText="警号" width="60"></s:GridColumn>
+			<s:GridColumn labelFunction="radioNo" headerText="电台编号" width="70"></s:GridColumn>								
+			<s:GridColumn dataField="callNo" headerText="呼号" width="60"></s:GridColumn>
+			<s:GridColumn dataField="serviceStatusName" headerText="状态" width="50"></s:GridColumn>
+			<s:GridColumn dataField="phone" headerText="电话" width="120"></s:GridColumn>
+			<s:GridColumn dataField="departmentNAME" headerText="所属单位" width="120"></s:GridColumn>
+		</s:ArrayList>
+	</s:columns>
+</s:DataGrid>

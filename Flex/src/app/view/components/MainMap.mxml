@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:esri="http://www.esri.com/2008/ags"
+		 xmlns:subComponents="app.view.components.subComponents.*" 
+		 xmlns:flash="flash.text.*"
+		 xmlns:components="app.view.components.*" xmlns:symbols="com.esri.ags.symbols.*">	
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<esri:NavigationTool id="navTool" map="{map}"/>
+	</fx:Declarations>
+		
+	<esri:Map logoVisible="false" id="map" scaleBarVisible="false">		
+		<esri:infoWindowContent>
+			<s:BorderContainer backgroundColor="white"
+							   borderColor="0xBBBBBB"
+							   cornerRadius="5"
+							   minHeight="0"
+							   minWidth="0">
+				<s:layout>
+					<s:VerticalLayout paddingBottom="5"
+									  paddingLeft="5"
+									  paddingRight="5"
+									  paddingTop="5"/>
+				</s:layout>
+				
+				<mx:ViewStack id="infoWindowView" resizeToContent="true">
+					<components:InfoWindowCarInfo id="infoWindowCarInfo"/>
+					<components:InfoWindowPoliceInfo id="infoWindowPoliceInfo"/>
+					<components:InfoWindowPoliceInfoPT id="infoWindowPoliceInfoPT"/>
+					<components:InfoWindowPoliceInfoFX id="infoWindowPoliceInfoFX"/>
+					<components:InfoWindowAlarmInfo id="infoWindowAlarmInfo"/>
+					<components:InfoWindowTrackPointInfo id="infoWindowTrackPointInfo"/>
+					<components:InfoWindowAlarmStatis id="infoWindowAlarmStatis"/>
+					<components:InfoWindowExceptInfo id="infoWindowExceptInfo"/>
+					<components:InfoWindowElePolice id="infoWindowElePolice"/>
+				</mx:ViewStack>
+			</s:BorderContainer>
+		</esri:infoWindowContent>
+		
+		<esri:ArcGISTiledMapServiceLayer id="tileLayer"/>
+		
+		<esri:ArcGISTiledMapServiceLayer id="imageLayer"/>
+		
+		<esri:GraphicsLayer id="layerWarningArea"/>
+		
+		<esri:GraphicsLayer id="patrolAreaLayer"/>
+				
+		<esri:GraphicsLayer id="measureLayer"/>	
+		
+		<esri:GraphicsLayer id="drawLayer"/>
+		
+		<esri:GraphicsLayer id="patrolPointLayer"/>
+		
+		<esri:GraphicsLayer id="elePoliceLayer"/>
+		
+		<esri:GraphicsLayer id="gpsLayer"/>
+		
+		<esri:GraphicsLayer id="layerExcept"/>
+		
+		<esri:GraphicsLayer id="alarmLayer"/>
+				
+		<esri:GraphicsLayer id="trackLayer"/>	
+		
+		<esri:GraphicsLayer id="trackLinebackLayer"/>	
+		
+		<esri:GraphicsLayer id="flashLayer"/>		
+	</esri:Map>
+</s:Group>
