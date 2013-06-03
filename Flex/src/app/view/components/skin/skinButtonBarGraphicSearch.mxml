@@ -46,7 +46,7 @@
             @see spark.skins.spark.ButtonBarFirstButtonSkin
         -->
         <fx:Component id="firstButton">
-            <s:ButtonBarButton skinClass="app.view.components.skin.skinButtonBarFirstButtonGraphicSearch" />
+            <s:ButtonBarButton toolTip="圆形搜索" skinClass="app.view.components.skin.skinButtonBarFirstButtonGraphicSearch" />
         </fx:Component>
 
         <!--- 
@@ -55,7 +55,7 @@
             @see spark.skins.spark.ButtonBarMiddleButtonSkin
         -->
         <fx:Component id="middleButton" >
-            <s:ButtonBarButton skinClass="app.view.components.skin.skinButtonBarMiddleButtonGraphicSearch" />
+            <s:ButtonBarButton toolTip="矩形搜索" skinClass="app.view.components.skin.skinButtonBarMiddleButtonGraphicSearch" />
         </fx:Component>
 
         <!--- 
@@ -64,7 +64,7 @@
             @see spark.skins.spark.ButtonBarLastButtonSkin
         -->
         <fx:Component id="lastButton" >
-            <s:ButtonBarButton skinClass="app.view.components.skin.skinButtonBarLastButtonGraphicSearch" />
+            <s:ButtonBarButton toolTip="多边形搜索" skinClass="app.view.components.skin.skinButtonBarLastButtonGraphicSearch" />
         </fx:Component>
 
     </fx:Declarations>

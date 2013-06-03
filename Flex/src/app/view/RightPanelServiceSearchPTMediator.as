@@ -700,7 +700,7 @@ package app.view
 				}
 			}
 		}
-		
+				
 		private function onBarGraphicChange(event:Event):void
 		{
 			if(rightPanelServiceSearch.graphicIndex == 0)
@@ -718,6 +718,8 @@ package app.view
 			else
 			{
 				sendNotification(AppNotification.NOTIFY_SEARCH_GRAPHICSTOP);
+				
+				onSearchPolice();
 			}
 			
 			function drawResultHandle(geometry:Geometry):void

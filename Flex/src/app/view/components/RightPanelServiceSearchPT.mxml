@@ -21,6 +21,7 @@
 			import flash.utils.setTimeout;
 			
 			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
 			
 			import spark.components.ComboBox;
 			import spark.events.GridEvent;
@@ -41,6 +42,7 @@
 			
 			public static const MAPLOCATE:String = "maplocate";
 			public static const MAPSEARCH:String = "mapsearch";
+			public static const MAPREFRESH:String = "maprefresh";
 			
 			public static const GRAPHICCHANGE:String = "graphicchange";
 						
@@ -127,7 +129,7 @@
 				}
 			}
 			
-			protected function comboDept_changeHandler(event:IndexChangeEvent):void
+			/* protected function comboDept_changeHandler(event:IndexChangeEvent):void
 			{
 				listDeptItem = (event.currentTarget as DropDownList).selectedItem;
 				
@@ -175,7 +177,7 @@
 				textPoliceNo = (event.currentTarget as TextInput).text;
 					
 				dispatchEvent(new Event(SEARCH));
-			}								
+			}			 */					
 			
 			protected function comboRoad2_textchangeHandler(event:Event):void
 			{
@@ -195,7 +197,7 @@
 				{
 					return gps.radioNo;
 				}
-			}
+			}			
 		]]>
 	</fx:Script>
 	
@@ -211,29 +213,6 @@
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
-							 panelTitle="搜索半径" width="100%">	
-		<s:HGroup width="100%" verticalAlign="middle">
-			<s:RadioButton label="500米" value="500" groupName="radioGroupRadius" width="25%"/>
-			<s:RadioButton label="1000米" value="1000" selected="true" groupName="radioGroupRadius" width="25%"/>
-			<s:RadioButton label="1500米" value="1500" groupName="radioGroupRadius" width="25%"/>
-			<s:RadioButton label="2000米" value="2000" groupName="radioGroupRadius" width="25%"/>
-		</s:HGroup>
-		<s:HGroup width="100%" verticalAlign="middle">
-			<s:RadioButton label="2500米" value="2500" groupName="radioGroupRadius" width="25%"/>
-			<s:HGroup verticalAlign="middle" width="75%">
-				<s:RadioButton id="rbCustom" label="自定义" value="custom" groupName="radioGroupRadius"/>
-				<s:TextInput id="textRadius" width="100%" 
-							 change="dispatchEvent(new Event(GRAPHICCHANGE));"
-							 click="textRadius_clickHandler(event)"
-							 editable="{rbCustom.selected}" 
-							 restrict="0-9"/>
-				<s:Label text="米"/>
-			</s:HGroup>
-			<s:Spacer/>
-			<s:Spacer/>
-		</s:HGroup>
-	</components:BaseSubPanel>
 	
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="地图操作" width="100%">	
@@ -328,12 +307,36 @@
 	</components:BaseSubPanel>
 	
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
-							 panelTitle="警力搜索（图形）" width="100%">	
+							 panelTitle="搜索半径" width="100%">	
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:RadioButton label="500米" value="500" groupName="radioGroupRadius" width="25%"/>
+			<s:RadioButton label="1000米" value="1000" selected="true" groupName="radioGroupRadius" width="25%"/>
+			<s:RadioButton label="1500米" value="1500" groupName="radioGroupRadius" width="25%"/>
+			<s:RadioButton label="2000米" value="2000" groupName="radioGroupRadius" width="25%"/>
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:RadioButton label="2500米" value="2500" groupName="radioGroupRadius" width="25%"/>
+			<s:HGroup verticalAlign="middle" width="75%">
+				<s:RadioButton id="rbCustom" label="自定义" value="custom" groupName="radioGroupRadius"/>
+				<s:TextInput id="textRadius" width="100%" 
+							 change="dispatchEvent(new Event(GRAPHICCHANGE));"
+							 click="textRadius_clickHandler(event)"
+							 editable="{rbCustom.selected}" 
+							 restrict="0-9"/>
+				<s:Label text="米"/>
+			</s:HGroup>
+			<s:Spacer/>
+			<s:Spacer/>
+		</s:HGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="警力搜索" width="100%">	
 		<s:HGroup width="100%" verticalAlign="middle">
 			<s:Label text="图形搜索："/>
 			<s:ButtonBar id="barGraphicSearch"
 						 change="dispatchEvent(new Event(GRAPHICCHANGE));"
-						 height="30" width="90"
+						 height="30" width="90" 
 						 skinClass="app.view.components.skin.skinButtonBarGraphicSearch">
 				<s:ArrayCollection>
 					<fx:String>CIRCLE</fx:String>
@@ -341,10 +344,13 @@
 					<fx:String>POLYGON</fx:String>
 				</s:ArrayCollection>
 			</s:ButtonBar>
+			<s:Button toolTip="清空" height="30" width="30" 
+					  buttonDown="{graphicIndex=-1;dispatchEvent(new Event(GRAPHICCHANGE));}"
+					  icon="assets/image/b_refresh.png"/>		
 		</s:HGroup>
 	</components:BaseSubPanel>
 	
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+	<!--<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="警力搜索（属性）" width="100%">	
 		<s:HGroup width="100%" verticalAlign="middle">
 			<s:Label text="警号/车牌/姓名/电台编号/呼号："/>
@@ -385,7 +391,7 @@
 					  icon="assets/image/b_find.png"
 					  skinClass="app.view.components.skin.skinButton"/>		
 		</s:HGroup>
-	</components:BaseSubPanel>
+	</components:BaseSubPanel>-->
 	
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
 							 panelTitle="勤务列表({listPolice.length})" 

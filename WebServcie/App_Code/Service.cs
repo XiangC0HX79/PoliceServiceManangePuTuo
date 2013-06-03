@@ -22,8 +22,8 @@ using SharedNamespace;
 // [System.Web.Script.Services.ScriptService]
 public class Service : System.Web.Services.WebService
 {
-    private String strConn = "Data Source=192.168.1.211;user id=sa;password=1111;initial catalog=fxqw;min pool size=5;persist security info=true";
-    private String strMapUrl = "http://192.168.1.211/ArcGIS/services/FXGAXM/MapServer";
+    private String strConn = "Data Source=192.168.1.5;user id=sa;password=P@ssw0rd;initial catalog=testQW;min pool size=5;persist security info=true;pooling=false";
+    private String strMapUrl = "http://192.168.1.5/ArcGIS/services/PTGAXM/MapServer";
     private String strSDEPredix = "[sde].[sde].";
 
     //小区名单，默认小区后缀为 小区/街坊/公寓/村/苑/宅/里，黑名单里面名称为小区，白名单里面名称为单位

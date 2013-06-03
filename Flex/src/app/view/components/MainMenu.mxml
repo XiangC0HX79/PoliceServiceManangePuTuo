@@ -107,25 +107,24 @@
 				this.graphics.drawPath(commands,coord);
 				
 				dictMenu[SERVICEOVERVIEW]	= this.getChildAt(0);
-				dictMenu[SERVICESEARCH] 	= this.getChildAt(1);
-				dictMenu[SERVICECALL] 		= this.getChildAt(2);
-				dictMenu[SERVICETRACKREALTIME] = this.getChildAt(3);
-				dictMenu[SERVICETRACKHISTORY] = this.getChildAt(4);
-				dictMenu[SERVICELINEBACK] 	= this.getChildAt(5);
-				dictMenu[TODAYSERVICE] 		= this.getChildAt(6);
-				dictMenu[ALARMINFO] 		= this.getChildAt(7);
-				dictMenu[SERVICEEXCEPT] 	= this.getChildAt(8);
-				dictMenu[TODAYQUEST] 		= this.getChildAt(9);
-				dictMenu[WARNING] 			= this.getChildAt(10);
+				dictMenu[SERVICECALL] 		= this.getChildAt(1);
+				dictMenu[SERVICETRACKHISTORY] = this.getChildAt(2);
+				dictMenu[TODAYSERVICE] 		= this.getChildAt(3);
+				dictMenu[SERVICETRACKREALTIME] = this.getChildAt(4);
+				dictMenu[SERVICESEARCH] 	= this.getChildAt(5);
+				dictMenu[ALARMINFO] 		= this.getChildAt(6);
+				dictMenu[SERVICEEXCEPT] 	= this.getChildAt(7);
+				dictMenu[WARNING] 			= this.getChildAt(8);
+				dictMenu[SERVICELINEBACK] 	= this.getChildAt(9);
 				
-				for each(var moduleHide:String in AppConfigVO.moduleHideArr)
+				/* for each(var moduleHide:String in AppConfigVO.moduleHideArr)
 				{
 					if((dictMenu[moduleHide] != undefined)
 						&& this.containsElement(dictMenu[moduleHide]))
 					{
 						this.removeElement(dictMenu[moduleHide]);
 					}
-				}
+				} */
 			}
 			
 			//阻止地图对于菜单点击事件的响应
@@ -157,18 +156,8 @@
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
-							   upIcon="@Embed('assets/image/menu/icon2a.png')" 
-							   overIcon="@Embed('assets/image/menu/icon2b.png')" 
-							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
-	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
-							   width="65" height="65"
 							   upIcon="@Embed('assets/image/menu/icon3a.png')" 
 							   overIcon="@Embed('assets/image/menu/icon3b.png')" 
-							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
-	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
-							   width="65" height="65"
-							   upIcon="@Embed('assets/image/menu/icon4a.png')" 
-							   overIcon="@Embed('assets/image/menu/icon4b.png')" 
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
@@ -177,24 +166,24 @@
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
-							   upIcon="@Embed('assets/image/menu/icon5a.png')" 
-							   overIcon="@Embed('assets/image/menu/icon5b.png')" 
+							   upIcon="@Embed('assets/image/menu/icon7a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon7b.png')" 
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
-							   upIcon="@Embed('assets/image/menu/icon7a.png')" 
-							   overIcon="@Embed('assets/image/menu/icon7b.png')" 
+							   upIcon="@Embed('assets/image/menu/icon4a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon4b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon2a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon2b.png')" 
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
 							   upIcon="@Embed('assets/image/menu/icon8a.png')" 
 							   overIcon="@Embed('assets/image/menu/icon8b.png')"
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
-	<!--<subComponents:ImageButton buttonDown="{menu = ALARMSTATIS;dispatchEvent(new Event(MENUCLICK));}"
-								width="65" height="65"
-								upIcon="@Embed('assets/image/menu/icon11a.png')" 
-								overIcon="@Embed('assets/image/menu/icon11b.png')" 
-								skinClass="app.view.components.skin.skinImageButtonMenu"/>-->
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
 							   upIcon="@Embed('assets/image/menu/icon9a.png')" 
@@ -202,12 +191,12 @@
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
-							   upIcon="@Embed('assets/image/menu/icon6a.png')" 
-							   overIcon="@Embed('assets/image/menu/icon6b.png')" 
+							   upIcon="@Embed('assets/image/menu/icon12a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon12b.png')"
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
-							   upIcon="@Embed('assets/image/menu/icon12a.png')" 
-							   overIcon="@Embed('assets/image/menu/icon12b.png')"
+							   upIcon="@Embed('assets/image/menu/icon5a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon5b.png')" 
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 </s:HGroup>
