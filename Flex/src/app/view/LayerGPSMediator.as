@@ -152,10 +152,13 @@ package app.view
 			
 			labelSymbol = new TextSymbol;		
 			labelSymbol.textFormat = textFormat;
-			//labelSymbol.background = true;
-			//labelSymbol.backgroundColor = 0xEEEEEE;
-			labelSymbol.color = 0x0000FF;			
-			labelSymbol.text = (this.scale >= AppConfigVO.scaleVisible)?gps.gpsName:"";
+			labelSymbol.backgroundColor = 0xFF;
+			labelSymbol.color = 0xFFFFFF;			
+			
+			labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
+			
+			var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
+			labelSymbol.text = labelSymbol.background?name:" ";
 			
 			if(gps.policeTypeID == DicPoliceType.VEHICLE.id)
 				labelSymbol.yoffset = 20;
@@ -202,7 +205,13 @@ package app.view
 			textFormat = new TextFormat;
 			textFormat.bold = true;
 			labelSymbol.textFormat = textFormat;
-			labelSymbol.text = (this.scale >= AppConfigVO.scaleVisible)?gps.gpsName:"";
+			labelSymbol.backgroundColor = 0xFF;
+			labelSymbol.color = 0xFFFFFF;			
+						
+			labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
+			
+			var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
+			labelSymbol.text = labelSymbol.background?name:" ";
 			
 			if(gps.policeTypeID == DicPoliceType.VEHICLE.id)
 				labelSymbol.yoffset = 20;
@@ -266,7 +275,10 @@ package app.view
 				
 				
 				var labelSymbol:TextSymbol = symbolArr[0] as TextSymbol;
-				labelSymbol.text = (this.scale >= AppConfigVO.scaleVisible)?gps.gpsName:" ";
+				labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
+				
+				var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
+				labelSymbol.text = labelSymbol.background?name:" ";
 				
 				if(symbolArr.length == 3)
 				{

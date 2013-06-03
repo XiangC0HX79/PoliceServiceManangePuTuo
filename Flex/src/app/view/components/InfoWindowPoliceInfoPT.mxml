@@ -55,6 +55,41 @@
 				</s:layout>
 				<s:Label text="电台编号：" fontWeight="bold"/>
 				<s:Label text="{police.radioNo}" width="100%" color="0x0000FF" fontWeight="bold"/>
+				<s:Label text="姓　　名：" fontWeight="bold"/>
+				<s:Label text="{police.gpsName}" width="100%"/>
+			</s:SkinnableContainer>
+			
+			<s:SkinnableContainer width="100%">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="电　　话：" fontWeight="bold"/>
+				<s:Label text="{police.phone}" width="100%"/>
+			</s:SkinnableContainer>
+						
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="警　　种：" fontWeight="bold"/>
+				<s:Label text="{police.policeKind}"/>
+				<s:Spacer width="100%"/>
+				<s:Label text="单　　位：" fontWeight="bold"/>
+				<s:Label text="{police.departmentNAME}"/>
+			</s:SkinnableContainer>
+			
+			<s:SkinnableContainer width="100%">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="警　　号：" fontWeight="bold"/>
+				<s:Label text="{police.policeNo}" width="100%"/>
+			</s:SkinnableContainer>
+			
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
 				<s:Label text="班　　次：" fontWeight="bold"/>
 				<s:Label text="{police.runName}" width="100%"/>
 			</s:SkinnableContainer>
@@ -74,6 +109,7 @@
 				<s:Label text="结束时间：" fontWeight="bold"/>
 				<s:Label text="{police.runEndTimeFormat}"/>
 			</s:SkinnableContainer>
+			
 			<s:SkinnableContainer width="100%">
 				<s:layout>
 					<s:HorizontalLayout verticalAlign="middle"/>
@@ -83,34 +119,6 @@
 				<s:Label text="方　　式：" fontWeight="bold"/>
 				<s:Label text="{police.patrolTypeName}" width="100%"/>
 			</s:SkinnableContainer>
-						
-			<s:SkinnableContainer width="100%">
-				<s:layout>
-					<s:HorizontalLayout verticalAlign="middle"/>
-				</s:layout>
-				<s:Label text="警　　种：" fontWeight="bold"/>
-				<s:Label text="{police.policeKind}" width="100%"/>
-				<s:Label text="电　　话：" fontWeight="bold"/>
-				<s:Label text="{police.phone}" width="100%"/>
-			</s:SkinnableContainer>
-			
-			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
-				<s:layout>
-					<s:HorizontalLayout verticalAlign="middle"/>
-				</s:layout>
-				<s:Label text="所属部门：" fontWeight="bold"/>
-				<s:Label text="{police.departmentNAME}" width="100%"/>
-			</s:SkinnableContainer>
-			
-		<!--	<s:SkinnableContainer width="100%">
-				<s:layout>
-					<s:HorizontalLayout verticalAlign="middle"/>
-				</s:layout>
-				<s:Label text="车　　牌：" fontWeight="bold"/>
-				<s:Label text="{police.carNo}" width="100%"/>
-				<s:Label text="电　　话：" fontWeight="bold"/>
-				<s:Label text="{police.phone}" width="100%"/>
-			</s:SkinnableContainer>-->
 			
 			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
 				<s:layout>

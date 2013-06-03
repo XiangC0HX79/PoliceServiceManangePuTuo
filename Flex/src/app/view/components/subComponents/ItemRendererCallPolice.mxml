@@ -8,6 +8,6 @@
 	</fx:Declarations>
 	<s:VGroup horizontalAlign="center" width="100%" gap="2" paddingTop="10" paddingBottom="10">
 		<s:Label text="{data.gpsName}" color="{data.todayCalled?0xFF:0x0}"/>
-		<s:Image source="{data.graphicSource}"/>
+		<!--<s:Image source="{data.graphicSource}"/>-->
 	</s:VGroup>
 </s:ItemRenderer>
