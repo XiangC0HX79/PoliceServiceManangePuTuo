@@ -1,18 +1,11 @@
 <Config>
 	<MapConfig>
-		<!--<InitialExtent>
-			<xmin>-17506.466803</xmin>
-			<ymin>-4231.684133</ymin>
-			<xmax>2885.059615</xmax>
-			<ymax>10047.633127</ymax>
-		</InitialExtent>	-->
 		<MapUrl>http://192.168.1.5/ArcGIS/rest/services/</MapUrl>
-		<MapName>FXGAXM</MapName>
-		<ImageName>MHGAYG</ImageName>
+		<MapName>PTGAXM</MapName>
 	</MapConfig>
 	<AppConfig>
 			<Debug>1</Debug>
-			<District>奉贤区</District>	
+			<District>普陀区</District>	
 			<Scale>0.5/0.5/0.6/0.8</Scale>	
 			<ScaleVisible>0.6</ScaleVisible>
 			<WebServiceUrl>http://218.242.45.170/PTGAWebServcie/Service.asmx?wsdl</WebServiceUrl>

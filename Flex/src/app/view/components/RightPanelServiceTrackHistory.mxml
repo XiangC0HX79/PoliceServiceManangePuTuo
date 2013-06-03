@@ -35,7 +35,7 @@
 			public static const SLIDE:String = "slide";
 						
 			[Bindable]public var endTime:Date = new Date;
-			[Bindable]public var beginTime:Date = new Date(endTime.time - 60*60*1000);
+			[Bindable]public var beginTime:Date = new Date(endTime.time - 24*60*60*1000);
 			
 			[Bindable]public var textPoliceNo:String = "";
 			
