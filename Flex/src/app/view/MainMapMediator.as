@@ -464,7 +464,7 @@ package app.view
 		
 		private function showExceptInfoWindow(except:ServiceExceptVO):void
 		{				
-			mainMap.map.infoWindow.label = "异常类型：" + except.exceptLabel;
+			mainMap.map.infoWindow.label = "异常类型：" + except.ExceptType.exceptName;
 			mainMap.infoWindowView.selectedChild = mainMap.infoWindowExceptInfo;
 			mainMap.map.infoWindow.show(except.object as MapPoint);
 		}

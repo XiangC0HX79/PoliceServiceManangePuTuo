@@ -172,6 +172,8 @@ public class ClsGetData
 
             foreach (string p in sqls)
             {
+                if (p == "") continue;
+
                 IDbCommand dbCommand = dbProviderFactory.CreateCommand();
                 dbCommand.CommandText = p;
                 dbCommand.Connection = dbConnection;

@@ -5,12 +5,17 @@
 					 xmlns:subComponents="app.view.components.subComponents.*" 
 					 xmlns:components="app.view.components.*"
 					 width="100%" height="100%" label="异常勤务">
+	<s:states>
+		<s:State name="Normal"/>
+		<s:State name="Command"/>
+	</s:states>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 		
 	<fx:Script>
 		<![CDATA[
+			import app.model.dict.DicExceptType;
 			import app.model.dict.DicPatrolZone;
 			import app.model.vo.AppConfigVO;
 			import app.model.vo.GPSNewVO;
@@ -19,24 +24,30 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			
+			import spark.components.supportClasses.ItemRenderer;
 			import spark.events.GridEvent;
 			import spark.events.IndexChangeEvent;
+			import spark.events.RendererExistenceEvent;
 			
 			public static const SEARCH:String = "search";
 			
 			public static const GRIDCLICK:String = "gridclick";
 			public static const GRIDDOUBLECLICK:String = "griddoubleclick";
 			
+			public static const UPDATE:String = "update";
+			
 			[Bindable] public var listDept:ArrayCollection = null;
 			[Bindable] public var listDeptItem:* = null;
 			
 			[Bindable]public var listExcept:ArrayCollection = new ArrayCollection;
 			[Bindable]public var listExceptItem:* = null;
-						
+			
+			[Bindable]public var exceptTypeArray:ArrayCollection;
+			
 			private function labelType(item:Object, column:GridColumn):String
 			{
 				var except:ServiceExceptVO = item as ServiceExceptVO;
-				return except.exceptLabel;
+				return except.ExceptType.exceptName;
 			}			
 			
 			protected function comboDept_changeHandler(event:IndexChangeEvent):void
@@ -62,13 +73,64 @@
 					listExceptItem = event.item;
 					dispatchEvent(new Event(GRIDDOUBLECLICK));
 				}
+			}			
+			
+			protected function datagroupExceptType_rendererAddHandler(event:RendererExistenceEvent):void
+			{		
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onExceptTypeRendererClick);
 			}
+			
+			private function onExceptTypeRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				var data:DicExceptType = itemRenderer.data as DicExceptType;				
+								
+				data.isMonitoring = !data.isMonitoring;
+				
+				if(data != DicExceptType.ALL)
+				{
+					var allShow:Boolean = true;
+					for each(var item:DicExceptType in DicExceptType.list)
+					{
+						if((!item.isMonitoring) && (item != DicExceptType.ALL))
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicExceptType.ALL.isMonitoring = allShow;
+				}
+				else
+				{					
+					for each(item in DicExceptType.list)
+					{
+						item.isMonitoring = DicExceptType.ALL.isMonitoring;
+					}
+				}
+				
+				dispatchEvent(new Event(UPDATE));
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="实时监测" width="100%" includeIn="Command">		
+		<s:DataGroup width="280" dataProvider="{exceptTypeArray}" 
+					 rendererAdd="datagroupExceptType_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererExceptType">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth"
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="选择单位" width="100%">		
 		<s:HGroup width="100%" verticalAlign="middle">
@@ -85,6 +147,7 @@
 					  skinClass="app.view.components.skin.skinButton"/>	
 		</s:HGroup>
 	</components:BaseSubPanel>
+	
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
 							 height="100%" minButtonShow="false"
 							 panelTitle="异常勤务列表({listExcept.length})" width="100%">

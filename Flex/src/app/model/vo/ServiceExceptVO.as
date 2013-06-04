@@ -1,5 +1,7 @@
 package app.model.vo
 {
+	import app.model.dict.DicExceptType;
+	
 	import spark.formatters.DateTimeFormatter;
 
 	[Bindable]
@@ -10,14 +12,21 @@ package app.model.vo
 		public static var LONGTIME_DIFF:Number = 60;//异常报警处警警员处警时间过长判定长度（分钟）
 		public static var NOPATROL_DIFF:Number = 60;//异常报警巡区无人巡逻时间判定长度（分钟）
 		
-		public static const CROSSING:String ="1";//越界报警
-		public static const STOPPING:String ="2";//车辆停止时间过长报警
-		public static const LONGTIME:String ="3";//处警时间过长
-		public static const NOPATROL:String ="4";//巡区长时间无人员及车辆巡逻报警
-		public static const EMERGENCY:String ="5";//警员告警异常
-		public static const MANUAL:String ="6";//手动修改警员状态为异常
-				
-		public var UnNormalType:String = "";
+		public var ExceptID:String = "";
+		
+		private var exceptTypeID:String = "";
+		
+		public function get ExceptType():DicExceptType
+		{
+			for each(var item:DicExceptType in DicExceptType.list)
+			{
+				if(item.exceptID == this.exceptTypeID)
+					return item;
+			}
+			
+			return DicExceptType.UNKNOWN;
+		}
+		
 		public var GpsIDOrZoneID:String = "";
 		public var GPSNameOrZoneName:String = "";
 		public var DepID:String = "";
@@ -63,28 +72,11 @@ package app.model.vo
 			
 			return dateF.format(date);
 		}
-		
-		public function get exceptLabel():String
-		{
-			if(this.UnNormalType == ServiceExceptVO.CROSSING)
-				return "巡逻越界";
-			else if(this.UnNormalType == ServiceExceptVO.LONGTIME)
-				return "处警过长";
-			else if(this.UnNormalType == ServiceExceptVO.NOPATROL)
-				return "无人巡逻";
-			else if(this.UnNormalType == ServiceExceptVO.STOPPING)
-				return "人员车辆滞留";
-			else if(this.UnNormalType == ServiceExceptVO.EMERGENCY)
-				return "警员告警";
-			else if(this.UnNormalType == ServiceExceptVO.MANUAL)
-				return "手动修改";
-			else
-				return "未知异常";
-		}
-		
+				
 		public function ServiceExceptVO(source:Object)
 		{			
-			this.UnNormalType = source.UnNormalType;
+			this.ExceptID = source.ID;
+			this.exceptTypeID = source.UnNormalType;
 			this.UnNormalDate = source.UnNormalDesc;
 			this.GpsIDOrZoneID = source.GpsIDOrZoneID;
 			this.ReportDateTime = ConvertDate(source.ReportDateTime);

@@ -6,6 +6,7 @@ package app.view
 	import app.model.GPSRealTimeInfoProxy;
 	import app.model.TrackHistoryProxy;
 	import app.model.dict.DicDepartment;
+	import app.model.dict.DicExceptType;
 	import app.model.dict.DicPatrolZone;
 	import app.model.dict.DicPoliceType;
 	import app.model.vo.AlarmInfoVO;
@@ -45,6 +46,8 @@ package app.view
 			
 			rightPanelServiceExcept.addEventListener(RightPanelServiceExcept.GRIDCLICK,onGridExceptClick);
 			rightPanelServiceExcept.addEventListener(RightPanelServiceExcept.GRIDDOUBLECLICK,onGridExceptDoubleClick);
+			
+			rightPanelServiceExcept.addEventListener(RightPanelServiceExcept.UPDATE,onUpdate);
 		}
 		
 		private function get rightPanelServiceExcept():RightPanelServiceExcept
@@ -70,7 +73,7 @@ package app.view
 					var serviceExcept:ServiceExceptVO = new ServiceExceptVO(row);
 					
 					var realTimeInfoProxy:GPSRealTimeInfoProxy = facade.retrieveProxy(GPSRealTimeInfoProxy.NAME) as GPSRealTimeInfoProxy;
-					if(serviceExcept.UnNormalType == ServiceExceptVO.CROSSING)
+					if(serviceExcept.ExceptType == DicExceptType.CROSSING)
 					{
 						var gps:GPSNewVO = realTimeInfoProxy.dicGPS[serviceExcept.GpsIDOrZoneID] as GPSNewVO;
 						if(gps != null)
@@ -85,7 +88,7 @@ package app.view
 							rightPanelServiceExcept.listExcept.addItem(serviceExcept);
 						}
 					}
-					else if(serviceExcept.UnNormalType == ServiceExceptVO.STOPPING)
+					else if(serviceExcept.ExceptType == DicExceptType.STOPPING)
 					{
 						gps = realTimeInfoProxy.dicGPS[serviceExcept.GpsIDOrZoneID] as GPSNewVO;
 						if(gps != null)
@@ -100,7 +103,7 @@ package app.view
 							rightPanelServiceExcept.listExcept.addItem(serviceExcept);
 						}
 					}
-					else if(serviceExcept.UnNormalType == ServiceExceptVO.NOPATROL)
+					else if(serviceExcept.ExceptType == DicExceptType.NOPATROL)
 					{
 						var patrolZone:DicPatrolZone = DicPatrolZone.dict[serviceExcept.GpsIDOrZoneID] as DicPatrolZone;
 						if(patrolZone != null)
@@ -115,7 +118,7 @@ package app.view
 							rightPanelServiceExcept.listExcept.addItem(serviceExcept);
 						}
 					}
-					else if(serviceExcept.UnNormalType == ServiceExceptVO.EMERGENCY)
+					else if(serviceExcept.ExceptType == DicExceptType.EMERGENCY)
 					{						
 						gps = realTimeInfoProxy.dicGPS[serviceExcept.GpsIDOrZoneID] as GPSNewVO;
 						if(gps != null)
@@ -126,7 +129,7 @@ package app.view
 								var item:ServiceExceptVO = rightPanelServiceExcept.listExcept[i];
 								
 								if((item.GpsIDOrZoneID == serviceExcept.GpsIDOrZoneID)
-									&& (item.UnNormalType == ServiceExceptVO.EMERGENCY))
+									&& (item.ExceptType == DicExceptType.EMERGENCY))
 								{
 									if(item.ReportDateTime > serviceExcept.ReportDateTime)
 									{										
@@ -154,7 +157,7 @@ package app.view
 							}
 						}						
 					}
-					else if(serviceExcept.UnNormalType == ServiceExceptVO.MANUAL)
+					else if(serviceExcept.ExceptType == DicExceptType.MANUAL)
 					{
 						gps = realTimeInfoProxy.dicGPS[serviceExcept.GpsIDOrZoneID] as GPSNewVO;
 						if(gps != null) 
@@ -165,7 +168,7 @@ package app.view
 								item = rightPanelServiceExcept.listExcept[i];
 								
 								if((item.GpsIDOrZoneID == serviceExcept.GpsIDOrZoneID)
-								&& (item.UnNormalType == ServiceExceptVO.MANUAL))
+								&& (item.ExceptType == DicExceptType.MANUAL))
 								{
 									if(item.ReportDateTime > serviceExcept.ReportDateTime)
 									{										
@@ -207,6 +210,32 @@ package app.view
 			sendNotification(AppNotification.NOTIFY_TRACKEXCEPT_LOCATE,rightPanelServiceExcept.listExceptItem);
 		}
 		
+		private function onUpdate(event:Event):void
+		{
+			var s:String = "";
+			for each(var item:DicExceptType in DicExceptType.list)
+			{
+				if(item != DicExceptType.ALL)
+				{
+					s += item.exceptName + "," + (item.isMonitoring?"1":"0") + ";";
+				}
+			}
+			
+			s = s.substr(0,s.length - 1);
+			
+			sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
+				[
+					"SaveExceptMonitor"
+					,onResult
+					,[s]
+				]);	
+			
+			function onResult(result:Number):void
+			{
+				
+			}
+		}
+		
 		override public function listNotificationInterests():Array
 		{
 			return [
@@ -222,6 +251,12 @@ package app.view
 				case AppNotification.NOTIFY_APP_INIT:
 					rightPanelServiceExcept.listDept = DicDepartment.listOverview;
 					
+					DicExceptType.ALL.isMonitoring = true;
+					for each(var item:DicExceptType in DicExceptType.list)
+						DicExceptType.ALL.isMonitoring &&= item.isMonitoring;
+						
+					rightPanelServiceExcept.exceptTypeArray = DicExceptType.list;
+					
 					if(AppConfigVO.Auth == "1")
 					{
 						rightPanelServiceExcept.listDeptItem = DicDepartment.ALL;
@@ -230,6 +265,9 @@ package app.view
 					{
 						rightPanelServiceExcept.listDeptItem = AppConfigVO.user.department;
 					}
+					
+					if(AppConfigVO.exceptMonitorArray.indexOf(Number(AppConfigVO.user.department.id)) >= 0)
+						rightPanelServiceExcept.currentState = "Command";
 					break;
 				
 				case AppNotification.NOTIFY_MENUBAR:	

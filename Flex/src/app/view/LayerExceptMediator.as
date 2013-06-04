@@ -1,10 +1,13 @@
 package app.view
 {
 	import app.AppNotification;
+	import app.model.dict.DicDepartment;
+	import app.model.dict.DicExceptType;
 	import app.model.dict.DicGPSImage;
 	import app.model.dict.DicPatrolPoint;
 	import app.model.dict.DicPoliceType;
 	import app.model.dict.DicServiceStatus;
+	import app.model.vo.AppConfigVO;
 	import app.model.vo.ServiceExceptVO;
 	import app.view.components.MainMenu;
 	import app.view.components.MainTool;
@@ -22,8 +25,15 @@ package app.view
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.media.Sound;
+	import flash.net.URLRequest;
 	import flash.text.TextFormat;
+	import flash.utils.Timer;
 	
+	import mx.collections.ArrayCollection;
+	
+	import org.osmf.events.TimeEvent;
 	import org.puremvc.as3.interfaces.IMediator;
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.mediator.Mediator;
@@ -31,6 +41,10 @@ package app.view
 	public class LayerExceptMediator extends Mediator implements IMediator
 	{
 		public static const NAME:String = "LayerExceptMediator";
+				
+		private var exceptTimer:Timer;
+		
+		private var soundPlay:Sound;
 		
 		public function LayerExceptMediator(viewComponent:Object=null)
 		{
@@ -53,7 +67,7 @@ package app.view
 		{			
 			var graphic:Graphic = event.currentTarget as Graphic;
 			var except:ServiceExceptVO = graphic.attributes as ServiceExceptVO;
-			if(except.UnNormalType != ServiceExceptVO.NOPATROL)
+			if(except.ExceptType != DicExceptType.NOPATROL)
 			{
 				sendNotification(AppNotification.NOTIFY_LAYEREXCEPT_GRAPHICCLICK,except);
 			}
@@ -105,7 +119,7 @@ package app.view
 			var textFormat:TextFormat = null;		
 			var selectedSymbol:SimpleMarkerSymbol = null;
 			
-			if(except.UnNormalType == ServiceExceptVO.EMERGENCY)
+			if(except.ExceptType == DicExceptType.EMERGENCY)
 			{
 				iconSymbol = new PictureMarkerSymbol("assets/image/emergency.swf");
 			}
@@ -134,9 +148,53 @@ package app.view
 			return graphic;
 		}
 		
+		private function onExceptTimer(event:TimerEvent):void
+		{
+			var id:String = (AppConfigVO.Auth == "1")?DicDepartment.ALL.id:AppConfigVO.user.department.id;
+			
+			sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
+				[
+					"GetRealExcept"
+					,onResult
+					,[id]
+					,false
+				]);	
+			
+			function onResult(result:ArrayCollection):void
+			{
+				if(result.length > 0)
+				{
+					var exsist:Boolean = false;
+					
+					var except:ServiceExceptVO = new ServiceExceptVO(result[0]);
+					
+					for each(var graphic:Graphic in layerExcept.graphics)
+					{
+						var temp:ServiceExceptVO = graphic.attributes as ServiceExceptVO;
+						if(except.ExceptID == temp.ExceptID)
+						{
+							exsist = true;
+							break;
+						}
+					}
+					
+					if((!exsist) && (except.ExceptType.isMonitoring))
+					{						
+						locate(except);
+					
+						flash(except);
+						
+						soundPlay.play();
+					}
+				}
+			}
+		}
+		
 		override public function listNotificationInterests():Array
 		{
 			return [
+				AppNotification.NOTIFY_APP_INIT,
+				
 				AppNotification.NOTIFY_MENUBAR,
 				
 				AppNotification.NOTIFY_TRACKEXCEPT_LOCATE,
@@ -150,6 +208,18 @@ package app.view
 		{			
 			switch(notification.getName())
 			{
+				case AppNotification.NOTIFY_APP_INIT:
+					if(AppConfigVO.exceptMonitorArray.indexOf(Number(AppConfigVO.user.department.id)) >= 0)
+					{
+						soundPlay = new Sound;
+						soundPlay.load(new URLRequest("assets/msg.mp3"));
+						
+						exceptTimer = new Timer(10000);
+						exceptTimer.addEventListener(TimerEvent.TIMER,onExceptTimer);
+						exceptTimer.start();
+					}
+					break;
+				
 				case AppNotification.NOTIFY_MENUBAR:
 					layerExcept.clear();
 					
@@ -184,7 +254,7 @@ package app.view
 			
 			layerExcept.clear();
 			
-			if(except.UnNormalType == ServiceExceptVO.STOPPING)
+			if(except.ExceptType == DicExceptType.STOPPING)
 			{
 				if((except.gps != null) && (except.gps.policeType != DicPoliceType.VEHICLE))
 				{
@@ -195,7 +265,7 @@ package app.view
 					graphic = createCarGraphic(except);
 				}
 			}
-			else if(except.UnNormalType == ServiceExceptVO.NOPATROL)
+			else if(except.ExceptType == DicExceptType.NOPATROL)
 			{
 				graphic = createPatrolGraphic(except)
 			}

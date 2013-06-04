@@ -44,6 +44,8 @@ package app.model.vo
 		
 		public static var arrScale:Array = new Array;
 		
+		public static var exceptMonitorArray:Array = new Array;
+		
 		public static var scaleVisible:Number = 0;
 	}
 }

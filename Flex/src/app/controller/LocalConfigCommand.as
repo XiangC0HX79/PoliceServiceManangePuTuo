@@ -5,6 +5,7 @@ package app.controller
 	import app.model.dict.DicAlarmType;
 	import app.model.dict.DicDepartment;
 	import app.model.dict.DicElePolice;
+	import app.model.dict.DicExceptType;
 	import app.model.dict.DicGPSImage;
 	import app.model.dict.DicPatrolPoint;
 	import app.model.dict.DicPatrolType;
@@ -184,7 +185,7 @@ package app.controller
 				{
 					n = Number(s);
 					if(!isNaN(n) && (n > 0))
-						AppConfigVO.arrScale.push(Number(n));
+						AppConfigVO.arrScale.push(n);
 					else 
 						AppConfigVO.arrScale.push(1);
 				}
@@ -193,6 +194,16 @@ package app.controller
 			if(xml.AppConfig.ScaleVisible != undefined)
 			{
 				AppConfigVO.scaleVisible = Number(String(xml.AppConfig.ScaleVisible));
+			}
+			
+			if(xml.AppConfig.ExceptMonitor != undefined)
+			{
+				for each(s in String(xml.AppConfig.ExceptMonitor).split("/"))
+				{
+					n = Number(s);
+					if(!isNaN(n) && (n > 0))
+						AppConfigVO.exceptMonitorArray.push(n);
+				}
 			}
 			
 			n = Number(xml.AppConfig.Image.Vehicle.@w);
@@ -505,7 +516,17 @@ package app.controller
 					case 17:
 						ServiceExceptVO.LONGTIME_DIFF = Number(row.PARAVALUE);
 						break;
-
+					
+					default:
+						for each(var item:DicExceptType in DicExceptType.list)
+						{
+							if(item.exceptName == row.PARANAME)
+							{
+								item.isMonitoring = (row.PARAVALUE == "1");
+								break;
+							}
+						}
+						break;
 				}
 			}
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：系统配置加载完成！");		

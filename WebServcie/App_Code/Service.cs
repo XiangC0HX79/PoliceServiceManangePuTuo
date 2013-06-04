@@ -53,8 +53,9 @@ public class Service : System.Web.Services.WebService
         String sql = "SELECT " +
                         "PARAID, " +
                         "PARANAME, " +
-                        "PARAVALUE " + 
-                        "FROM T_QW_SYS_PARA";
+                        "PARAVALUE, " +
+                        "PARADATATYPE " + 
+                        "FROM T_QW_SYS_PARA WHERE ISUSE = 1";
         return clsGetData.GetTable(sql);
     }
 
@@ -1859,6 +1860,31 @@ double dist(PointN p1, PointN p2) // 返回两点之间欧氏距离
 
         sql = "SELECT TOP 1 * FROM T_QW_DM WHERE BDMJYID = '" + jyid + "' AND STID = '" + stid + "' " +
                        "ORDER BY DMDate DESC";
+
+        return clsGetData.GetTable(sql);
+    }
+
+    [WebMethod]
+    public int SaveExceptMonitor(String monitor)
+    {
+        var clsGetData = new ClsGetData("System.Data.SqlClient", strConn);
+
+        var sql = monitor.Split(';').Select(s => s.Split(',')).Aggregate("", (current, except) => current + ("UPDATE T_QW_SYS_PARA SET PARAVALUE = " + except[1] + " WHERE PARANAME = '" + except[0] + "';"));
+
+        return clsGetData.ExcuteNoQuery(sql);
+    }
+
+    [WebMethod]
+    public DataTable GetRealExcept(String id)
+    {
+        var sql = "SELECT TOP 1 * "
+                   + "FROM T_QW_UNNORMALQW "
+                   + "WHERE ReportDateTime > DATEADD(MI,-30,GETDATE())";
+
+        if (id != "-1")
+            sql += " AND DepID = " + id;
+
+        var clsGetData = new ClsGetData("System.Data.SqlClient", strConn);
 
         return clsGetData.GetTable(sql);
     }

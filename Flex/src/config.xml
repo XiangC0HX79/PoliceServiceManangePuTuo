@@ -6,6 +6,7 @@
 	<AppConfig>
 			<Debug>1</Debug>
 			<District>普陀区</District>	
+			<ExceptMonitor>16/26/27</ExceptMonitor>
 			<Scale>0.5/0.5/0.6/0.8</Scale>	
 			<ScaleVisible>0.6</ScaleVisible>
 			<WebServiceUrl>http://localhost:15607/WebServcie/Service.asmx?wsdl</WebServiceUrl>
