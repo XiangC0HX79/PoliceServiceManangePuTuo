@@ -89,5 +89,20 @@ package app.model.dict
 			
 			return new ArrayCollection(arr);
 		}
+		
+		public static function get listPolice():ArrayCollection
+		{
+			var arr:Array = new Array;
+			for each (var item:DicDepartment in dict)
+			{
+				if(item.ZB == 124)
+					arr.push(item);
+			}			
+			arr.push(DicDepartment.ALL);
+			
+			arr.sortOn("PX",Array.NUMERIC,"shortName",Array.CASEINSENSITIVE);
+			
+			return new ArrayCollection(arr);
+		}
 	}
 }

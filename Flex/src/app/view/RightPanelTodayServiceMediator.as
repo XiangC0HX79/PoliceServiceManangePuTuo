@@ -359,7 +359,7 @@ package app.view
 			switch(notification.getName())
 			{
 				case AppNotification.NOTIFY_APP_INIT:
-					rightPanelTodayService.listDept = DicDepartment.listOverview;
+					rightPanelTodayService.listDept = DicDepartment.listPolice;
 					
 					if(AppConfigVO.Auth == "0")
 					{

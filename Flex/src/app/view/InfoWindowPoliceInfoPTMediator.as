@@ -36,7 +36,7 @@ package app.view
 			infoWindowPoliceInfo.addEventListener(InfoWindowPoliceInfoPT.CHANGESTATE,onChangeState);			
 			infoWindowPoliceInfo.addEventListener(InfoWindowPoliceInfoPT.TRACKREALTIME,onTrackRealtimeButtonDown);	
 			infoWindowPoliceInfo.addEventListener(InfoWindowPoliceInfoPT.TRACKHISTORY,onTrackHistoryButtonDown);
-			infoWindowPoliceInfo.addEventListener(InfoWindowPoliceInfoPT.CORRECTPOS,onCorrectPosition);
+			//infoWindowPoliceInfo.addEventListener(InfoWindowPoliceInfoPT.CORRECTPOS,onCorrectPosition);
 			
 			infoWindowPoliceInfo.addEventListener(InfoWindowPoliceInfoPT.ANSWER,onAnswer);
 			infoWindowPoliceInfo.addEventListener(InfoWindowPoliceInfoPT.NOANSWER,onNoAnswer);
@@ -92,7 +92,7 @@ package app.view
 					,infoWindowPoliceInfo.txtCall.text
 					,infoWindowPoliceInfo.inputName.text
 					,infoWindowPoliceInfo.inputKind.text
-					,infoWindowPoliceInfo.textPos
+					,infoWindowPoliceInfo.checkPosition.selected
 				]);
 		}
 		
@@ -106,7 +106,7 @@ package app.view
 					,infoWindowPoliceInfo.txtCall.text
 					,infoWindowPoliceInfo.inputName.text
 					,infoWindowPoliceInfo.inputKind.text
-					,infoWindowPoliceInfo.textPos
+					,infoWindowPoliceInfo.checkPosition.selected
 				]);
 		}
 		
@@ -128,7 +128,7 @@ package app.view
 		}
 		
 		
-		private function onCorrectPosition(event:Event):void
+		/*private function onCorrectPosition(event:Event):void
 		{			
 			sendNotification(AppNotification.NOTIFY_SEARCH_GRAPHICSTART,[0,DrawTool.MAPPOINT,drawResultHandle]);
 			
@@ -141,7 +141,7 @@ package app.view
 				sendNotification(AppNotification.NOTIFY_APP_ALERTINFO,"实为GPS位置修正完毕。");
 				//alarmInfoProxy.correct(rightPanelAlarmInfo.listAlarmItem,geometry as MapPoint);
 			}
-		}
+		}*/
 		
 		override public function listNotificationInterests():Array
 		{
@@ -169,7 +169,8 @@ package app.view
 					
 					infoWindowPoliceInfo.textKind = infoWindowPoliceInfo.police.policeKind;
 					infoWindowPoliceInfo.textName = infoWindowPoliceInfo.police.gpsName;
-					infoWindowPoliceInfo.textPos = infoWindowPoliceInfo.police.mapPoint.x + " " + infoWindowPoliceInfo.police.mapPoint.y;
+					infoWindowPoliceInfo.isTruePosition = true;
+					//infoWindowPoliceInfo.textPos = infoWindowPoliceInfo.police.mapPoint.x + " " + infoWindowPoliceInfo.police.mapPoint.y;
 					
 					infoWindowPoliceInfo.currentState = "min";					
 					break;

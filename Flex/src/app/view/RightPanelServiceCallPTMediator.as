@@ -56,7 +56,7 @@ package app.view
 			
 			rightPanelServiceCall.addEventListener(RightPanelServiceCallPT.ONLYCALL,onOnlyCall);
 			
-			rightPanelServiceCall.addEventListener(RightPanelServiceCallPT.CORRECTPOS,onCorrectPosition);
+			//rightPanelServiceCall.addEventListener(RightPanelServiceCallPT.CORRECTPOS,onCorrectPosition);
 			
 			rightPanelServiceCall.addEventListener(RightPanelServiceCallPT.LOCATECALL,onLocateCall);
 			rightPanelServiceCall.addEventListener(RightPanelServiceCallPT.FLASHCALL,onFlashCall);
@@ -173,7 +173,8 @@ package app.view
 			{
 				rightPanelServiceCall.textKind = user.policeKind;
 				rightPanelServiceCall.textName = user.gpsName;
-				rightPanelServiceCall.textPos = user.mapPoint.x + " " + user.mapPoint.y;
+				//rightPanelServiceCall.textPos = user.mapPoint.x + " " + user.mapPoint.y;
+				rightPanelServiceCall.isTruePosition = true;
 				
 				sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
 					["getCallInfo",onResult,[user.userId,user.radioNo],false]);
@@ -194,7 +195,7 @@ package app.view
 			}
 		}
 				
-		private function setCall(police:GPSNewVO,isresponse:String,memo:String,trueName:String,trueKind:String,truePosition:String,fromInfo:Boolean = true):void
+		private function setCall(police:GPSNewVO,isresponse:String,memo:String,trueName:String,trueKind:String,isTruePosition:Boolean,fromInfo:Boolean = true):void
 		{
 			if(police != null)
 			{				
@@ -218,7 +219,7 @@ package app.view
 							,police.mapPoint.x + " " + police.mapPoint.y
 							,trueName
 							,trueKind
-							,truePosition
+							,isTruePosition?"是":"否"
 						]
 					]);	
 			}
@@ -245,7 +246,7 @@ package app.view
 					,rightPanelServiceCall.textDemo
 					,rightPanelServiceCall.textName
 					,rightPanelServiceCall.textKind
-					,rightPanelServiceCall.textPos
+					,rightPanelServiceCall.isTruePosition
 					,false
 				);
 		}
@@ -258,7 +259,7 @@ package app.view
 					,rightPanelServiceCall.textDemo
 					,rightPanelServiceCall.textName
 					,rightPanelServiceCall.textKind
-					,rightPanelServiceCall.textPos
+					,rightPanelServiceCall.isTruePosition
 					,false
 				);
 		}
@@ -268,7 +269,7 @@ package app.view
 			sendNotification(AppNotification.NOTIFY_APP_ALERTINFO,"当前GPS已失效，无法定位！");
 		}
 		
-		private function onCorrectPosition(event:Event):void
+		/*private function onCorrectPosition(event:Event):void
 		{			
 			if(rightPanelServiceCall.listPoliceItem != null)
 			{
@@ -288,14 +289,14 @@ package app.view
 				sendNotification(AppNotification.NOTIFY_APP_ALERTINFO,"实为GPS位置修正完毕。");
 				//alarmInfoProxy.correct(rightPanelAlarmInfo.listAlarmItem,geometry as MapPoint);
 			}
-		}
+		}*/
 		
 		private function onLocateCall(event:Event):void
 		{
 			var call:CallVO = rightPanelServiceCall.gridCall.selectedItem as CallVO;
-			if(call && call.truePosition)
+			if(call && call.callPosition)
 			{
-				var xy:Array = call.truePosition.split(' ');
+				var xy:Array = call.callPosition.split(' ');
 				if(xy.length > 1)
 				{
 					var mapPoint:MapPoint = new MapPoint(Number(xy[0]),Number(xy[1]));
@@ -307,9 +308,9 @@ package app.view
 		private function onFlashCall(event:Event):void
 		{
 			var call:CallVO = rightPanelServiceCall.gridCall.selectedItem as CallVO;
-			if(call && call.truePosition)
+			if(call && call.callPosition)
 			{
-				var xy:Array = call.truePosition.split(' ');
+				var xy:Array = call.callPosition.split(' ');
 				if(xy.length > 1)
 				{
 					var mapPoint:MapPoint = new MapPoint(Number(xy[0]),Number(xy[1]));

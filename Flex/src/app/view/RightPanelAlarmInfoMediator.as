@@ -385,7 +385,7 @@ package app.view
 			switch(notification.getName())
 			{
 				case AppNotification.NOTIFY_APP_INIT:
-					rightPanelAlarmInfo.listDept = DicDepartment.listOverview;
+					rightPanelAlarmInfo.listDept = DicDepartment.listPolice;
 					
 					if(AppConfigVO.Auth == "0")
 					{

@@ -22,7 +22,7 @@
 			public static const TRACKHISTORY:String = "trackhistory";
 			public static const ANSWER:String = "answer";
 			public static const NOANSWER:String = "noanswer";
-			public static const CORRECTPOS:String = "CorrectPos";
+			//public static const CORRECTPOS:String = "CorrectPos";
 									
 			[Bindable]public var police:GPSNewVO = null;
 			
@@ -33,7 +33,8 @@
 			[Bindable]public var textCall:String = "";
 			[Bindable]public var textName:String = "";
 			[Bindable]public var textKind:String = "";
-			[Bindable]public var textPos:String = "";
+			//[Bindable]public var textPos:String = "";	
+			[Bindable] public var isTruePosition:Boolean = true;	
 						
 			protected function btnCall_buttonDownHandler(event:FlexEvent):void
 			{
@@ -72,10 +73,9 @@
 					<s:HorizontalLayout verticalAlign="middle"/>
 				</s:layout>
 				<s:Label text="警　　种：" fontWeight="bold"/>
-				<s:Label text="{police.policeKind}"/>
-				<s:Spacer width="100%"/>
+				<s:Label text="{police.policeKind}" width="100%"/>
 				<s:Label text="单　　位：" fontWeight="bold"/>
-				<s:Label text="{police.departmentNAME}"/>
+				<s:Label text="{police.departmentNAME}" minWidth="81"/>
 			</s:SkinnableContainer>
 			
 			<s:SkinnableContainer width="100%">
@@ -201,10 +201,9 @@
 				<s:TextInput id="inputKind" width="80" height="100%" text="{textKind}"/>
 			</s:HGroup>
 			<s:HGroup width="100%" verticalAlign="middle">
-				<s:Label text="实为位置：" fontWeight="bold"/>
-				<s:HGroup horizontalAlign="center" width="80">					
-					<s:Button label="修正位置" buttonDown="dispatchEvent(new Event(CORRECTPOS))"
-							  skinClass="app.view.components.skin.skinButton"/>
+				<s:Label text="实为位置：" fontWeight="bold"/>				
+				<s:HGroup horizontalAlign="center" width="80">	
+					<s:CheckBox id="checkPosition" selected="{isTruePosition}"/>
 				</s:HGroup>
 				<s:Label text="备　　注：" fontWeight="bold"/>
 				<s:TextInput id="txtCall" width="80" height="100%" text="{textCall}"/>

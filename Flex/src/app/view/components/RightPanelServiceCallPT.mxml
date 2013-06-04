@@ -26,7 +26,7 @@
 			public static const ANSWER:String = "answer";
 			public static const NOANSWER:String = "noanswer";
 			public static const ONLYCALL:String = "onlycall";
-			public static const CORRECTPOS:String = "CorrectPos";
+			//public static const CORRECTPOS:String = "CorrectPos";
 			
 			public static const LOCATECALL:String = "LocateCall";
 			public static const FLASHCALL:String = "FlashCall";
@@ -45,7 +45,8 @@
 			[Bindable] public var textDemo:String = "";			
 			[Bindable] public var textName:String = "";			
 			[Bindable] public var textKind:String = "";			
-			[Bindable] public var textPos:String = "";				
+			//[Bindable] public var textPos:String = "";			
+			[Bindable] public var isTruePosition:Boolean = true;				
 			
 			[Bindable] public var listCallHistory:ArrayCollection = new ArrayCollection;
 			
@@ -102,6 +103,11 @@
 				var gps:GPSNewVO = itemRenderer.data as GPSNewVO;
 				dispatchEvent(new AppEvent(AppEvent.LOCATEGPS,gps,true));
 			}
+			
+			private function labelTruePosition(item:CallVO,column:GridColumn):String
+			{
+				return item.isTruePosition?"是":"否";
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -112,6 +118,7 @@
 	<fx:Binding destination="textDemo" source="inputDemo.text" twoWay="true"/>
 	<fx:Binding destination="textName" source="inputName.text" twoWay="true"/>
 	<fx:Binding destination="textKind" source="inputKind.text" twoWay="true"/>
+	<fx:Binding destination="isTruePosition" source="checkPosition.selected" twoWay="true"/>
 	
 	<s:layout>
 		<s:VerticalLayout/>
@@ -204,9 +211,10 @@
 					<s:TextInput id="inputKind" width="100%" text="{textKind}"/>
 				</s:HGroup>
 				<s:HGroup width="100%" verticalAlign="middle">
-					<s:Label text="实为GPS位置："/>
-					<s:Button label="修正位置" buttonDown="dispatchEvent(new Event(CORRECTPOS))"
-							  skinClass="app.view.components.skin.skinButton"/>
+					<s:Label text="实为位置：" width="50%"/>	
+					<s:CheckBox id="checkPosition" selected="{isTruePosition}"/>
+					<!--<s:Button label="修正位置" buttonDown="dispatchEvent(new Event(CORRECTPOS))"
+							  skinClass="app.view.components.skin.skinButton"/>-->
 				</s:HGroup>
 				<s:HGroup width="100%" verticalAlign="middle">
 					<s:Label text="备　　注："/>
@@ -238,6 +246,7 @@
 							<s:GridColumn dataField="callName" headerText="点名人" width="60"></s:GridColumn>
 							<s:GridColumn dataField="trueName" headerText="姓名" width="40"></s:GridColumn>
 							<s:GridColumn dataField="trueKind" headerText="警种" width="40"></s:GridColumn>
+							<s:GridColumn labelFunction="labelTruePosition" headerText="位置" width="40"></s:GridColumn>
 							<s:GridColumn dataField="memo" headerText="备注" width="100"></s:GridColumn>
 						</s:ArrayList>
 					</s:columns>

@@ -17,7 +17,8 @@ package app.model.vo
 		
 		public var trueName:String = "";
 		public var trueKind:String = "";
-		public var truePosition:String = "";		
+		public var callPosition:String = "";
+		public var isTruePosition:Boolean = true;
 		
 		public function CallVO(source:Object)
 		{
@@ -36,7 +37,8 @@ package app.model.vo
 			
 			this.trueName = source.TRUENAME;
 			this.trueKind = source.TRUERYBH;
-			this.truePosition = source.TRUELOCATION;
+			this.callPosition = source.LOCATION;
+			this.isTruePosition = (source.TRUELOCATION == "是");
 		}
 		
 		/*private var _source:Object = null;
