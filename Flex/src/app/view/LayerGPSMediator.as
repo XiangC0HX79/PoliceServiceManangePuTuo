@@ -157,7 +157,8 @@ package app.view
 			
 			labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
 			
-			var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
+			var name:String = gps.radioNo + " " + gps.gpsName + " " + (gps.department?gps.department.shortName:"") + " " + (gps.policeType?gps.policeType.label:"");
+			//var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
 			labelSymbol.text = labelSymbol.background?name:" ";
 			
 			if(gps.policeTypeID == DicPoliceType.VEHICLE.id)
@@ -210,7 +211,7 @@ package app.view
 						
 			labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
 			
-			var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
+			var name:String = gps.radioNo + " " + gps.gpsName + " " + (gps.department?gps.department.shortName:"") + " " + (gps.policeType?gps.policeType.label:"");
 			labelSymbol.text = labelSymbol.background?name:" ";
 			
 			if(gps.policeTypeID == DicPoliceType.VEHICLE.id)
@@ -277,7 +278,8 @@ package app.view
 				var labelSymbol:TextSymbol = symbolArr[0] as TextSymbol;
 				labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
 				
-				var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
+				var name:String = gps.radioNo + " " + gps.gpsName + " " + (gps.department?gps.department.shortName:"") + " " + (gps.policeType?gps.policeType.label:"");
+				//var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
 				labelSymbol.text = labelSymbol.background?name:" ";
 				
 				if(symbolArr.length == 3)
