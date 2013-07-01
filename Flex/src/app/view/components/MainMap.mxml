@@ -60,6 +60,8 @@
 		
 		<esri:GraphicsLayer id="layerExcept"/>
 		
+		<esri:GraphicsLayer id="layerRealExcept"/>
+		
 		<esri:GraphicsLayer id="alarmLayer"/>
 				
 		<esri:GraphicsLayer id="trackLayer"/>	

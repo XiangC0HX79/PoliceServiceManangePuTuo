@@ -29,6 +29,7 @@ package app.view
 	import flash.media.Sound;
 	import flash.net.URLRequest;
 	import flash.text.TextFormat;
+	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
@@ -41,16 +42,12 @@ package app.view
 	public class LayerExceptMediator extends Mediator implements IMediator
 	{
 		public static const NAME:String = "LayerExceptMediator";
-				
-		private var exceptTimer:Timer;
-		
-		private var soundPlay:Sound;
 		
 		public function LayerExceptMediator(viewComponent:Object=null)
 		{
 			super(NAME, viewComponent);
 			 
-			layerExcept.addEventListener(GraphicEvent.GRAPHIC_ADD,onGraphicAdd);	
+			layerExcept.addEventListener(GraphicEvent.GRAPHIC_ADD,onGraphicAdd);
 		}
 		
 		private function get layerExcept():GraphicsLayer
@@ -148,53 +145,9 @@ package app.view
 			return graphic;
 		}
 		
-		private function onExceptTimer(event:TimerEvent):void
-		{
-			var id:String = (AppConfigVO.Auth == "1")?DicDepartment.ALL.id:AppConfigVO.user.department.id;
-			
-			sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
-				[
-					"GetRealExcept"
-					,onResult
-					,[id]
-					,false
-				]);	
-			
-			function onResult(result:ArrayCollection):void
-			{
-				if(result.length > 0)
-				{
-					var exsist:Boolean = false;
-					
-					var except:ServiceExceptVO = new ServiceExceptVO(result[0]);
-					
-					for each(var graphic:Graphic in layerExcept.graphics)
-					{
-						var temp:ServiceExceptVO = graphic.attributes as ServiceExceptVO;
-						if(except.ExceptID == temp.ExceptID)
-						{
-							exsist = true;
-							break;
-						}
-					}
-					
-					if((!exsist) && (except.ExceptType.isMonitoring))
-					{						
-						locate(except);
-					
-						flash(except);
-						
-						soundPlay.play();
-					}
-				}
-			}
-		}
-		
 		override public function listNotificationInterests():Array
 		{
 			return [
-				AppNotification.NOTIFY_APP_INIT,
-				
 				AppNotification.NOTIFY_MENUBAR,
 				
 				AppNotification.NOTIFY_TRACKEXCEPT_LOCATE,
@@ -207,19 +160,7 @@ package app.view
 		override public function handleNotification(notification:INotification):void
 		{			
 			switch(notification.getName())
-			{
-				case AppNotification.NOTIFY_APP_INIT:
-					if(AppConfigVO.exceptMonitorArray.indexOf(Number(AppConfigVO.user.department.id)) >= 0)
-					{
-						soundPlay = new Sound;
-						soundPlay.load(new URLRequest("assets/msg.mp3"));
-						
-						exceptTimer = new Timer(10000);
-						exceptTimer.addEventListener(TimerEvent.TIMER,onExceptTimer);
-						exceptTimer.start();
-					}
-					break;
-				
+			{				
 				case AppNotification.NOTIFY_MENUBAR:
 					layerExcept.clear();
 					

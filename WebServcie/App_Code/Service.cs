@@ -22,8 +22,8 @@ using SharedNamespace;
 // [System.Web.Script.Services.ScriptService]
 public class Service : System.Web.Services.WebService
 {
-    private String strConn = "Data Source=192.168.1.5;user id=sa;password=P@ssw0rd;initial catalog=testQW;min pool size=5;persist security info=true;pooling=false";
-    private String strMapUrl = "http://192.168.1.5/ArcGIS/services/PTGAXM/MapServer";
+    private String strConn = "Data Source=192.168.1.211;user id=sa;password=1111;initial catalog=fxqw;min pool size=5;persist security info=true;pooling=false";
+    private String strMapUrl = "http://192.168.1.211/ArcGIS/services/ptqwmap/MapServer";
     private String strSDEPredix = "[sde].[sde].";
 
     //小区名单，默认小区后缀为 小区/街坊/公寓/村/苑/宅/里，黑名单里面名称为小区，白名单里面名称为单位
@@ -1875,14 +1875,11 @@ double dist(PointN p1, PointN p2) // 返回两点之间欧氏距离
     }
 
     [WebMethod]
-    public DataTable GetRealExcept(String id)
+    public DataTable GetRealExcept()
     {
-        var sql = "SELECT TOP 1 * "
-                   + "FROM T_QW_UNNORMALQW "
-                   + "WHERE ReportDateTime > DATEADD(MI,-30,GETDATE())";
-
-        if (id != "-1")
-            sql += " AND DepID = " + id;
+        var sql = "SELECT * FROM T_QW_UNNORMALQW "
+                   + "WHERE ReportDateTime > DATEADD(MI,-10,GETDATE()) "
+                    + "ORDER BY ReportDateTime DESC";
 
         var clsGetData = new ClsGetData("System.Data.SqlClient", strConn);
 

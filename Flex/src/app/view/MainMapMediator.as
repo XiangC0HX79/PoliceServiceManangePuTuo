@@ -141,6 +141,7 @@ package app.view
 			facade.registerMediator(new LayerTrackLinebackMediator(mainMap.trackLinebackLayer));
 			facade.registerMediator(new LayerAlarmMediator(mainMap.alarmLayer));
 			facade.registerMediator(new LayerMeasureMediator(mainMap.measureLayer));
+			facade.registerMediator(new LayerRealExceptMediator(mainMap.layerRealExcept));
 			facade.registerMediator(new LayerExceptMediator(mainMap.layerExcept));
 			facade.registerMediator(new LayerWarningAreaMediator(mainMap.layerWarningArea));
 			facade.registerMediator(new LayerFlashMediator(mainMap.flashLayer));
