@@ -58,9 +58,6 @@ package app.view
 					rightPanelServiceOverview.listDept = DicDepartment.listOverview;
 					
 					rightPanelServiceOverview.listLayer = DicLayer.listPatrol;
-					if(AppConfigVO.district.indexOf('奉贤') >= 0)
-						rightPanelServiceOverview.listLayer.addAll(DicLayer.listElePolice);
-					//sendNotification(AppNotification.NOTIFY_OVERVIEW_SET,[rightPanelServiceOverview.checkPatrolZone,rightPanelServiceOverview.checkPatrolPoint]);
 					break;
 			}
 		}

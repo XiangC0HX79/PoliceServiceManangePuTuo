@@ -3,6 +3,7 @@ package app.view
 	import app.AppNotification;
 	import app.model.GPSRealTimeInfoProxy;
 	import app.model.dict.DicGPSImage;
+	import app.model.dict.DicLayer;
 	import app.model.dict.DicPoliceType;
 	import app.model.vo.AppConfigVO;
 	import app.model.vo.GPSNewVO;
@@ -66,6 +67,11 @@ package app.view
 		private function get gpsLayer():GraphicsLayer
 		{
 			return viewComponent as GraphicsLayer;
+		}
+		
+		private function get isShowLabel():Boolean
+		{
+			return ((this.scale >= AppConfigVO.scaleVisible) && (DicLayer.GPSNAME.selected));
 		}
 		
 		private var scale:Number = 1;
@@ -155,7 +161,7 @@ package app.view
 			labelSymbol.backgroundColor = 0xFF;
 			labelSymbol.color = 0xFFFFFF;			
 			
-			labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
+			labelSymbol.background = this.isShowLabel;
 			
 			var name:String = gps.radioNo + " " + gps.gpsName + " " + (gps.department?gps.department.shortName:"") + " " + (gps.policeType?gps.policeType.label:"");
 			//var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;
@@ -208,8 +214,8 @@ package app.view
 			labelSymbol.textFormat = textFormat;
 			labelSymbol.backgroundColor = 0xFF;
 			labelSymbol.color = 0xFFFFFF;			
-						
-			labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
+			
+			labelSymbol.background = this.isShowLabel;
 			
 			var name:String = gps.radioNo + " " + gps.gpsName + " " + (gps.department?gps.department.shortName:"") + " " + (gps.policeType?gps.policeType.label:"");
 			labelSymbol.text = labelSymbol.background?name:" ";
@@ -276,7 +282,7 @@ package app.view
 				
 				
 				var labelSymbol:TextSymbol = symbolArr[0] as TextSymbol;
-				labelSymbol.background = this.scale >= AppConfigVO.scaleVisible;
+				labelSymbol.background = this.isShowLabel;
 				
 				var name:String = gps.radioNo + " " + gps.gpsName + " " + (gps.department?gps.department.shortName:"") + " " + (gps.policeType?gps.policeType.label:"");
 				//var name:String = gps.radioNo + " " + gps.gpsName + " " + gps.department.shortName + " " + gps.policeType.label;

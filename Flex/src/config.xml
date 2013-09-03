@@ -1,15 +1,15 @@
 <Config>
 	<MapConfig>
 		<MapUrl>http://192.168.1.211/ArcGIS/rest/services/</MapUrl>
-		<MapName>ptqwmap</MapName>
+		<MapName>FXGAXM</MapName>
 	</MapConfig>
 	<AppConfig>
 			<Debug>1</Debug>
-			<District>普陀区</District>	
+			<District>嘉定</District>	
 			<ExceptMonitor>16/26/27</ExceptMonitor>
 			<Scale>0.5/0.5/0.6/0.8</Scale>	
 			<ScaleVisible>0.6</ScaleVisible>
-			<WebServiceUrl>http://localhost:3412/WebServcie/Service.asmx?wsdl</WebServiceUrl>
+			<WebServiceUrl>http://localhost:1966/WebServcie/Service.asmx?wsdl</WebServiceUrl>
 			<Image>
 				<Vehicle w="40" h="25"/>
 				<People w="40" h="40"/>

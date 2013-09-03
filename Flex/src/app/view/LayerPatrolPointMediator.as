@@ -58,7 +58,7 @@ package app.view
 			for(var i:Number = layerPatrolPoint.map.lods.length - 3;i<layerPatrolPoint.map.lods.length;i++)
 			{
 				var lod:LOD = layerPatrolPoint.map.lods[i];
-				if(layerPatrolPoint.map.scale == lod.scale)
+				if(lod && (layerPatrolPoint.map.scale == lod.scale))
 				{
 					this.scaleVisible = true;
 					break;
