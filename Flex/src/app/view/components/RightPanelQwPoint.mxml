@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent  xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					 xmlns:s="library://ns.adobe.com/flex/spark" 
+					 xmlns:mx="library://ns.adobe.com/flex/mx"
+					 xmlns:subComponents="app.view.components.subComponents.*" 
+					 xmlns:components="app.view.components.*"
+					 width="100%" height="100%" label="卡点">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+		
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			
+			import spark.components.supportClasses.ItemRenderer;
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			import spark.events.RendererExistenceEvent;
+			
+			import app.model.dict.DicPointLevel;
+			import app.model.dict.DicPointType;
+			import app.model.vo.AppConfigVO;
+			import app.model.vo.GPSNewVO;
+			import app.view.components.skin.skinBaseSubPanel;
+			import app.view.components.subComponents.ItemRendererOverviewServiceStatus;
+			import app.view.components.subComponents.ItemRendererOverviewServiceType;
+			
+			//public static const SEARCH:String = "search";
+			public static const POINT_LEVEL_UPDATE:String = "PointLevelUpdate";
+			public static const POINT_TYPE_UPDATE:String = "PointTypeUpdate";
+			
+			public static const GRIDCLICK:String = "gridclick";
+			public static const GRIDDOUBLECLICK:String = "griddoubleclick";
+			
+			[Bindable]public var listPointLevel:ArrayCollection = null;
+			[Bindable]public var listPointType:ArrayCollection = null;
+			
+			[Bindable]public var listExcept:ArrayCollection = new ArrayCollection;
+			[Bindable]public var listExceptItem:* = null;
+								
+			protected function datagrid1_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listExceptItem = event.item;
+					dispatchEvent(new Event(GRIDCLICK));
+				}
+			}
+			
+			protected function datagrid1_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listExceptItem = event.item;
+					dispatchEvent(new Event(GRIDDOUBLECLICK));
+				}
+			}
+			
+			protected function listPointLevel_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onListPointLevelRendererClick);
+			}
+			
+			private function onListPointLevelRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				itemRenderer.data.isMapShow = !itemRenderer.data.isMapShow;			
+								
+				if(itemRenderer.data != DicPointLevel.ALL)
+				{
+					var allShow:Boolean = true;
+					for each(var item:DicPointLevel in DicPointLevel.list)
+					{
+						if(!item.isMapShow)
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicPointLevel.ALL.isMapShow = allShow;
+				}
+				else
+				{					
+					for each(item in DicPointLevel.list)
+					{
+						item.isMapShow = DicPointLevel.ALL.isMapShow;
+					}
+				}
+				
+				dispatchEvent(new Event(POINT_LEVEL_UPDATE));
+			}
+			
+			protected function listPointType_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onListPointTypeRendererClick);
+			}
+			
+			private function onListPointTypeRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				itemRenderer.data.isMapShow = !itemRenderer.data.isMapShow;				
+				
+				if(itemRenderer.data != DicPointType.ALL)
+				{
+					var allShow:Boolean = true;
+					for each(var item:DicPointType in DicPointType.list)
+					{
+						if(!item.isMapShow)
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicPointType.ALL.isMapShow = allShow;
+				}
+				else
+				{					
+					for each(item in DicPointType.list)
+					{
+						item.isMapShow = DicPointType.ALL.isMapShow;
+					}
+				}
+				
+				dispatchEvent(new Event(POINT_TYPE_UPDATE));
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="卡点等级" width="100%" horizontalScrollPolicy="off">	
+		<s:DataGroup width="290" dataProvider="{listPointLevel}" 
+					 rendererAdd="listPointLevel_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererPointLevel">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth"
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="卡点类型" width="100%" horizontalScrollPolicy="off">	
+		<s:DataGroup width="290" dataProvider="{listPointType}" 
+					 rendererAdd="listPointType_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererPointType">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth" 
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+							 height="100%" minButtonShow="false"
+							 panelTitle="卡点列表({listExcept.length})" width="100%">
+		<s:DataGrid height="100%" width="100%"  
+					dataProvider="{listExcept}" 
+					gridDoubleClick="datagrid1_gridDoubleClickHandler(event)"
+					gridClick="datagrid1_gridClickHandler(event)"
+					doubleClickEnabled="true"
+					alternatingRowColors="[0xEEEEEE,0xFFFFFF]">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn headerText="名称" dataField="Name" width="120"></s:GridColumn>
+					<s:GridColumn headerText="等级" dataField="Level.label" width="100"></s:GridColumn>
+					<s:GridColumn headerText="类型" dataField="Type.label" width="120"></s:GridColumn>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>		
+	</components:BaseSubPanel>		
+</s:NavigatorContent>

@@ -1,19 +1,20 @@
 package app.controller
 {
+	import mx.messaging.AbstractConsumer;
+	
+	import spark.components.Application;
+	
 	import app.AppNotification;
 	import app.model.AlarmInfoProxy;
-	import app.model.vo.AppConfigVO;
 	import app.model.GPSRealTimeInfoProxy;
+	import app.model.QWPointProxy;
 	import app.model.TrackHistoryProxy;
 	import app.model.TrackLinebackProxy;
 	import app.model.TrackRealtimeProxy;
-	
-	import mx.messaging.AbstractConsumer;
+	import app.model.vo.AppConfigVO;
 	
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
-	
-	import spark.components.Application;
 	
 	public class ModelPreCommand extends SimpleCommand
 	{
@@ -24,11 +25,16 @@ package app.controller
 			facade.registerProxy(new TrackRealtimeProxy);
 			facade.registerProxy(new TrackHistoryProxy);
 			facade.registerProxy(new TrackLinebackProxy);
+			facade.registerProxy(new QWPointProxy);
 			
 			var application:Application = note.getBody() as Application;
 			if(application.parameters.userid != "")
 			{
 				AppConfigVO.userid = application.parameters.userid;
+			}
+			
+			IFDEF::Debug{
+				AppConfigVO.userid = "1462";
 			}
 			
 			if(application.parameters.Auth != "")

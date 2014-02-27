@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+			
+	<fx:Script>
+		<![CDATA[			
+			import app.model.vo.QwPointVO;
+			
+			[Bindable]public var qwPoint:QwPointVO;
+		]]>
+	</fx:Script>
+	
+	<s:VGroup gap="2" rowHeight="20" variableRowHeight="false" width="300">
+		<s:SkinnableContainer width="100%">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="名　　称：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Name}" width="100%" color="0x0000FF" fontWeight="bold"/>
+			<s:Label text="单　　位：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Dep}" width="100%"/>
+		</s:SkinnableContainer>
+		
+	    <s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="等　　级：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Level.label}" width="100%"/>
+			<s:Label text="类　　型：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Type.label}" width="100%"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="负责人：" fontWeight="bold" trackingLeft="4"/>
+			<s:Label text="{qwPoint.Leader}" width="100%"/>
+			<s:Label text="需求警力：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.PoliceNum}" width="100%"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="邻近分局：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Neighbour}" width="100%"/>
+			<s:Label text="交接路名：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Cross}" width="100%"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="位　　置：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Address}" width="100%"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="备　　注：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Note}" width="100%"/>
+		</s:SkinnableContainer>
+	</s:VGroup>		
+</s:NavigatorContent>

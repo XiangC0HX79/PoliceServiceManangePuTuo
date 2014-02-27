@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -22,9 +23,9 @@ using SharedNamespace;
 // [System.Web.Script.Services.ScriptService]
 public class Service : System.Web.Services.WebService
 {
-    private String strConn = "Data Source=192.168.1.211;user id=sa;password=1111;initial catalog=fxqw;min pool size=5;persist security info=true;pooling=false";
-    private String strMapUrl = "http://192.168.1.211/ArcGIS/services/FXGAXM/MapServer";
-    private String strSDEPredix = "[sde].[sde].";
+    private String strConn = "";
+    private String strMapUrl = "";
+    private String strSDEPredix = "";
 
     //小区名单，默认小区后缀为 小区/街坊/公寓/村/苑/宅/里，黑名单里面名称为小区，白名单里面名称为单位
     private String[] quarterPredixList = { "小区","街坊","公寓","村","苑","宅","里" };
@@ -35,6 +36,10 @@ public class Service : System.Web.Services.WebService
 
         //如果使用设计的组件，请取消注释以下行 
         //InitializeComponent(); 
+
+        strConn = ConfigurationManager.AppSettings["Conn"];
+        strMapUrl = ConfigurationManager.AppSettings["MapUrl"];
+        strSDEPredix = ConfigurationManager.AppSettings["SDEPredix"];
     }
 
     [WebMethod]
@@ -1702,6 +1707,24 @@ double dist(PointN p1, PointN p2) // 返回两点之间欧氏距离
 
         return result;
     }
+
+    [WebMethod]
+    public DataTable GetQwPoint(string userId)
+    {
+        var clsGetData = new ClsGetData("System.Data.SqlClient", strConn);
+        var sql = "SELECT " +
+                    "DWXX.DEPID    GPSDEPID, " +
+                    "DWXX.DWMC     GPSDEPNAME, " +
+                    "JYXX.ID       USERID, " +
+                    "JYXX.RYXM     GPSNAME " +
+                    "FROM V_QWGLXT_JYXX_1 JYXX,V_DWXX DWXX " +
+                    "WHERE JYXX.ID = '" + userId + "' AND JYXX.SSGZZ = DWXX.DEPID";
+
+        sql = "SELECT * FROM T_QW_POINT";
+
+        return clsGetData.GetTable(sql);
+    }
+
 
     //奉贤接口
     [WebMethod]

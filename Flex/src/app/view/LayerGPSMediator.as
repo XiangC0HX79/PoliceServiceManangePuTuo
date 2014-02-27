@@ -341,6 +341,7 @@ package app.view
 					gpsLayer.visible = (
 						(notification.getType() != MainMenu.SERVICELINEBACK)
 						&& (notification.getType() != MainMenu.SERVICETRACKHISTORY)
+						&& (notification.getType() != MainMenu.QW_POINT)
 					);
 					
 					clearSelect();

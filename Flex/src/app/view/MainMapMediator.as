@@ -1,31 +1,5 @@
 package app.view
 {
-	import app.AppNotification;
-	import app.model.AlarmInfoProxy;
-	import app.model.GPSRealTimeInfoProxy;
-	import app.model.TrackHistoryProxy;
-	import app.model.TrackRealtimeProxy;
-	import app.model.dict.DicDepartment;
-	import app.model.dict.DicElePolice;
-	import app.model.dict.DicPatrolPoint;
-	import app.model.dict.DicPatrolType;
-	import app.model.dict.DicPatrolZone;
-	import app.model.dict.DicPoliceType;
-	import app.model.dict.DicServiceStatus;
-	import app.model.dict.DicServiceType;
-	import app.model.vo.AlarmInfoVO;
-	import app.model.vo.AlarmPoliceVO;
-	import app.model.vo.AppConfigVO;
-	import app.model.vo.GPSNewVO;
-	import app.model.vo.GPSVO;
-	import app.model.vo.MapCursor;
-	import app.model.vo.ServiceExceptVO;
-	import app.model.vo.TrackHistoryVO;
-	import app.view.components.InfoStatis;
-	import app.view.components.MainMap;
-	import app.view.components.MainMenu;
-	import app.view.components.MainTool;
-	
 	import com.esri.ags.FeatureSet;
 	import com.esri.ags.Graphic;
 	import com.esri.ags.Map;
@@ -96,11 +70,6 @@ package app.view
 	import mx.rpc.AsyncResponder;
 	import mx.utils.StringUtil;
 	
-	import org.puremvc.as3.interfaces.IMediator;
-	import org.puremvc.as3.interfaces.INotification;
-	import org.puremvc.as3.patterns.facade.Facade;
-	import org.puremvc.as3.patterns.mediator.Mediator;
-	
 	import spark.components.Group;
 	import spark.components.VGroup;
 	import spark.components.supportClasses.Skin;
@@ -109,6 +78,39 @@ package app.view
 	import spark.effects.supportClasses.AnimateTransformInstance;
 	import spark.events.GridEvent;
 	import spark.primitives.Rect;
+	
+	import app.AppNotification;
+	import app.model.AlarmInfoProxy;
+	import app.model.GPSRealTimeInfoProxy;
+	import app.model.QWPointProxy;
+	import app.model.TrackHistoryProxy;
+	import app.model.TrackRealtimeProxy;
+	import app.model.dict.DicDepartment;
+	import app.model.dict.DicElePolice;
+	import app.model.dict.DicPatrolPoint;
+	import app.model.dict.DicPatrolType;
+	import app.model.dict.DicPatrolZone;
+	import app.model.dict.DicPoliceType;
+	import app.model.dict.DicServiceStatus;
+	import app.model.dict.DicServiceType;
+	import app.model.vo.AlarmInfoVO;
+	import app.model.vo.AlarmPoliceVO;
+	import app.model.vo.AppConfigVO;
+	import app.model.vo.GPSNewVO;
+	import app.model.vo.GPSVO;
+	import app.model.vo.MapCursor;
+	import app.model.vo.QwPointVO;
+	import app.model.vo.ServiceExceptVO;
+	import app.model.vo.TrackHistoryVO;
+	import app.view.components.InfoStatis;
+	import app.view.components.MainMap;
+	import app.view.components.MainMenu;
+	import app.view.components.MainTool;
+	
+	import org.puremvc.as3.interfaces.IMediator;
+	import org.puremvc.as3.interfaces.INotification;
+	import org.puremvc.as3.patterns.facade.Facade;
+	import org.puremvc.as3.patterns.mediator.Mediator;
 		
 	public class MainMapMediator extends Mediator implements IMediator
 	{		
@@ -144,6 +146,7 @@ package app.view
 			facade.registerMediator(new LayerRealExceptMediator(mainMap.layerRealExcept));
 			facade.registerMediator(new LayerExceptMediator(mainMap.layerExcept));
 			facade.registerMediator(new LayerWarningAreaMediator(mainMap.layerWarningArea));
+			facade.registerMediator(new LayerQwPointMediator(mainMap.qwPointLayer));
 			facade.registerMediator(new LayerFlashMediator(mainMap.flashLayer));
 													
 			//将infoWindow放置于staticLayer最顶层			
@@ -257,7 +260,8 @@ package app.view
 						
 						AppNotification.NOTIFY_LAYERGPS_LOCATE,
 						
-						AppNotification.NOTIFY_ALARM_STATISCLICK
+						AppNotification.NOTIFY_ALARM_STATISCLICK,
+						AppNotification.NOTIFY_LAYER_QWPOINT_CLICK
 						];
 		}
 		
@@ -341,6 +345,14 @@ package app.view
 				
 				case AppNotification.NOTIFY_ALARM_STATISCLICK:
 					showAlarmStatisWindow(notification.getBody() as DicPatrolZone);
+					break;
+				
+				case AppNotification.NOTIFY_LAYER_QWPOINT_CLICK:
+					var qwPoint:QwPointVO = notification.getBody() as QwPointVO;			
+					mainMap.infoWindowQwPoint.qwPoint = qwPoint;					
+					mainMap.map.infoWindow.label = qwPoint.Name;
+					mainMap.infoWindowView.selectedChild = mainMap.infoWindowQwPoint;
+					mainMap.map.infoWindow.show(qwPoint.pt);
 					break;
 			}
 		}

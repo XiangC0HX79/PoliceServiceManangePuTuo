@@ -406,6 +406,11 @@ package app
 		public static const NOTIFY_WARNINGAREA_FLASH:String				= "WarningAreaFlash";
 		
 		/**
+		 * 卡点-闪烁
+		 */		
+		public static const NOTIFY_QWPOINT_FLASH:String					= "QwPointFlash";
+		
+		/**
 		 * 分色预警-更新
 		 */		
 		public static const NOTIFY_WARNINGAREA_REFRESH:String			= "WarningAreaRefresh";
@@ -516,6 +521,16 @@ package app
 		 */		
 		public static const NOTIFY_LAYERFLASH_FLASH:String				= "LayerFlashFlash";
 		
+		/**
+		 * 图层-卡点-刷新
+		 */		
+		public static const NOTIFY_LAYER_QWPOINT_REFRESH:String			= "LayerQwPointRefresh";
+		
+		/**
+		 * 图层-卡点-点击
+		 */		
+		public static const NOTIFY_LAYER_QWPOINT_CLICK:String			= "LayerQwPointClick";
+				
 		/**
 		 *地图操作-InfoPolice关闭
 		 */		

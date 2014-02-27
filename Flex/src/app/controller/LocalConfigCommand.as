@@ -1,27 +1,5 @@
 package app.controller
 {
-	import app.AppNotification;
-	import app.model.GPSRealTimeInfoProxy;
-	import app.model.dict.DicAlarmType;
-	import app.model.dict.DicDepartment;
-	import app.model.dict.DicElePolice;
-	import app.model.dict.DicExceptType;
-	import app.model.dict.DicGPSImage;
-	import app.model.dict.DicPatrolPoint;
-	import app.model.dict.DicPatrolType;
-	import app.model.dict.DicPatrolZone;
-	import app.model.dict.DicPoliceType;
-	import app.model.dict.DicRoad;
-	import app.model.dict.DicServiceStatus;
-	import app.model.dict.DicServiceType;
-	import app.model.vo.AlarmPoliceVO;
-	import app.model.vo.AppConfigVO;
-	import app.model.vo.GPSNewVO;
-	import app.model.vo.GPSVO;
-	import app.model.vo.ServiceExceptVO;
-	import app.view.*;
-	import app.view.components.*;
-	
 	import com.esri.ags.FeatureSet;
 	import com.esri.ags.Graphic;
 	import com.esri.ags.events.LayerEvent;
@@ -36,6 +14,66 @@ package app.controller
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
+	
+	import app.AppNotification;
+	import app.model.GPSRealTimeInfoProxy;
+	import app.model.dict.DicAlarmType;
+	import app.model.dict.DicDepartment;
+	import app.model.dict.DicElePolice;
+	import app.model.dict.DicExceptType;
+	import app.model.dict.DicGPSImage;
+	import app.model.dict.DicPatrolPoint;
+	import app.model.dict.DicPatrolType;
+	import app.model.dict.DicPatrolZone;
+	import app.model.dict.DicPointLevel;
+	import app.model.dict.DicPointType;
+	import app.model.dict.DicPoliceType;
+	import app.model.dict.DicRoad;
+	import app.model.dict.DicServiceStatus;
+	import app.model.dict.DicServiceType;
+	import app.model.vo.AlarmPoliceVO;
+	import app.model.vo.AppConfigVO;
+	import app.model.vo.GPSNewVO;
+	import app.model.vo.GPSVO;
+	import app.model.vo.ServiceExceptVO;
+	import app.view.RightPanelAlarmInfoFXMediator;
+	import app.view.RightPanelAlarmInfoMediator;
+	import app.view.RightPanelAlarmStatisMediator;
+	import app.view.RightPanelQwPointMediator;
+	import app.view.RightPanelServiceCallFXMediator;
+	import app.view.RightPanelServiceCallMediator;
+	import app.view.RightPanelServiceCallPTMediator;
+	import app.view.RightPanelServiceExceptMediator;
+	import app.view.RightPanelServiceLinebackMediator;
+	import app.view.RightPanelServiceOverviewMediator;
+	import app.view.RightPanelServiceOverviewPTMediator;
+	import app.view.RightPanelServiceSearchFXMediator;
+	import app.view.RightPanelServiceSearchMediator;
+	import app.view.RightPanelServiceSearchPTMediator;
+	import app.view.RightPanelServiceTrackHistoryMediator;
+	import app.view.RightPanelServiceTrackRealtimeMediator;
+	import app.view.RightPanelTodayQuestMediator;
+	import app.view.RightPanelTodayServiceMediator;
+	import app.view.RightPanelWarningAreaMediator;
+	import app.view.components.RightPanelAlarmInfo;
+	import app.view.components.RightPanelAlarmInfoFX;
+	import app.view.components.RightPanelAlarmStatis;
+	import app.view.components.RightPanelQwPoint;
+	import app.view.components.RightPanelServiceCall;
+	import app.view.components.RightPanelServiceCallFX;
+	import app.view.components.RightPanelServiceCallPT;
+	import app.view.components.RightPanelServiceExcept;
+	import app.view.components.RightPanelServiceLineback;
+	import app.view.components.RightPanelServiceOverview;
+	import app.view.components.RightPanelServiceOverviewPT;
+	import app.view.components.RightPanelServiceSearch;
+	import app.view.components.RightPanelServiceSearchFX;
+	import app.view.components.RightPanelServiceSearchPT;
+	import app.view.components.RightPanelServiceTrackHistory;
+	import app.view.components.RightPanelServiceTrackRealtime;
+	import app.view.components.RightPanelTodayQuest;
+	import app.view.components.RightPanelTodayService;
+	import app.view.components.RightPanelWarningArea;
 	
 	import org.puremvc.as3.interfaces.ICommand;
 	import org.puremvc.as3.interfaces.INotification;
@@ -307,6 +345,7 @@ package app.controller
 			facade.registerMediator(new RightPanelTodayQuestMediator(new RightPanelTodayQuest));
 			facade.registerMediator(new RightPanelAlarmStatisMediator(new RightPanelAlarmStatis));
 			facade.registerMediator(new RightPanelWarningAreaMediator(new RightPanelWarningArea));
+			facade.registerMediator(new RightPanelQwPointMediator(new RightPanelQwPoint));
 			
 			if(AppConfigVO.district.indexOf('奉贤') >= 0)
 			{
@@ -449,6 +488,20 @@ package app.controller
 			{
 				var patorl:DicPatrolType = new DicPatrolType(item);
 				DicPatrolType.dict[patorl.id] = patorl;
+			}
+			//卡点等级
+			DicPointLevel.dict[DicPointLevel.ALL.id] = DicPointLevel.ALL;
+			for each(item in xmlList.(PDICID == 352))
+			{
+				var pointLevel:DicPointLevel = new DicPointLevel(item);
+				DicPointLevel.dict[pointLevel.id] = pointLevel;
+			}
+			//卡点类型
+			DicPointType.dict[DicPointType.ALL.id] = DicPointType.ALL;
+			for each(item in xmlList.(PDICID == 353))
+			{
+				var piontType:DicPointType = new DicPointType(item);
+				DicPointType.dict[piontType.id] = piontType;
 			}
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：系统字典加载完成！");	
 			

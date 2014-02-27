@@ -36,6 +36,7 @@
 					<components:InfoWindowAlarmStatis id="infoWindowAlarmStatis"/>
 					<components:InfoWindowExceptInfo id="infoWindowExceptInfo"/>
 					<components:InfoWindowElePolice id="infoWindowElePolice"/>
+					<components:InfoWindowQwPoint id="infoWindowQwPoint"/>
 				</mx:ViewStack>
 			</s:BorderContainer>
 		</esri:infoWindowContent>
@@ -53,6 +54,8 @@
 		<esri:GraphicsLayer id="drawLayer"/>
 		
 		<esri:GraphicsLayer id="patrolPointLayer"/>
+		
+		<esri:GraphicsLayer id="qwPointLayer"/>
 		
 		<esri:GraphicsLayer id="elePoliceLayer"/>
 		

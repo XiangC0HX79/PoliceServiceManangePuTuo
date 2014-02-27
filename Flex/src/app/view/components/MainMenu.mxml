@@ -44,6 +44,8 @@
 			
 			public static const WARNING:String = "分色预警";
 			
+			public static const QW_POINT:String = "卡点";
+			
 			public static const MENUCLICK:String = "menuclick";
 			
 			public var menu:String = "";
@@ -116,6 +118,7 @@
 				dictMenu[SERVICEEXCEPT] 	= this.getChildAt(7);
 				dictMenu[WARNING] 			= this.getChildAt(8);
 				dictMenu[SERVICELINEBACK] 	= this.getChildAt(9);
+				dictMenu[QW_POINT] 	= this.getChildAt(10);
 				
 				/* for each(var moduleHide:String in AppConfigVO.moduleHideArr)
 				{
@@ -193,6 +196,11 @@
 							   width="65" height="65"
 							   upIcon="@Embed('assets/image/menu/icon12a.png')" 
 							   overIcon="@Embed('assets/image/menu/icon12b.png')"
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon5a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon5b.png')" 
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
