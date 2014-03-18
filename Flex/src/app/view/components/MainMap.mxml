@@ -53,6 +53,8 @@
 		
 		<esri:GraphicsLayer id="drawLayer"/>
 		
+		<esri:GraphicsLayer id="patrolLineLayer"/>
+		
 		<esri:GraphicsLayer id="patrolPointLayer"/>
 		
 		<esri:GraphicsLayer id="qwPointLayer"/>

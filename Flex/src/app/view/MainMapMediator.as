@@ -135,6 +135,7 @@ package app.view
 			facade.registerMediator(new LayerTileMediator(mainMap.tileLayer));
 			facade.registerMediator(new LayerImageMediator(mainMap.imageLayer));
 			facade.registerMediator(new LayerPatrolZoneMediator(mainMap.patrolAreaLayer));
+			facade.registerMediator(new LayerPatrolLineMediator(mainMap.patrolLineLayer));
 			facade.registerMediator(new LayerPatrolPointMediator(mainMap.patrolPointLayer));
 			facade.registerMediator(new LayerElePoliceMediator(mainMap.elePoliceLayer));
 			facade.registerMediator(new LayerTrackHistoryMediator(mainMap.trackLayer));

@@ -10,6 +10,7 @@ package app.model.dict
 	public class DicLayer
 	{
 		public static const PATROLZONE:DicLayer = new DicLayer({NAME:"巡区"});
+		public static const PATROLLINE:DicLayer = new DicLayer({NAME:"巡线"});
 		public static const PATROLPOINT:DicLayer = new DicLayer({NAME:"必到点"});
 		public static const GPSNAME:DicLayer = new DicLayer({NAME:"名称"});
 		
@@ -29,6 +30,7 @@ package app.model.dict
 		{
 			var arr:ArrayCollection = new ArrayCollection;
 			arr.addItem(PATROLZONE);
+			arr.addItem(PATROLLINE);
 			arr.addItem(PATROLPOINT);
 			arr.addItem(GPSNAME);
 			return arr;

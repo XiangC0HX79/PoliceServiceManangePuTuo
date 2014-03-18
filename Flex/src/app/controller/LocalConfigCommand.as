@@ -22,6 +22,7 @@ package app.controller
 	import app.model.dict.DicElePolice;
 	import app.model.dict.DicExceptType;
 	import app.model.dict.DicGPSImage;
+	import app.model.dict.DicPatrolLine;
 	import app.model.dict.DicPatrolPoint;
 	import app.model.dict.DicPatrolType;
 	import app.model.dict.DicPatrolZone;
@@ -81,7 +82,7 @@ package app.controller
 	
 	public class LocalConfigCommand extends SimpleCommand implements ICommand
 	{
-		private static const INITCOUNT:Number = 12;
+		private static const INITCOUNT:Number = 13;
 		private static var init:Number = 0;
 		
 		private var arrGPSTemp:ArrayCollection = new ArrayCollection;
@@ -313,6 +314,11 @@ package app.controller
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
 			sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
 				["getPatrolZone",onPatrolZoneResult,[],false]);		
+			
+			//加载巡线数据
+			sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
+			sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
+				["getPatrolLine",onPatrolLineResult,[],false]);		
 			
 			//加载卡点数据
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
@@ -624,6 +630,20 @@ package app.controller
 				DicPatrolZone.dict[patrolZone.id] = patrolZone;
 			}
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：巡区数据加载完成！");		
+			
+			appInit();
+		}
+		
+		private function onPatrolLineResult(result:ArrayCollection):void
+		{	
+			DicPatrolLine.dict[DicPatrolLine.ALL.id] = DicPatrolLine.ALL;
+			
+			for each(var row:Object in result)
+			{
+				var patrolLine:DicPatrolLine = new DicPatrolLine(row);				
+				DicPatrolLine.dict[patrolLine.id] = patrolLine;
+			}
+			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：巡线数据加载完成！");		
 			
 			appInit();
 		}

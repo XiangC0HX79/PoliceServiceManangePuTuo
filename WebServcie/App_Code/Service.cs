@@ -448,6 +448,23 @@ public class Service : System.Web.Services.WebService
         return clsGetData.GetTable(sql);
     }
 
+    [WebMethod]
+    public DataTable getPatrolLine()
+    {
+        ClsGetData clsGetData = new ClsGetData("System.Data.SqlClient", strConn);
+        String sql = "SELECT " +
+                        "ID             ID, " +
+                        "DEPID          DEPID, " +
+                        "NAME           NAME, " +
+                        "HH             HH, " +
+                        "LINERANGE      LINERANGE, " +
+                        "EXTENT1        EXTENT1, " +
+                        "EXTENT2        EXTENT2, " +
+                        "EXTENT3        EXTENT3 " +
+                        "FROM T_QW_PATROLLINE";
+        return clsGetData.GetTable(sql);
+    }
+
 
     [WebMethod]
     public DataTable getPatrolPoint()
