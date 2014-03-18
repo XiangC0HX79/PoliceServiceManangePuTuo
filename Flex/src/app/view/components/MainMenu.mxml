@@ -44,7 +44,7 @@
 			
 			public static const WARNING:String = "分色预警";
 			
-			public static const QW_POINT:String = "卡点";
+			public static const QW_POINT:String = "卡点展示";
 			
 			public static const MENUCLICK:String = "menuclick";
 			
@@ -204,7 +204,7 @@
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
 							   width="65" height="65"
-							   upIcon="@Embed('assets/image/menu/icon5a.png')" 
-							   overIcon="@Embed('assets/image/menu/icon5b.png')" 
+							   upIcon="@Embed('assets/image/menu/icon13a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon13b.png')" 
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 </s:HGroup>

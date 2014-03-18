@@ -8,8 +8,6 @@ package app.model.dict
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
-	
-	import org.hamcrest.mxml.object.Null;
 
 	[Bindable]
 	public class DicPatrolZone

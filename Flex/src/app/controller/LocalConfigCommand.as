@@ -491,14 +491,14 @@ package app.controller
 			}
 			//卡点等级
 			DicPointLevel.dict[DicPointLevel.ALL.id] = DicPointLevel.ALL;
-			for each(item in xmlList.(PDICID == 352))
+			for each(item in xmlList.(PDICID == 353))
 			{
 				var pointLevel:DicPointLevel = new DicPointLevel(item);
 				DicPointLevel.dict[pointLevel.id] = pointLevel;
 			}
 			//卡点类型
 			DicPointType.dict[DicPointType.ALL.id] = DicPointType.ALL;
-			for each(item in xmlList.(PDICID == 353))
+			for each(item in xmlList.(PDICID == 352))
 			{
 				var piontType:DicPointType = new DicPointType(item);
 				DicPointType.dict[piontType.id] = piontType;

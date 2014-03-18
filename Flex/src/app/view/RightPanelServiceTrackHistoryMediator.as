@@ -25,7 +25,6 @@ package app.view
 	import mx.events.CollectionEvent;
 	import mx.events.FlexEvent;
 	
-	import org.hamcrest.object.nullValue;
 	import org.puremvc.as3.interfaces.IMediator;
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.mediator.Mediator;
