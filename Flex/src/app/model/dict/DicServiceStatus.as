@@ -24,7 +24,7 @@ package app.model.dict
 			this.label = source.DICVALUE;
 			this.orderNum = source.ORDERNUM;
 			
-			this.imageSource = DicGPSImage.getImageClass(DicGPSImage.STATUS,orderNum);
+			this.imageSource = DicGPSImage.getImageClass(DicGPSImage.STATUS,0,orderNum);
 			/*switch(this.label)
 			{
 				case "待勤":

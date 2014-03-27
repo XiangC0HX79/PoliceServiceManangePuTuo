@@ -46,6 +46,8 @@
 			
 			public static const QW_POINT:String = "卡点展示";
 			
+			public static const PATROL_LINE:String = "巡逻工作";
+			
 			public static const MENUCLICK:String = "menuclick";
 			
 			public var menu:String = "";
@@ -118,7 +120,8 @@
 				dictMenu[SERVICEEXCEPT] 	= this.getChildAt(7);
 				dictMenu[WARNING] 			= this.getChildAt(8);
 				dictMenu[SERVICELINEBACK] 	= this.getChildAt(9);
-				dictMenu[QW_POINT] 	= this.getChildAt(10);
+				dictMenu[QW_POINT] 			= this.getChildAt(10);
+				dictMenu[PATROL_LINE] 		= this.getChildAt(11);
 				
 				/* for each(var moduleHide:String in AppConfigVO.moduleHideArr)
 				{
@@ -206,5 +209,10 @@
 							   width="65" height="65"
 							   upIcon="@Embed('assets/image/menu/icon13a.png')" 
 							   overIcon="@Embed('assets/image/menu/icon13b.png')" 
+							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
+	<subComponents:ImageButton buttonDown="imagebutton1_buttonDownHandler(event)"
+							   width="65" height="65"
+							   upIcon="@Embed('assets/image/menu/icon14a.png')" 
+							   overIcon="@Embed('assets/image/menu/icon14b.png')" 
 							   skinClass="app.view.components.skin.skinImageButtonMenu"/>
 </s:HGroup>

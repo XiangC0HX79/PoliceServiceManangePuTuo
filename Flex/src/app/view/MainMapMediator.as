@@ -64,6 +64,7 @@ package app.view
 	import mx.events.FlexEvent;
 	import mx.graphics.SolidColor;
 	import mx.managers.CursorManager;
+	import mx.managers.CursorManagerPriority;
 	import mx.printing.FlexPrintJob;
 	import mx.printing.FlexPrintJobScaleType;
 	import mx.resources.ResourceManager;
@@ -99,6 +100,7 @@ package app.view
 	import app.model.vo.GPSNewVO;
 	import app.model.vo.GPSVO;
 	import app.model.vo.MapCursor;
+	import app.model.vo.PatrolLineVO;
 	import app.model.vo.QwPointVO;
 	import app.model.vo.ServiceExceptVO;
 	import app.model.vo.TrackHistoryVO;
@@ -131,6 +133,7 @@ package app.view
 			facade.registerMediator(new InfoWindowAlarmStatisMediator(mainMap.infoWindowAlarmStatis));
 			facade.registerMediator(new InfoWindowExceptInfoMediator(mainMap.infoWindowExceptInfo));
 			facade.registerMediator(new InfoWindowElePoliceMediator(mainMap.infoWindowElePolice));
+			facade.registerMediator(new InfoWindowPatrolPointMediator(mainMap.infoWindowPatrolPoint));
 			
 			facade.registerMediator(new LayerTileMediator(mainMap.tileLayer));
 			facade.registerMediator(new LayerImageMediator(mainMap.imageLayer));
@@ -237,6 +240,9 @@ package app.view
 						AppNotification.NOTIFY_TOOLBAR,
 						AppNotification.NOTIFY_MENUBAR,
 						
+						AppNotification.NOTIFY_LAYER_MOUSEOVER,
+						AppNotification.NOTIFY_LAYER_MOUSEOUT,
+						
 						AppNotification.NOTIFY_LAYERGPS_POLICECLICK,
 						//AppNotification.NOTIFY_LAYERGPS_PEOPLECLICK,
 						AppNotification.NOTIFY_LAYERGPS_VEHICLECLICK,
@@ -262,7 +268,8 @@ package app.view
 						AppNotification.NOTIFY_LAYERGPS_LOCATE,
 						
 						AppNotification.NOTIFY_ALARM_STATISCLICK,
-						AppNotification.NOTIFY_LAYER_QWPOINT_CLICK
+						AppNotification.NOTIFY_LAYER_QWPOINT_CLICK,
+						AppNotification.NOTIFY_LAYERPATROPOINT_GRAPHICCLICK
 						];
 		}
 		
@@ -295,7 +302,14 @@ package app.view
 					locateGeometry(notification.getBody() as Geometry);
 					break;
 				
+				case AppNotification.NOTIFY_LAYER_MOUSEOVER:
+					MapCursor.HAND.cursorId = CursorManager.setCursor(MapCursor.HAND.currentCursor,CursorManagerPriority.HIGH,MapCursor.HAND.xOffset,MapCursor.HAND.yOffset);					
+					break;
 				
+				case AppNotification.NOTIFY_LAYER_MOUSEOUT:
+					CursorManager.removeCursor(MapCursor.HAND.cursorId);
+					break;		
+								
 				case AppNotification.NOTIFY_LAYERGPS_POLICECLICK:
 					showPoliceInfoWindow(notification.getBody() as GPSNewVO);
 					break;
@@ -354,6 +368,13 @@ package app.view
 					mainMap.map.infoWindow.label = qwPoint.Name;
 					mainMap.infoWindowView.selectedChild = mainMap.infoWindowQwPoint;
 					mainMap.map.infoWindow.show(qwPoint.pt);
+					break;
+				
+				case AppNotification.NOTIFY_LAYERPATROPOINT_GRAPHICCLICK:
+					var patrolPoint:DicPatrolPoint = notification.getBody() as DicPatrolPoint;		
+					mainMap.map.infoWindow.label = patrolPoint.label;
+					mainMap.infoWindowView.selectedChild = mainMap.infoWindowPatrolPoint;
+					mainMap.map.infoWindow.show(patrolPoint.mapPoint);
 					break;
 			}
 		}

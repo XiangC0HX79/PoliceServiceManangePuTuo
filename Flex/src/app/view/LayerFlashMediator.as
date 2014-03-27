@@ -60,7 +60,8 @@ package app.view
 		override public function listNotificationInterests():Array
 		{
 			return [
-				AppNotification.NOTIFY_LAYERFLASH_FLASH
+				AppNotification.NOTIFY_LAYERFLASH_FLASH,
+				AppNotification.NOTIFY_LAYERFLASH_FLASH_SOURCE
 			];
 		}
 		
@@ -71,7 +72,27 @@ package app.view
 				case AppNotification.NOTIFY_LAYERFLASH_FLASH:
 					flash(notification.getBody() as Array);
 					break;
+				
+				case AppNotification.NOTIFY_LAYERFLASH_FLASH_SOURCE:
+					flashSource(notification.getBody() as Array);
+					break;
 			}
+		}
+		
+		private function flashSource(arr:Array,alpha:Number = 1):void
+		{			
+			if(flashMovie.isPlaying)
+			{
+				flashMovie.end();
+			}
+			
+			var fade2:Fade = flashMovie.children[0];
+			fade2.alphaFrom = alpha;
+			
+			var fade1:Fade = flashMovie.children[1];
+			fade1.alphaTo = alpha;
+			
+			flashMovie.play(arr);
 		}
 				
 		private function flash(arr:Array,alpha:Number = 1):void

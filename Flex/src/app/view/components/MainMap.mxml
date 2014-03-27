@@ -37,6 +37,7 @@
 					<components:InfoWindowExceptInfo id="infoWindowExceptInfo"/>
 					<components:InfoWindowElePolice id="infoWindowElePolice"/>
 					<components:InfoWindowQwPoint id="infoWindowQwPoint"/>
+					<components:InfoWindowPatrolPoint id="infoWindowPatrolPoint"/>
 				</mx:ViewStack>
 			</s:BorderContainer>
 		</esri:infoWindowContent>

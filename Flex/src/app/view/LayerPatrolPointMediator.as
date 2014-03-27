@@ -1,13 +1,7 @@
 package app.view
 {
-	import app.AppNotification;
-	import app.model.dict.DicDepartment;
-	import app.model.dict.DicLayer;
-	import app.model.dict.DicPatrolPoint;
-	import app.model.dict.DicPatrolZone;
-	import app.view.components.MainMenu;
-	
 	import com.esri.ags.Graphic;
+	import com.esri.ags.events.GraphicEvent;
 	import com.esri.ags.events.ZoomEvent;
 	import com.esri.ags.layers.GraphicsLayer;
 	import com.esri.ags.layers.supportClasses.LOD;
@@ -16,9 +10,18 @@ package app.view
 	import com.esri.ags.symbols.SimpleMarkerSymbol;
 	import com.esri.ags.symbols.TextSymbol;
 	
+	import flash.events.MouseEvent;
 	import flash.text.TextFormat;
 	
 	import mx.collections.ArrayCollection;
+	
+	import app.AppNotification;
+	import app.ApplicationFacade;
+	import app.model.dict.DicDepartment;
+	import app.model.dict.DicLayer;
+	import app.model.dict.DicPatrolPoint;
+	import app.model.dict.DicPatrolZone;
+	import app.view.components.MainMenu;
 	
 	import org.puremvc.as3.interfaces.IMediator;
 	import org.puremvc.as3.interfaces.INotification;
@@ -44,11 +47,37 @@ package app.view
 			super(NAME, viewComponent);
 						
 			layerPatrolPoint.visible = false;
+			
+			layerPatrolPoint.addEventListener(GraphicEvent.GRAPHIC_ADD,onGraphicAdd);
 		}
 		
 		private function get layerPatrolPoint():GraphicsLayer
 		{
 			return viewComponent as GraphicsLayer;
+		}
+		
+		private function onGraphicAdd(event:GraphicEvent):void
+		{	
+			event.graphic.addEventListener(MouseEvent.CLICK, onGraphicClick);
+			
+			event.graphic.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			event.graphic.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		}
+		
+		private function onMouseOver(event:MouseEvent):void
+		{						
+			sendNotification(AppNotification.NOTIFY_LAYER_MOUSEOVER);
+		}
+		
+		private function onMouseOut(event:MouseEvent):void
+		{						
+			sendNotification(AppNotification.NOTIFY_LAYER_MOUSEOUT);			
+		}
+		
+		private function onGraphicClick(event:MouseEvent):void
+		{			
+			var graphic:Graphic = event.currentTarget as Graphic;
+			sendNotification(AppNotification.NOTIFY_LAYERPATROPOINT_GRAPHICCLICK,graphic.attributes);
 		}
 		
 		private function onZoomEnd(event:ZoomEvent):void

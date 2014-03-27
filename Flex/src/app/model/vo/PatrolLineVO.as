@@ -1,35 +1,35 @@
-package app.model.dict
+package app.model.vo
 {
 	import com.esri.ags.SpatialReference;
 	import com.esri.ags.geometry.MapPoint;
 	import com.esri.ags.geometry.Polyline;
 	
-	import flash.utils.Dictionary;
-	
-	import mx.collections.ArrayCollection;
+	import app.model.dict.DicDepartment;
+	import app.model.dict.DicPatrolLineType;
 
 	[Bindable]
-	public class DicPatrolLine
+	public class PatrolLineVO
 	{
 		public static var defaultColor:Number = 0xFF0000;
-		
-		public static const ALL:DicPatrolLine = new DicPatrolLine({KEYID:'-1',DEPID:'-1',ZONENM:'所有巡区'});
-		
+				
 		public var id:String;
-		public var depid:String;
+		public var dept:DicDepartment;
 		public var label:String;
 		public var callNo:String;
 		public var color:Number = 0xFF0000;
 		
+		public var type:DicPatrolLineType;
+		
 		public var polyline:Polyline;
 		
-		public function DicPatrolLine(source:Object)
+		public function PatrolLineVO(source:Object)
 		{
 			this.id = source.ID;
-			this.depid = source.DEPID;
+			this.dept = DicDepartment.dict[source.DEPID];
 			this.label = source.NAME;			
-			this.callNo = source.HH;
-						
+			this.callNo = source.HH;		
+			this.type = DicPatrolLineType.dict[source.TYPE];
+			
 			var ring:Array = new Array;
 			if(source.LINERANGE != undefined)
 			{				
@@ -39,9 +39,9 @@ package app.model.dict
 				{
 					this.color = Number(arr[1]);
 				}
-				else if(DicPatrolLine != null)
+				else if(PatrolLineVO != null)
 				{
-					this.color = DicPatrolLine.defaultColor;
+					this.color = PatrolLineVO.defaultColor;
 				}
 				
 				var arrPoint:Array = zonerange.split(";");
@@ -68,33 +68,6 @@ package app.model.dict
 					this.polyline = new Polyline([ring],new SpatialReference(102100));
 				}
 			}
-		}
-		
-		public static var dict:Dictionary = new Dictionary;
-		public static function get listAll():ArrayCollection
-		{
-			var arr:Array = new Array;
-			for each (var item:DicPatrolLine in dict)
-			{
-				arr.push(item);
-			}			
-			arr.sortOn("id",Array.NUMERIC);
-			
-			return new ArrayCollection(arr);
-		}
-		public static function get list():ArrayCollection
-		{
-			var arr:Array = new Array;
-			for each (var item:DicPatrolLine in dict)
-			{
-				if(item.id != ALL.id)
-				{
-					arr.push(item);
-				}
-			}			
-			arr.sortOn("id",Array.NUMERIC);
-			
-			return new ArrayCollection(arr);
 		}
 	}
 }

@@ -22,7 +22,7 @@ package app.controller
 	import app.model.dict.DicElePolice;
 	import app.model.dict.DicExceptType;
 	import app.model.dict.DicGPSImage;
-	import app.model.dict.DicPatrolLine;
+	import app.model.dict.DicPatrolLineType;
 	import app.model.dict.DicPatrolPoint;
 	import app.model.dict.DicPatrolType;
 	import app.model.dict.DicPatrolZone;
@@ -40,6 +40,7 @@ package app.controller
 	import app.view.RightPanelAlarmInfoFXMediator;
 	import app.view.RightPanelAlarmInfoMediator;
 	import app.view.RightPanelAlarmStatisMediator;
+	import app.view.RightPanelPatrolLineMediator;
 	import app.view.RightPanelQwPointMediator;
 	import app.view.RightPanelServiceCallFXMediator;
 	import app.view.RightPanelServiceCallMediator;
@@ -59,6 +60,7 @@ package app.controller
 	import app.view.components.RightPanelAlarmInfo;
 	import app.view.components.RightPanelAlarmInfoFX;
 	import app.view.components.RightPanelAlarmStatis;
+	import app.view.components.RightPanelPatrolLine;
 	import app.view.components.RightPanelQwPoint;
 	import app.view.components.RightPanelServiceCall;
 	import app.view.components.RightPanelServiceCallFX;
@@ -82,7 +84,7 @@ package app.controller
 	
 	public class LocalConfigCommand extends SimpleCommand implements ICommand
 	{
-		private static const INITCOUNT:Number = 13;
+		private static const INITCOUNT:Number = 12;
 		private static var init:Number = 0;
 		
 		private var arrGPSTemp:ArrayCollection = new ArrayCollection;
@@ -316,9 +318,9 @@ package app.controller
 				["getPatrolZone",onPatrolZoneResult,[],false]);		
 			
 			//加载巡线数据
-			sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
-			sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
-				["getPatrolLine",onPatrolLineResult,[],false]);		
+			//sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
+			//sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
+			//	["getPatrolLine",onPatrolLineResult,[],false]);		
 			
 			//加载卡点数据
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
@@ -352,6 +354,7 @@ package app.controller
 			facade.registerMediator(new RightPanelAlarmStatisMediator(new RightPanelAlarmStatis));
 			facade.registerMediator(new RightPanelWarningAreaMediator(new RightPanelWarningArea));
 			facade.registerMediator(new RightPanelQwPointMediator(new RightPanelQwPoint));
+			facade.registerMediator(new RightPanelPatrolLineMediator(new RightPanelPatrolLine));
 			
 			if(AppConfigVO.district.indexOf('奉贤') >= 0)
 			{
@@ -509,6 +512,13 @@ package app.controller
 				var piontType:DicPointType = new DicPointType(item);
 				DicPointType.dict[piontType.id] = piontType;
 			}
+			//巡线类型
+			DicPatrolLineType.dict[DicPatrolLineType.ALL.id] = DicPatrolLineType.ALL;
+			for each(item in xmlList.(PDICID == 359))
+			{
+				var patrolLineType:DicPatrolLineType = new DicPatrolLineType(item);
+				DicPatrolLineType.dict[patrolLineType.id] = patrolLineType;
+			}
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：系统字典加载完成！");	
 			
 			appInit();
@@ -634,7 +644,7 @@ package app.controller
 			appInit();
 		}
 		
-		private function onPatrolLineResult(result:ArrayCollection):void
+		/*private function onPatrolLineResult(result:ArrayCollection):void
 		{	
 			DicPatrolLine.dict[DicPatrolLine.ALL.id] = DicPatrolLine.ALL;
 			
@@ -646,7 +656,7 @@ package app.controller
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：巡线数据加载完成！");		
 			
 			appInit();
-		}
+		}*/
 		
 		private function onPatrolPointResult(result:ArrayCollection):void
 		{	

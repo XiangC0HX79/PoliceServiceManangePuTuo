@@ -35,17 +35,7 @@ package app.model.dict
 		}
 		
 		public static var dict:Dictionary = new Dictionary;
-		/*public static function get listAll():ArrayCollection
-		{
-			var arr:Array = new Array;
-			for each (var item:DicDepartment in dict)
-			{
-				arr.push(item);
-			}			
-			arr.sortOn("PX",Array.NUMERIC,"shortName",Array.CASEINSENSITIVE);
-			
-			return new ArrayCollection(arr);
-		}*/
+		
 		public static function get list():ArrayCollection
 		{
 			var arr:Array = new Array;
@@ -103,6 +93,18 @@ package app.model.dict
 			arr.sortOn("PX",Array.NUMERIC,"shortName",Array.CASEINSENSITIVE);
 			
 			return new ArrayCollection(arr);
+		}
+		
+		public function copy():DicDepartment
+		{			
+			var o:Object = {};
+			o.DEPID = this.id;
+			o.PX = this.PX;
+			o.ZB = this.ZB;
+			o.JC = this.shortName;
+			o.DWMC = this.label;
+			
+			return new DicDepartment(o);
 		}
 	}
 }

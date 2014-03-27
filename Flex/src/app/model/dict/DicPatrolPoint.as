@@ -21,6 +21,9 @@ package app.model.dict
 		public var startTime:Date;
 		public var endTime:Date;
 		
+		public var depId:Number;
+		public var time:String;
+		
 		public var mapPoint:MapPoint;
 		
 		public function DicPatrolPoint(source:Object)
@@ -33,6 +36,9 @@ package app.model.dict
 			
 			this.startTime = new Date(Date.parse(source.StartTime));
 			this.endTime = new Date(Date.parse(source.endTime));
+			
+			this.depId =  source.DEPID;
+			this.time =  source.TIME;
 			
 			var long:Number = Number(source.X);
 			var lat:Number = Number(source.Y);

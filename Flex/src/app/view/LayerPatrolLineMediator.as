@@ -1,19 +1,18 @@
 package app.view
 {
 	import com.esri.ags.Graphic;
+	import com.esri.ags.events.GraphicEvent;
 	import com.esri.ags.layers.GraphicsLayer;
-	import com.esri.ags.symbols.CompositeSymbol;
-	import com.esri.ags.symbols.SimpleFillSymbol;
 	import com.esri.ags.symbols.SimpleLineSymbol;
 	import com.esri.ags.symbols.TextSymbol;
 	
+	import flash.events.MouseEvent;
 	import flash.text.TextFormat;
 	
+	import mx.collections.ArrayCollection;
+	
 	import app.AppNotification;
-	import app.model.dict.DicDepartment;
-	import app.model.dict.DicLayer;
-	import app.model.dict.DicPatrolLine;
-	import app.model.vo.AppConfigVO;
+	import app.model.vo.PatrolLineVO;
 	import app.view.components.MainMenu;
 	
 	import org.puremvc.as3.interfaces.IMediator;
@@ -24,14 +23,15 @@ package app.view
 	{
 		public static const NAME:String = "LayerPatrolLineMediator";
 		
-		private var overviewVisible:Boolean = false;
-		private var panelVisible:Boolean = false;
+		private var tipGraphic:Graphic;
 		
 		public function LayerPatrolLineMediator(viewComponent:Object=null)
 		{
 			super(NAME, viewComponent);
 						
-			layerPatrolLine.visible = false;
+			layerPatrolLine.visible = false;			
+			
+			layerPatrolLine.addEventListener(GraphicEvent.GRAPHIC_ADD,onGraphicAdd);			
 		}
 		
 		private function get layerPatrolLine():GraphicsLayer
@@ -39,31 +39,58 @@ package app.view
 			return viewComponent as GraphicsLayer;
 		}
 		
-		private function refresh():void
-		{			
-			layerPatrolLine.visible = overviewVisible || panelVisible;
+		private function onGraphicAdd(event:GraphicEvent):void
+		{				
+			event.graphic.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			event.graphic.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		}
+		
+		private function onMouseOver(event:MouseEvent):void
+		{						
+			if(tipGraphic != null)
+				layerPatrolLine.remove(tipGraphic);
 			
-			if(layerPatrolLine.visible)
-			{
-				for each(var graphic:Graphic in layerPatrolLine.graphicProvider)
-				{
-					var patrolLine:DicPatrolLine = graphic.attributes as DicPatrolLine;
-					
-					var dept:DicDepartment = DicDepartment.dict[patrolLine.depid] as DicDepartment;
-					if(dept != null)
-					{
-						graphic.visible = dept.isMapShow;
-					}
-				}
-			}
+			var gr:Graphic = event.currentTarget as Graphic;
+			
+			var patrolLine:PatrolLineVO = gr.attributes as PatrolLineVO;
+			
+			tipGraphic = new Graphic;
+			tipGraphic.geometry = layerPatrolLine.map.toMapFromStage(event.stageX,event.stageY - 20);//patrolLine.polyline.paths[0][0];
+			tipGraphic.attributes = patrolLine;
+			
+			var textFormat:TextFormat = new TextFormat;
+			textFormat.bold = true;
+			textFormat.font = "黑体";
+			textFormat.size = 16;
+			
+			var textSymbol:TextSymbol = new TextSymbol;
+			textSymbol.text = patrolLine.label + "(" + patrolLine.callNo + ")";
+			//textSymbol.yoffset = -10;		
+			textSymbol.textFormat = textFormat;
+			
+			tipGraphic.symbol = textSymbol;
+			
+			layerPatrolLine.add(tipGraphic);
+			
+			//sendNotification(AppNotification.NOTIFY_LAYER_MOUSEOVER);			
+		}
+		
+		private function onMouseOut(event:MouseEvent):void
+		{						
+			if(tipGraphic != null)
+				layerPatrolLine.remove(tipGraphic);
+			
+			tipGraphic = null;
+			
+			//sendNotification(AppNotification.NOTIFY_LAYER_MOUSEOUT);			
 		}
 		
 		override public function listNotificationInterests():Array
 		{
 			return [
-					//AppNotification.NOTIFY_MENUBAR,
-					AppNotification.NOTIFY_APP_INIT,
-					AppNotification.NOTIFY_OVERVIEW_SET
+					AppNotification.NOTIFY_MENUBAR,
+					AppNotification.NOTIFY_PATROL_LINE_UPDATE,
+					AppNotification.NOTIFY_PATROL_LINE_FLASH
 			];
 		}
 		
@@ -72,49 +99,41 @@ package app.view
 			switch(notification.getName())
 			{
 				case AppNotification.NOTIFY_MENUBAR:
-					panelVisible = (notification.getType() == MainMenu.SERVICELINEBACK);
-					
-					refresh();
+					layerPatrolLine.visible = (notification.getType() == MainMenu.PATROL_LINE);
 					break;
 				
-				case AppNotification.NOTIFY_APP_INIT:
-					for each(var patrolLine:DicPatrolLine in DicPatrolLine.list)
+				case AppNotification.NOTIFY_PATROL_LINE_UPDATE:
+					if(layerPatrolLine.visible)
 					{
-						if(patrolLine.polyline != null)
+						layerPatrolLine.clear();
+						
+						for each(var patrolLine:PatrolLineVO in notification.getBody())
 						{
-							var graphic:Graphic = new Graphic;
-							graphic.geometry = patrolLine.polyline;
-							graphic.attributes = patrolLine;
-							
-							graphic.symbol = new SimpleLineSymbol("solid",patrolLine.color,1,2);
-														
-							layerPatrolLine.add(graphic);
-							
-							var txtGraphic:Graphic = new Graphic;
-							txtGraphic.geometry = patrolLine.polyline.paths[0][0];
-							txtGraphic.attributes = patrolLine;
-							
-							var textFormat:TextFormat = new TextFormat;
-							textFormat.bold = true;
-							textFormat.font = "黑体";
-							textFormat.size = 12;
-							
-							var textSymbol:TextSymbol = new TextSymbol;
-							textSymbol.text = patrolLine.label + "(" + patrolLine.callNo + ")";
-							//textSymbol.yoffset = -10;			
-							textSymbol.textFormat = textFormat;
-							
-							txtGraphic.symbol = textSymbol;
-													
-							layerPatrolLine.add(txtGraphic);
+							if(patrolLine.polyline != null)
+							{
+								var graphic:Graphic = new Graphic;
+								graphic.geometry = patrolLine.polyline;
+								graphic.attributes = patrolLine;
+								
+								graphic.symbol = new SimpleLineSymbol("solid",patrolLine.color,1,4);
+															
+								layerPatrolLine.add(graphic);
+							}
 						}
 					}
 					break;
 				
-				case AppNotification.NOTIFY_OVERVIEW_SET:
-					overviewVisible = DicLayer.PATROLLINE.selected;
+				case AppNotification.NOTIFY_PATROL_LINE_FLASH:					
+					patrolLine = notification.getBody() as PatrolLineVO;
 					
-					refresh();
+					var arr:Array = [];
+					for each(var gr:Graphic in layerPatrolLine.graphicProvider)
+					{
+						if(gr.attributes == patrolLine)
+							arr.push(gr);
+					}
+					
+					sendNotification(AppNotification.NOTIFY_LAYERFLASH_FLASH_SOURCE,arr);
 					break;
 			}
 		}

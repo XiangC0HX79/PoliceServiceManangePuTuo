@@ -33,13 +33,14 @@ package app.controller
 				AppConfigVO.userid = application.parameters.userid;
 			}
 			
-			IFDEF::Debug{
-				AppConfigVO.userid = "1462";
-			}
-			
 			if(application.parameters.Auth != "")
 			{
 				AppConfigVO.Auth = application.parameters.Auth;
+			}
+			
+			IFDEF::Debug{
+				AppConfigVO.userid = "1462";
+				AppConfigVO.Auth = "1";
 			}
 		}
 	}

@@ -193,7 +193,7 @@ package app.model.vo
 				}			
 			}
 						
-			return DicGPSImage.getImageClass(type,status);
+			return DicGPSImage.getImageClass(type,this.hasGun,status);
 		}
 		
 		public function refresh():void

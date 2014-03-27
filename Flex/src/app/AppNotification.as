@@ -134,8 +134,16 @@ package app
 		 * AddressLocatorService
 		 */		
 		public static const NOTIFY_ADDRESSLOCATOR:String			= "AddressLocator";
-		
 				
+		/**
+		 * 图层-鼠标选中
+		 */		
+		public static const NOTIFY_LAYER_MOUSEOVER:String				= "LayerMouseOver";
+		
+		/**
+		 * 图层-鼠标擦除
+		 */		
+		public static const NOTIFY_LAYER_MOUSEOUT:String				= "LayerMouseOut";
 		
 		/**
 		 *地图-操作变更
@@ -416,6 +424,16 @@ package app
 		public static const NOTIFY_WARNINGAREA_REFRESH:String			= "WarningAreaRefresh";
 		
 		/**
+		 * 巡线-刷新
+		 */		
+		public static const NOTIFY_PATROL_LINE_UPDATE:String			= "PatrolLineUpdate";
+		
+		/**
+		 * 巡线-闪烁
+		 */		
+		public static const NOTIFY_PATROL_LINE_FLASH:String			= "PatrolLineFlash";
+				
+		/**
 		 * 图层-基础图层-QUERY
 		 * layerName,where,outFields,resultFunction,returnGeometry,showLoading
 		 */		
@@ -507,6 +525,11 @@ package app
 		public static const NOTIFY_LAYERELEPOLICE_GRAPHICCLICK:String	= "LayerElePoliceGraphicClick";
 		
 		/**
+		 * 图层-必到点-点击
+		 */		
+		public static const NOTIFY_LAYERPATROPOINT_GRAPHICCLICK:String	= "LayerPatrolPointGraphicClick";
+		
+		/**
 		 * 图层-电子警察-闪烁
 		 */		
 		public static const NOTIFY_LAYERELEPOLICE_FLASH:String			= "LayerElePoliceFlash";
@@ -520,6 +543,11 @@ package app
 		 * 图层-闪烁
 		 */		
 		public static const NOTIFY_LAYERFLASH_FLASH:String				= "LayerFlashFlash";
+		
+		/**
+		 * 图层-闪烁2
+		 */		
+		public static const NOTIFY_LAYERFLASH_FLASH_SOURCE:String		= "LayerFlashFlashSource";
 		
 		/**
 		 * 图层-卡点-刷新

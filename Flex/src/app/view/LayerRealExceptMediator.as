@@ -105,7 +105,7 @@ package app.view
 			var textFormat:TextFormat = null;		
 			var selectedSymbol:SimpleMarkerSymbol = null;
 			var tt:DicPoliceType
-			var bitmap:Bitmap = new Bitmap(DicGPSImage.getImageClass(DicPoliceType.VEHICLE.id) as BitmapData);
+			var bitmap:Bitmap = new Bitmap(DicGPSImage.getImageClass(DicPoliceType.VEHICLE.id,0) as BitmapData);
 			iconSymbol = new PictureMarkerSymbol(bitmap);
 			
 			textFormat = new TextFormat;

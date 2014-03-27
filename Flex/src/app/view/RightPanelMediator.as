@@ -132,6 +132,9 @@ package app.view
 							case MainMenu.QW_POINT:
 								navi = facade.retrieveMediator(RightPanelQwPointMediator.NAME).getViewComponent() as NavigatorContent;	
 								break;
+							case MainMenu.PATROL_LINE:
+								navi = facade.retrieveMediator(RightPanelPatrolLineMediator.NAME).getViewComponent() as NavigatorContent;	
+								break;
 						}
 												
 						if(!rightPanel.viewstack1.contains(navi))

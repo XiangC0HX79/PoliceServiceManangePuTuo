@@ -1,15 +1,5 @@
 package app.view
 {
-	import app.AppNotification;
-	import app.model.GPSRealTimeInfoProxy;
-	import app.model.dict.DicGPSImage;
-	import app.model.dict.DicLayer;
-	import app.model.dict.DicPoliceType;
-	import app.model.vo.AppConfigVO;
-	import app.model.vo.GPSNewVO;
-	import app.view.components.MainMenu;
-	import app.view.components.MainTool;
-	
 	import com.esri.ags.Graphic;
 	import com.esri.ags.events.GraphicEvent;
 	import com.esri.ags.events.ZoomEvent;
@@ -19,6 +9,7 @@ package app.view
 	import com.esri.ags.symbols.CompositeSymbol;
 	import com.esri.ags.symbols.MarkerSymbol;
 	import com.esri.ags.symbols.PictureMarkerSymbol;
+	import com.esri.ags.symbols.SimpleFillSymbol;
 	import com.esri.ags.symbols.SimpleLineSymbol;
 	import com.esri.ags.symbols.SimpleMarkerSymbol;
 	import com.esri.ags.symbols.TextSymbol;
@@ -32,12 +23,22 @@ package app.view
 	import mx.collections.ArrayCollection;
 	import mx.effects.Sequence;
 	
+	import spark.effects.Fade;
+	import spark.formatters.DateTimeFormatter;
+	
+	import app.AppNotification;
+	import app.model.GPSRealTimeInfoProxy;
+	import app.model.dict.DicGPSImage;
+	import app.model.dict.DicLayer;
+	import app.model.dict.DicPoliceType;
+	import app.model.vo.AppConfigVO;
+	import app.model.vo.GPSNewVO;
+	import app.view.components.MainMenu;
+	import app.view.components.MainTool;
+	
 	import org.puremvc.as3.interfaces.IMediator;
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.mediator.Mediator;
-	
-	import spark.effects.Fade;
-	import spark.formatters.DateTimeFormatter;
 	
 	public class LayerGPSMediator extends Mediator implements IMediator
 	{
@@ -151,7 +152,7 @@ package app.view
 				iconSymbol.width = gps.graphicSource.width * this.scale;
 				iconSymbol.height = gps.graphicSource.height * this.scale;
 			}
-									
+			
 			textFormat = new TextFormat;
 			textFormat.bold = true;
 			//textFormat.font = "宋体";
@@ -181,7 +182,7 @@ package app.view
 			else
 				labelBackSymbol.yoffset = 28;
 			labelBackSymbol.xoffset = 2;*/
-									
+			
 			var result:Graphic = new Graphic();						
 			result.attributes = gps;
 			result.geometry = gps.mapPoint;	

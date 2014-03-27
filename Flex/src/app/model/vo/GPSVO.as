@@ -1,13 +1,5 @@
 package app.model.vo
 {
-	import app.model.dict.DicDepartment;
-	import app.model.dict.DicGPSImage;
-	import app.model.dict.DicPatrolType;
-	import app.model.dict.DicPatrolZone;
-	import app.model.dict.DicPoliceType;
-	import app.model.dict.DicServiceStatus;
-	import app.model.dict.DicServiceType;
-	
 	import com.esri.ags.SpatialReference;
 	import com.esri.ags.geometry.MapPoint;
 	
@@ -19,6 +11,14 @@ package app.model.vo
 	import mx.core.BitmapAsset;
 	
 	import spark.formatters.DateTimeFormatter;
+	
+	import app.model.dict.DicDepartment;
+	import app.model.dict.DicGPSImage;
+	import app.model.dict.DicPatrolType;
+	import app.model.dict.DicPatrolZone;
+	import app.model.dict.DicPoliceType;
+	import app.model.dict.DicServiceStatus;
+	import app.model.dict.DicServiceType;
 	
 	[Bindable]
 	public class GPSVO
@@ -32,6 +32,8 @@ package app.model.vo
 		public var departmentNAME:String = "";
 		public var policeNo:String = "";
 		public var phone:String = "";
+		
+		public var hasGun:int = 0;
 		
 		public var gpsDate:Date;
 		public var gpsDateFormat:String = "";
@@ -196,14 +198,14 @@ package app.model.vo
 			else*/ 
 			if(this.policeType == DicPoliceType.VEHICLE)
 			{
-				return DicGPSImage.getImageClass(DicPoliceType.VEHICLE.id);		
+				return DicGPSImage.getImageClass(DicPoliceType.VEHICLE.id,this.hasGun);		
 				//BitmapAsset(new DicGPSImage.CAR).bitmapData;		
 				//imageClass = DicGPSImage.CAR;
 			}
 			//交警
 			else if(this.policeType == DicPoliceType.TRAFFIC)
 			{				
-				return DicGPSImage.getImageClass(DicPoliceType.TRAFFIC.id);
+				return DicGPSImage.getImageClass(DicPoliceType.TRAFFIC.id,this.hasGun);
 			}
 			//民警
 			else
@@ -233,12 +235,12 @@ package app.model.vo
 					
 					//人员 - 勤务 - 勤务状态
 					var status:String = (this.serviceStatus == null)?"0":this.serviceStatus.orderNum;	
-					return DicGPSImage.getImageClass(type,status);	
+					return DicGPSImage.getImageClass(type,this.hasGun,status);	
 				}					
 				//人员 - 非勤务
 				else
 				{
-					return DicGPSImage.getImageClass(DicPoliceType.PEOPLE.id);	
+					return DicGPSImage.getImageClass(DicPoliceType.PEOPLE.id,this.hasGun);	
 					//return BitmapAsset(new DicGPSImage.PEOPLE).bitmapData;	
 					//return DicGPSImage.PEOPLE;					
 					//imageClass = DicGPSImage.PEOPLE;
@@ -266,6 +268,8 @@ package app.model.vo
 				
 				this.policeNo = (source.POLICENO == undefined)?"":source.POLICENO;
 				this.phone = (source.PHONE == undefined)?"":source.PHONE;
+				
+				this.hasGun = (source.HASGUN == undefined)?0:source.HASGUN;
 				
 				this.gpsDate = ConvertDate(source.DATARECORDTIME);
 				this.gpsDateFormat = ConvertDateFormat(this.gpsDate);

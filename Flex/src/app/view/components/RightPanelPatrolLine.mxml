@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent  xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					 xmlns:s="library://ns.adobe.com/flex/spark" 
+					 xmlns:mx="library://ns.adobe.com/flex/mx"
+					 xmlns:subComponents="app.view.components.subComponents.*" 
+					 xmlns:components="app.view.components.*"
+					 width="100%" height="100%" label="巡线">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+		
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			
+			import spark.components.supportClasses.ItemRenderer;
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			import spark.events.RendererExistenceEvent;
+			
+			import app.model.dict.DicDepartment;
+			import app.model.dict.DicPatrolLineType;
+			import app.model.vo.AppConfigVO;
+			import app.model.vo.GPSNewVO;
+			import app.view.components.skin.skinBaseSubPanel;
+			import app.view.components.subComponents.ItemRendererOverviewServiceStatus;
+			import app.view.components.subComponents.ItemRendererOverviewServiceType;
+			
+			public static const UPDATE:String = "Update";
+			
+			public static const GRIDCLICK:String = "gridclick";
+			public static const GRIDDOUBLECLICK:String = "griddoubleclick";
+			
+			[Bindable]public var listPointType:ArrayCollection;
+						
+			[Bindable] public var listDept:ArrayCollection;
+			
+			[Bindable]public var listPatrolLine:ArrayCollection = new ArrayCollection;
+			[Bindable]public var listPatrolLineItem:* = null;
+								
+			protected function datagrid1_gridClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listPatrolLineItem = event.item;
+					dispatchEvent(new Event(GRIDCLICK));
+				}
+			}
+			
+			protected function datagrid1_gridDoubleClickHandler(event:GridEvent):void
+			{
+				if(event.item != null)
+				{
+					listPatrolLineItem = event.item;
+					dispatchEvent(new Event(GRIDDOUBLECLICK));
+				}
+			}
+						
+			protected function listDepartment_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onDeptRendererClick);
+			}
+			
+			private function onDeptRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				var data:DicDepartment = itemRenderer.data as DicDepartment;		
+				var departmentAll:DicDepartment = listDept[0];
+				
+				data.isMapShow = !data.isMapShow;
+				
+				var allShow:Boolean = true;
+				if(data != departmentAll)
+				{
+					allShow = true;
+					for(var i:Number = 1;i<listDept.length;i++)
+					{
+						var item:DicDepartment = listDept[i];
+						if(!item.isMapShow)
+						{
+							allShow = false;
+							break;
+						}
+					}
+					departmentAll.isMapShow = allShow;
+				}
+				else
+				{			
+					for(i = 1;i<listDept.length;i++)
+					{
+						item = listDept[i];
+						item.isMapShow = departmentAll.isMapShow;
+					}		
+				}
+				
+				dispatchEvent(new Event(UPDATE));
+			}
+			
+			protected function listPointType_rendererAddHandler(event:RendererExistenceEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.renderer as ItemRenderer;
+				itemRenderer.addEventListener(MouseEvent.CLICK,onListPointTypeRendererClick);
+			}
+			
+			private function onListPointTypeRendererClick(event:MouseEvent):void
+			{
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
+				itemRenderer.data.isMapShow = !itemRenderer.data.isMapShow;				
+				
+				if(itemRenderer.data != DicPatrolLineType.ALL)
+				{
+					var allShow:Boolean = true;
+					for each(var item:DicPatrolLineType in DicPatrolLineType.list)
+					{
+						if(!item.isMapShow)
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicPatrolLineType.ALL.isMapShow = allShow;
+				}
+				else
+				{					
+					for each(item in DicPatrolLineType.list)
+					{
+						item.isMapShow = DicPatrolLineType.ALL.isMapShow;
+					}
+				}
+				
+				dispatchEvent(new Event(UPDATE));
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+		
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" minButtonShow="false"
+							 panelTitle="所属单位" 
+							 width="290" horizontalScrollPolicy="off">	
+		<s:DataGroup width="290" dataProvider="{listDept}" 
+					 rendererAdd="listDepartment_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererOverviewDepartment">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth" id="tileLayout" 
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+							 panelTitle="巡线类型" width="100%" horizontalScrollPolicy="off">	
+		<s:DataGroup width="290" dataProvider="{listPointType}" 
+					 rendererAdd="listPointType_rendererAddHandler(event)"
+					 itemRenderer="app.view.components.subComponents.ItemRendererPointType">
+			<s:layout>
+				<s:TileLayout columnAlign="justifyUsingWidth" 
+							  paddingTop="2" paddingBottom="2"/>
+			</s:layout>			
+		</s:DataGroup>
+	</components:BaseSubPanel>
+	
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
+							 height="100%" minButtonShow="false"
+							 panelTitle="巡线列表({listPatrolLine.length})" width="100%">
+		<s:DataGrid height="100%" width="100%"  
+					dataProvider="{listPatrolLine}" 
+					gridDoubleClick="datagrid1_gridDoubleClickHandler(event)"
+					gridClick="datagrid1_gridClickHandler(event)"
+					doubleClickEnabled="true"
+					alternatingRowColors="[0xEEEEEE,0xFFFFFF]">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn headerText="名称" dataField="label" width="120"></s:GridColumn>
+					<s:GridColumn headerText="呼号" dataField="callNo" width="100"></s:GridColumn>
+					<s:GridColumn headerText="类型" dataField="type.label" width="120"></s:GridColumn>
+					<s:GridColumn headerText="所属单位" dataField="dept.label" width="120"></s:GridColumn>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>		
+	</components:BaseSubPanel>		
+</s:NavigatorContent>

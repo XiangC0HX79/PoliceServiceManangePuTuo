@@ -18,7 +18,7 @@
 				var policeType:DicPoliceType = data as DicPoliceType;
 				if(policeType != null)
 				{
-					image.source = DicGPSImage.getImageClass(policeType.id);
+					image.source = DicGPSImage.getImageClass(policeType.id,0);
 				}
 			}
 		]]>

@@ -1,7 +1,5 @@
 package app.model.dict
 {
-	import app.model.vo.AppConfigVO;
-	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -9,11 +7,14 @@ package app.model.dict
 	import flash.events.IOErrorEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.globalization.NumberFormatter;
 	import flash.net.URLRequest;
 	import flash.utils.Dictionary;
 	
 	import mx.controls.Alert;
 	import mx.core.BitmapAsset;
+	
+	import app.model.vo.AppConfigVO;
 	
 	public final class DicGPSImage
 	{		
@@ -34,27 +35,34 @@ package app.model.dict
 		public static var STATUS_W:Number = 20;
 		public static var STATUS_H:Number = 20;
 		
-		public static function getImageClass(type:String,status:String = "0"):Object
+		public static function getImageClass(type:String,hasGun:int = 0,status:String = "0"):Object
 		{			
 			var i:Number = Number(type);
 			var j:Number = Number(status);
+			var k:Number = hasGun;
 			if(isNaN(i))i=2;
 			if(isNaN(j))j=0;
 			
-			var key:Number = i*100 + j;
+			var t:String = (j < 10)?("0" + j.toString()):j.toString();
+			
+			var key:String = k.toString() + i.toString() + t;
+			
 			if(dict[key] == undefined)
 			{				
+				var trans:Boolean = (hasGun == 0);
+				var backColor:uint = (hasGun == 0)?0x0:0xFF0000;
+				
 				if(type == DicPoliceType.VEHICLE.id)
 				{
-					dict[key] = new BitmapData(VEHICLE_W,VEHICLE_H,true,0x0);
+					dict[key] = new BitmapData(VEHICLE_W,VEHICLE_H,trans,backColor);
 				}
 				else if(type == STATUS)
 				{
-					dict[key] = new BitmapData(STATUS_W,STATUS_H,true,0x0);
+					dict[key] = new BitmapData(STATUS_W,STATUS_H,trans,backColor);
 				}
 				else
 				{
-					dict[key] = new BitmapData(PEOPLE_W,PEOPLE_H,true,0x0);
+					dict[key] = new BitmapData(PEOPLE_W,PEOPLE_H,trans,backColor);
 				}
 								
 				var loader:Loader = new Loader();

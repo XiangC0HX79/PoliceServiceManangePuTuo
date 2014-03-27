@@ -39,10 +39,16 @@ package app.model.vo
 		private static const CLASS_DRAWPOLY:Class;
 		public static const DRAWPOLY:MapCursor = new MapCursor(CLASS_DRAWPOLY,-9,-12);
 		
+		[Embed(source="assets/image/map_hand.png")]
+		private static const CLASS_HAND:Class;
+		public static const HAND:MapCursor = new MapCursor(CLASS_HAND,-10,0);
+		
 		
 		public var currentCursor:Class = null;
 		public var xOffset:Number = 0;
 		public var yOffset:Number = 0;
+		
+		public var cursorId:int;
 		
 		public function MapCursor(currentCursor:Class,xOffset:Number = 0,yOffset:Number = 0)
 		{

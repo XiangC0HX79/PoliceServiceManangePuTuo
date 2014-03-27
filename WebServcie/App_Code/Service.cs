@@ -79,7 +79,8 @@ public class Service : System.Web.Services.WebService
                         ",[ISUSE] " +
                         ",[NOTE] " +
                         ",[ORDERNUM] " +
-                        "FROM T_QW_SYS_DIC";
+                        "FROM T_QW_SYS_DIC " +
+                        "WHERE ISUSE = 1";
         return clsGetData.GetTable(sql);
     }
 
@@ -239,6 +240,7 @@ public class Service : System.Web.Services.WebService
                     "''      DUTYNOTE, " +
                     "''            SEX, " +
                     "''            RYBH, " +
+                    "''            HASGUN, " +
                     "''     STATECHANGETIME ";
 
         sql += "UNION SELECT " +
@@ -271,6 +273,7 @@ public class Service : System.Web.Services.WebService
                      "DUTYNOTE      DUTYNOTE, " +
                      "XB            SEX, " +
                      "RYBH          RYBH, " +
+                     "HASGUN          HASGUN, " +
                      "STATECHANGETIME     STATECHANGETIME ";
         if (GPSID != "")
             sql += "FROM VIEW_GPSPLAN WHERE GPSSIMCARD is not null and GPSSIMCARD!='' AND GPSID > " + GPSID;
@@ -460,7 +463,8 @@ public class Service : System.Web.Services.WebService
                         "LINERANGE      LINERANGE, " +
                         "EXTENT1        EXTENT1, " +
                         "EXTENT2        EXTENT2, " +
-                        "EXTENT3        EXTENT3 " +
+                        "EXTENT3        EXTENT3, " +
+                        "TYPE           TYPE " +
                         "FROM T_QW_PATROLLINE";
         return clsGetData.GetTable(sql);
     }
@@ -481,6 +485,8 @@ public class Service : System.Web.Services.WebService
                         "StartTime       StartTime, " +
                         "endTime         endTime, " +
                         "[DESC]          [DESC], " +
+                        "DEPID           DEPID, " +
+                        "[TIME]          [TIME], " +
                         "DICVALUE        DICVALUE " +
                         "FROM T_QW_MUSTTIME, " +
                         "(SELECT * FROM T_QW_SYS_DIC WHERE PDICID = 187) DIC " +

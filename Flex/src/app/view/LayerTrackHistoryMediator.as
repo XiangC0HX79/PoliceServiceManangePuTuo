@@ -378,7 +378,7 @@ package app.view
 					var pointSymbol:PictureMarkerSymbol = item.inService?
 						new PictureMarkerSymbol(new Bitmap(item.serviceStatus.imageSource as BitmapData))
 						:
-						new PictureMarkerSymbol(new Bitmap(DicGPSImage.getImageClass(DicGPSImage.STATUS) as BitmapData));
+						new PictureMarkerSymbol(new Bitmap(DicGPSImage.getImageClass(DicGPSImage.STATUS,0) as BitmapData));
 										
 					//var symbolPoint:SimpleMarkerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE,10,0x888888);
 					

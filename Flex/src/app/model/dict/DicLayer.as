@@ -30,7 +30,7 @@ package app.model.dict
 		{
 			var arr:ArrayCollection = new ArrayCollection;
 			arr.addItem(PATROLZONE);
-			arr.addItem(PATROLLINE);
+			//arr.addItem(PATROLLINE);
 			arr.addItem(PATROLPOINT);
 			arr.addItem(GPSNAME);
 			return arr;
