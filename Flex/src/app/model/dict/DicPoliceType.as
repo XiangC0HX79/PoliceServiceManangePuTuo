@@ -17,6 +17,7 @@ package app.model.dict
 		public static const VEHICLE:DicPoliceType = new DicPoliceType({ID:"1",LABEL:"车辆"});
 		public static const PEOPLE:DicPoliceType = new DicPoliceType({ID:"2",LABEL:"民警"});
 		public static const TRAFFIC:DicPoliceType = new DicPoliceType({ID:"3",LABEL:"交警"});
+		public static const SPECIAL:DicPoliceType = new DicPoliceType({ID:"4",LABEL:"特警"});
 		
 		public static const BASEDMG:DicPoliceType = new DicPoliceType({ID:"5",LABEL:"基地台"});
 		

@@ -1,18 +1,18 @@
 package app.model.vo
 {
-	import app.model.dict.DicDepartment;
-	import app.model.dict.DicGPSImage;
-	import app.model.dict.DicKind;
-	import app.model.dict.DicPoliceType;
-	import app.model.dict.DicServiceStatus;
-	import app.model.dict.DicServiceType;
-	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
 	import mx.core.BitmapAsset;
+	
+	import app.model.dict.DicDepartment;
+	import app.model.dict.DicGPSImage;
+	import app.model.dict.DicKind;
+	import app.model.dict.DicPoliceType;
+	import app.model.dict.DicServiceStatus;
+	import app.model.dict.DicServiceType;
 
 	[Bindable]
 	public class GPSNewVO extends GPSVO
@@ -42,6 +42,10 @@ package app.model.vo
 		//GPS有效性
 		public function get gpsValid():Boolean
 		{
+			IFDEF::Debug{
+				return true;
+			}
+				
 			if(this.gpsDate != null)
 			{
 				var diff:Number = (GPSNewVO.CurrentTime.time - this.gpsDate.time) / (1000*60);
@@ -79,7 +83,11 @@ package app.model.vo
 			
 			if(this.policeType.id != DicPoliceType.VEHICLE.id)
 			{
-				//非勤务
+				//武装巡逻
+				if(this.hasGun && !DicServiceType.WEAPON.isMapShow)
+					return false;
+				
+				//非勤务				
 				if((!this.inService) && (!DicServiceType.NOSERVICE.isMapShow || !this.gpsValid))
 					return false;
 				
@@ -96,8 +104,8 @@ package app.model.vo
 						return false;		
 					
 					//判断是否显示失效
-					if((!this.gpsValid) && (!DicServiceType.NOGPS.isMapShow))
-						return false;
+					//if((!this.gpsValid) && (!DicServiceType.NOGPS.isMapShow))
+					//	return false;
 				}
 			}
 			else
@@ -121,31 +129,20 @@ package app.model.vo
 			
 		override protected function GetImageSouce():Object
 		{
-			var type:String = "1";	
+			//var type:String = "1";	
 			var status:String = "0";
 			
 			//基地台
 			if(this.policeTypeID == DicPoliceType.BASEDMG.id)
 			{
-				type = DicPoliceType.BASEDMG.id;
+				//type = DicPoliceType.BASEDMG.id;
 			}
-			//车辆
-			else if(this.policeType == DicPoliceType.VEHICLE)
+			//车辆\交警\特警
+			else if((this.policeType == DicPoliceType.VEHICLE)
+				|| (this.policeType == DicPoliceType.TRAFFIC)
+				|| (this.policeType == DicPoliceType.SPECIAL))
 			{	
-				type = DicPoliceType.VEHICLE.id;	
-				if(!this.gpsValid)
-				{
-					status = "99";
-				}
-				else if(this.gpsStatus == "0")
-				{
-					status = "98";
-				}
-			}
-			//交警
-			else if(this.policeType == DicPoliceType.TRAFFIC)
-			{				
-				type = DicPoliceType.TRAFFIC.id;	
+				//type = this.policeType.id;	
 				if(!this.gpsValid)
 				{
 					status = "99";
@@ -159,7 +156,7 @@ package app.model.vo
 			else
 			{
 				//人员 - 勤务 - 勤务类型		
-				type = DicPoliceType.PEOPLE.id;	
+				//type = DicPoliceType.PEOPLE.id;	
 				if(this.serviceType != DicServiceType.NOSERVICE) 
 				{
 					var arr:Array = this.serviceType.imagelist.split(",");
@@ -193,7 +190,7 @@ package app.model.vo
 				}			
 			}
 						
-			return DicGPSImage.getImageClass(type,this.hasGun,status);
+			return DicGPSImage.getImageClass(this.policeType.id,this.hasGun,status);
 		}
 		
 		public function refresh():void

@@ -9,8 +9,12 @@ package app.model.dict
 	[Bindable]
 	public class DicServiceType
 	{
+		public static const ALL:DicServiceType = new DicServiceType({QWTYPEID:"-2",QWTYPENAME:"所有",ISGISSHOW:"0",ImageName:"2"});
 		public static const NOSERVICE:DicServiceType = new DicServiceType({QWTYPEID:"-1",QWTYPENAME:"未排班警力",ISGISSHOW:"0",ImageName:"2"});
-		public static const NOGPS:DicServiceType = new DicServiceType({QWTYPEID:"0",QWTYPENAME:"无GPS信号",ISGISSHOW:"0",ImageName:"4"});
+		//public static const NOGPS:DicServiceType = new DicServiceType({QWTYPEID:"0",QWTYPENAME:"无GPS信号",ISGISSHOW:"0",ImageName:"4"});
+		
+		public static const WEAPON:DicServiceType = new DicServiceType({QWTYPEID:"98",QWTYPENAME:"武装巡逻",ISGISSHOW:"1",ImageName:"98"});
+		public static const OTHER:DicServiceType = new DicServiceType({QWTYPEID:"99",QWTYPENAME:"其他勤务",ISGISSHOW:"0",ImageName:"99"});
 		
 		public var id:String = "";
 		public var label:String = "";
@@ -60,9 +64,16 @@ package app.model.dict
 			var arr:Array = new Array;
 			for each (var item:DicServiceType in dict)
 			{
-				arr.push(item);
+				if((item.label == "街面警力")
+					|| (item.label == "社区警力"))
+				{
+					arr.push(item);
+				}
 			}			
-			arr.push(DicServiceType.NOGPS);
+			
+			arr.push(DicServiceType.ALL);
+			arr.push(DicServiceType.WEAPON);
+			arr.push(DicServiceType.OTHER);
 			
 			arr.sortOn("id",Array.NUMERIC);
 			

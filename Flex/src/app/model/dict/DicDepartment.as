@@ -14,6 +14,7 @@ package app.model.dict
 	{
 		public static const ALL:DicDepartment = new DicDepartment({PX:'-1',JC:'所有单位',DEPID:'-1',DWMC:"所有单位"});
 		public static const TRAFFIC:DicDepartment = new DicDepartment({PX:'2000',JC:'交警',DEPID:'-2',DWMC:"交警"});
+		public static const OTHER:DicDepartment = new DicDepartment({PX:'2001',JC:'其他',DEPID:'-3',DWMC:"其他"});
 		
 		public var id:String = "";
 		public var label:String = "";
@@ -56,10 +57,11 @@ package app.model.dict
 			var arr:Array = new Array;
 			for each (var item:DicDepartment in dict)
 			{
-				if(item.ZB != 125)
+				if((item.ZB != 125) && (item.ZB != 120))
 					arr.push(item);
 			}			
 			arr.push(DicDepartment.TRAFFIC);
+			arr.push(DicDepartment.OTHER);
 			
 			arr.sortOn("PX",Array.NUMERIC,"shortName",Array.CASEINSENSITIVE);
 			

@@ -13,18 +13,18 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			import spark.components.supportClasses.ItemRenderer;
+			import spark.events.RendererExistenceEvent;
+			
 			import app.model.dict.DicDepartment;
 			import app.model.dict.DicKind;
 			import app.model.dict.DicPoliceType;
 			import app.model.dict.DicServiceStatus;
 			import app.model.dict.DicServiceType;
 			import app.model.vo.AppConfigVO;
-			
-			import mx.collections.ArrayCollection;
-			import mx.events.FlexEvent;
-			
-			import spark.components.supportClasses.ItemRenderer;
-			import spark.events.RendererExistenceEvent;
 			
 			public static const UPDATE:String = "update";
 						
@@ -46,8 +46,57 @@
 			
 			private function onRendererClick(event:MouseEvent):void
 			{
-				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
-				itemRenderer.data.isMapShow = !itemRenderer.data.isMapShow;				
+				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;		
+				
+				var serviceType:DicServiceType = itemRenderer.data as DicServiceType;				
+				
+				serviceType.isMapShow = !serviceType.isMapShow;
+				
+				if(serviceType == DicServiceType.ALL)
+				{					
+					for each(var item:DicServiceType in DicServiceType.list)
+					{
+						item.isMapShow = DicServiceType.ALL.isMapShow;
+					}
+					
+					DicServiceType.WEAPON.isMapShow = DicServiceType.ALL.isMapShow;
+					DicServiceType.OTHER.isMapShow = DicServiceType.ALL.isMapShow;
+				}
+				else if(serviceType == DicServiceType.OTHER)
+				{					
+					for each(item in DicServiceType.list)
+					{
+						if(!DicServiceType.listOverview.contains(item))
+						{
+							item.isMapShow = DicServiceType.OTHER.isMapShow;
+						}
+					}
+					
+					var allShow:Boolean = true;
+					for each(item in DicServiceType.listOverview)
+					{
+						if((item != DicServiceType.ALL) && (!item.isMapShow))
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicServiceType.ALL.isMapShow = allShow;
+				}
+				else
+				{
+					allShow = true;
+					for each(item in DicServiceType.listOverview)
+					{
+						if((item != DicServiceType.ALL) && (!item.isMapShow))
+						{
+							allShow = false;
+							break;
+						}
+					}
+					DicServiceType.ALL.isMapShow = allShow;
+				}
+				
 				dispatchEvent(new Event(UPDATE));
 			}
 			
@@ -158,6 +207,27 @@
 					}
 					
 					DicDepartment.ALL.isMapShow = allShow;
+				}				
+				else if(data == DicDepartment.OTHER)
+				{
+					allShow = true;
+					
+					for each(item in DicDepartment.list)
+					{
+						if(item.ZB == 120)
+							item.isMapShow = data.isMapShow;
+					}			
+					
+					for each(item in DicDepartment.list)
+					{
+						if(!item.isMapShow)
+						{
+							allShow = false;
+							break;
+						}
+					}
+					
+					DicDepartment.ALL.isMapShow = allShow;
 				}
 				else if(data != DicDepartment.ALL)
 				{
@@ -180,6 +250,7 @@
 					}
 					
 					DicDepartment.TRAFFIC.isMapShow = DicDepartment.ALL.isMapShow;
+					DicDepartment.OTHER.isMapShow = DicDepartment.ALL.isMapShow;
 				}
 				
 				dispatchEvent(new Event(RightPanelServiceOverview.UPDATE,true));

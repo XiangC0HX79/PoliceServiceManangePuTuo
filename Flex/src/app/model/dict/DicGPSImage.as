@@ -7,6 +7,7 @@ package app.model.dict
 	import flash.events.IOErrorEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.globalization.NumberFormatter;
 	import flash.net.URLRequest;
 	import flash.utils.Dictionary;
@@ -49,20 +50,22 @@ package app.model.dict
 			
 			if(dict[key] == undefined)
 			{				
-				var trans:Boolean = (hasGun == 0);
-				var backColor:uint = (hasGun == 0)?0x0:0xFF0000;
+				//var trans:Boolean = (hasGun == 0);
+				//var backColor:uint = (hasGun == 0)?0x0:0xFF0000;
+				var wOff:Number = hasGun?10:0;
+				var hOff:Number = hasGun?10:0;
 				
 				if(type == DicPoliceType.VEHICLE.id)
 				{
-					dict[key] = new BitmapData(VEHICLE_W,VEHICLE_H,trans,backColor);
+					dict[key] = new BitmapData(VEHICLE_W + wOff,VEHICLE_H + hOff,true,0x0);
 				}
 				else if(type == STATUS)
 				{
-					dict[key] = new BitmapData(STATUS_W,STATUS_H,trans,backColor);
+					dict[key] = new BitmapData(STATUS_W + wOff,STATUS_H + hOff,true,0x0);
 				}
 				else
 				{
-					dict[key] = new BitmapData(PEOPLE_W,PEOPLE_H,trans,backColor);
+					dict[key] = new BitmapData(PEOPLE_W + wOff,PEOPLE_H + hOff,true,0x0);
 				}
 								
 				var loader:Loader = new Loader();
@@ -96,13 +99,34 @@ package app.model.dict
 				var loader:Loader = Loader(event.target.loader);				
 				var source:BitmapData = Bitmap(loader.content).bitmapData;
 				var bitmapData:BitmapData = dict[key] as BitmapData;
-				///var sx:Number =  bitmapData.width/source.width;
-				//var sy:Number = bitmapData.height/source.height;
-				var scale:Number = Math.min(bitmapData.width/source.width,bitmapData.height/source.height);
-				var tx:Number = (bitmapData.width - source.width*scale)/2;
-				var ty:Number = (bitmapData.height - source.height*scale)/2;
-				var matrix:Matrix = new Matrix(scale,0,0,scale,tx,ty);
-				bitmapData.draw(source,matrix,null,null,null,true);
+				
+				if(hasGun)
+				{					
+					var scale:Number = Math.min(
+						(bitmapData.width - 10)/source.width
+						,(bitmapData.height - 10)/source.height
+					);
+					var tx:Number = (bitmapData.width - source.width*scale)/2;
+					var ty:Number = (bitmapData.height - source.height*scale)/2;
+					
+					var matrix:Matrix = new Matrix(scale,0,0,scale,tx,ty);
+					
+					bitmapData.draw(source,matrix,null,null,null,true);
+					
+					miaobian(bitmapData,0x88FF0000);
+					miaobian(bitmapData,0xFFFF0000);
+					miaobian(bitmapData,0xFFFF0000);
+					miaobian(bitmapData,0xFFFF0000);
+					miaobian(bitmapData,0xFFFF0000);
+				}
+				else
+				{
+					scale = Math.min(bitmapData.width/source.width,bitmapData.height/source.height);
+					tx = (bitmapData.width - source.width*scale)/2;
+					ty = (bitmapData.height - source.height*scale)/2;
+					matrix = new Matrix(scale,0,0,scale,tx,ty);
+					bitmapData.draw(source,matrix,null,null,null,true);					
+				}
 			}
 			
 			function ioErrorHandler(event:IOErrorEvent):void 
@@ -127,6 +151,111 @@ package app.model.dict
 			{
 				trace(event.text);
 			}
+		}
+		
+		private static function miaobian(bitmapData:BitmapData,color:uint):void
+		{
+			var bound:Array = [];
+			
+			for(var j:int=0;j<bitmapData.height;j++)
+			{
+				for(var i:int=0;i<bitmapData.width;i++)
+				{
+					if(bitmapData.getPixel32(i,j) > 0)
+					{
+						bound.push([i-1,j]);	
+						bound.push([i,j-1]);
+					}
+										
+					if(bound.length > 0)
+						break;
+				}
+				
+				if(bound.length > 0)
+					break;
+			}
+			
+			if(bound.length == 0)
+				return;
+			
+			var ds:int = 1;			
+			var de:int = 0;
+			
+			do
+			{
+				ds = de + 1;
+				
+				var ps:Array = bound[bound.length - 1];
+				var pe:Array = [0,0];
+				
+				for(i=8;i>0;i--)
+				{
+					de = (ds + i) % 8;
+					switch(de)
+					{
+						case 0:
+							pe[0] = ps[0] + 1;
+							pe[1] = ps[1] - 1;
+							break;
+						case 1:
+							pe[0] = ps[0] + 1;
+							pe[1] = ps[1];
+							break;
+						case 2:
+							pe[0] = ps[0] + 1;
+							pe[1] = ps[1] + 1;
+							break;
+						case 3:
+							pe[0] = ps[0];
+							pe[1] = ps[1] + 1;
+							break;
+						case 4:
+							pe[0] = ps[0] - 1;
+							pe[1] = ps[1] + 1;
+							break;
+						case 5:
+							pe[0] = ps[0] - 1;
+							pe[1] = ps[1];
+							break;
+						case 6:
+							pe[0] = ps[0] - 1;
+							pe[1] = ps[1] - 1;
+							break;
+						case 7:
+							pe[0] = ps[0];
+							pe[1] = ps[1] - 1;
+							break;
+					}
+					
+					if((pe[0] >= 0) && (pe[0] < bitmapData.width)
+						&& (pe[1] >= 0) && (pe[1] < bitmapData.height))
+					{
+						if(bitmapData.getPixel32(pe[0],pe[1]) == 0)
+							break;
+					}
+					else
+					{
+						break;
+					}
+				}
+				
+				if((pe[0] == bound[0][0]) && (pe[1] == bound[0][1]))
+					break;
+				else
+					bound.push(pe);
+				
+			}while(true);
+						
+			bitmapData.lock();
+			for each(var p:Array in bound)
+			{
+				if((p[0] >= 0) && (p[0] < bitmapData.width)
+					&& (p[1] >= 0) && (p[1] < bitmapData.height))
+				{
+					bitmapData.setPixel32(p[0],p[1],color);
+				}
+			}
+			bitmapData.unlock();
 		}
 	}
 }

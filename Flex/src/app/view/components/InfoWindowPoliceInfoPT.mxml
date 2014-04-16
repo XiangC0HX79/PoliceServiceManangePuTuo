@@ -54,60 +54,30 @@
 				<s:layout>
 					<s:HorizontalLayout verticalAlign="middle"/>
 				</s:layout>
-				<s:Label text="电台编号：" fontWeight="bold"/>
+				<s:Label text="单　　位：" fontWeight="bold"/>
+				<s:Label text="{police.departmentNAME}" minWidth="81"/>
+				<s:Label text="电　　台：" fontWeight="bold"/>
 				<s:Label text="{police.radioNo}" width="100%" color="0x0000FF" fontWeight="bold"/>
-				<s:Label text="姓　　名：" fontWeight="bold"/>
-				<s:Label text="{police.gpsName}" width="100%"/>
 			</s:SkinnableContainer>
 			
 			<s:SkinnableContainer width="100%">
 				<s:layout>
 					<s:HorizontalLayout verticalAlign="middle"/>
 				</s:layout>
-				<s:Label text="电　　话：" fontWeight="bold"/>
-				<s:Label text="{police.phone}" width="100%"/>
+				<s:Label text="姓　　名：" fontWeight="bold"/>
+				<s:Label text="{police.gpsName}" width="100%"/>
+				<s:Label text="方　　式：" fontWeight="bold"/>
+				<s:Label text="{police.patrolTypeName}" width="100%"/>
 			</s:SkinnableContainer>
 						
 			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
 				<s:layout>
 					<s:HorizontalLayout verticalAlign="middle"/>
 				</s:layout>
-				<s:Label text="警　　种：" fontWeight="bold"/>
-				<s:Label text="{police.policeKind}" width="100%"/>
-				<s:Label text="单　　位：" fontWeight="bold"/>
-				<s:Label text="{police.departmentNAME}" minWidth="81"/>
-			</s:SkinnableContainer>
-			
-			<s:SkinnableContainer width="100%">
-				<s:layout>
-					<s:HorizontalLayout verticalAlign="middle"/>
-				</s:layout>
 				<s:Label text="警　　号：" fontWeight="bold"/>
 				<s:Label text="{police.policeNo}" width="100%"/>
-			</s:SkinnableContainer>
-			
-			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
-				<s:layout>
-					<s:HorizontalLayout verticalAlign="middle"/>
-				</s:layout>
-				<s:Label text="班　　次：" fontWeight="bold"/>
-				<s:Label text="{police.runName}" width="100%"/>
-			</s:SkinnableContainer>
-			
-			<s:SkinnableContainer width="100%">
-				<s:layout>
-					<s:HorizontalLayout verticalAlign="middle"/>
-				</s:layout>
-				<s:Label text="开始时间：" fontWeight="bold"/>
-				<s:Label text="{police.runStartTimeFormat}"/>
-			</s:SkinnableContainer>
-			
-			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
-				<s:layout>
-					<s:HorizontalLayout verticalAlign="middle"/>
-				</s:layout>
-				<s:Label text="结束时间：" fontWeight="bold"/>
-				<s:Label text="{police.runEndTimeFormat}"/>
+				<s:Label text="警　　种：" fontWeight="bold"/>
+				<s:Label text="{police.policeKind}" width="100%"/>
 			</s:SkinnableContainer>
 			
 			<s:SkinnableContainer width="100%">
@@ -116,18 +86,42 @@
 				</s:layout>
 				<s:Label text="巡　　区：" fontWeight="bold"/>
 				<s:Label text="{police.patrolZoneName}" width="100%"/>
-				<s:Label text="方　　式：" fontWeight="bold"/>
-				<s:Label text="{police.patrolTypeName}" width="100%"/>
+				<s:Label text="班　　次：" fontWeight="bold"/>
+				<s:Label text="{police.runName}" width="100%"/>
 			</s:SkinnableContainer>
 			
 			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
 				<s:layout>
 					<s:HorizontalLayout verticalAlign="middle"/>
 				</s:layout>
+				<s:Label text="开始时间：" fontWeight="bold"/>
+				<s:Label text="{police.runStartTimeFormat}"/>
+			</s:SkinnableContainer>
+			
+			<s:SkinnableContainer width="100%">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="结束时间：" fontWeight="bold"/>
+				<s:Label text="{police.runEndTimeFormat}"/>
+			</s:SkinnableContainer>
+			
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+				<s:Label text="手机号码：" fontWeight="bold"/>
+				<s:Label text="{police.phone}" width="100%"/>
+			</s:SkinnableContainer>
+			
+			<s:SkinnableContainer width="100%">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
 				<s:Label text="勤务状态：" fontWeight="bold"/>
 				<s:DropDownList id="dropListServiceStatus" height="100%" 
 								dataProvider="{listServiceStatus}" 
-							 	selectedItem="{listServiceStatusItem}"
+								selectedItem="{listServiceStatusItem}"
 								width="100%" labelField="label">
 				</s:DropDownList>
 				<s:Button label="状态变更"
@@ -136,7 +130,7 @@
 						  skinClass="app.view.components.skin.skinButton"/>
 			</s:SkinnableContainer>
 			
-			<s:SkinnableContainer width="100%">
+			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
 				<s:layout>
 					<s:HorizontalLayout verticalAlign="middle"/>
 				</s:layout>
@@ -144,13 +138,19 @@
 				<s:Label text="{police.stateChangeTimeFormat}" id="labelStateChangeTimeFormat"/>
 			</s:SkinnableContainer>
 			
-			<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+			<s:SkinnableContainer width="100%">
 				<s:layout>
 					<s:HorizontalLayout verticalAlign="middle"/>
 				</s:layout>
 				<s:Label text="GPS 接收时间：" fontWeight="bold"/>
 				<s:Label text="{police.gpsDateFormat}"/>
 			</s:SkinnableContainer>
+			
+			<!--<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle"/>
+				</s:layout>
+			</s:SkinnableContainer>-->
 			
 			<s:HGroup width="100%" horizontalAlign="center">
 				<s:Button label="勤务点名"

@@ -207,6 +207,11 @@ package app.model.vo
 			{				
 				return DicGPSImage.getImageClass(DicPoliceType.TRAFFIC.id,this.hasGun);
 			}
+			//特警
+			if(this.policeType == DicPoliceType.SPECIAL)
+			{				
+				return DicGPSImage.getImageClass(DicPoliceType.SPECIAL.id,this.hasGun);
+			}
 			//民警
 			else
 			{

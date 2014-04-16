@@ -100,18 +100,7 @@ package app.view
 								navi = facade.retrieveMediator(RightPanelServiceTrackHistoryMediator.NAME).getViewComponent() as NavigatorContent;	
 								break;
 							case MainMenu.SERVICECALL:
-								if(AppConfigVO.district.indexOf('奉贤') >= 0)
-								{
-									navi = facade.retrieveMediator(RightPanelServiceCallFXMediator.NAME).getViewComponent() as NavigatorContent;
-								}
-								else if(AppConfigVO.district.indexOf('普陀') >= 0)
-								{
-									navi = facade.retrieveMediator(RightPanelServiceCallPTMediator.NAME).getViewComponent() as NavigatorContent;
-								}
-								else
-								{
-									navi = facade.retrieveMediator(RightPanelServiceCallMediator.NAME).getViewComponent() as NavigatorContent;			
-								}
+								navi = facade.retrieveMediator(RightPanelServiceCallPTMediator.NAME).getViewComponent() as NavigatorContent;
 								break;
 							case MainMenu.SERVICEEXCEPT:
 								navi = facade.retrieveMediator(RightPanelServiceExceptMediator.NAME).getViewComponent() as NavigatorContent;	

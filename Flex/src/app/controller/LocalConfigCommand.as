@@ -42,7 +42,6 @@ package app.controller
 	import app.view.RightPanelAlarmStatisMediator;
 	import app.view.RightPanelPatrolLineMediator;
 	import app.view.RightPanelQwPointMediator;
-	import app.view.RightPanelServiceCallFXMediator;
 	import app.view.RightPanelServiceCallMediator;
 	import app.view.RightPanelServiceCallPTMediator;
 	import app.view.RightPanelServiceExceptMediator;
@@ -270,6 +269,7 @@ package app.controller
 			DicPoliceType.dict[DicPoliceType.VEHICLE.id] = DicPoliceType.VEHICLE;
 			DicPoliceType.dict[DicPoliceType.PEOPLE.id] = DicPoliceType.PEOPLE;
 			DicPoliceType.dict[DicPoliceType.TRAFFIC.id] = DicPoliceType.TRAFFIC;
+			DicPoliceType.dict[DicPoliceType.SPECIAL.id] = DicPoliceType.SPECIAL;
 			
 			//初始化面板
 			initRightPanel();			
@@ -354,29 +354,11 @@ package app.controller
 			facade.registerMediator(new RightPanelAlarmStatisMediator(new RightPanelAlarmStatis));
 			facade.registerMediator(new RightPanelWarningAreaMediator(new RightPanelWarningArea));
 			facade.registerMediator(new RightPanelQwPointMediator(new RightPanelQwPoint));
-			facade.registerMediator(new RightPanelPatrolLineMediator(new RightPanelPatrolLine));
-			
-			if(AppConfigVO.district.indexOf('奉贤') >= 0)
-			{
-				facade.registerMediator(new RightPanelServiceOverviewMediator(new RightPanelServiceOverview));
-				facade.registerMediator(new RightPanelAlarmInfoFXMediator(new RightPanelAlarmInfoFX));
-				facade.registerMediator(new RightPanelServiceCallFXMediator(new RightPanelServiceCallFX));
-				facade.registerMediator(new RightPanelServiceSearchFXMediator(new RightPanelServiceSearchFX));	
-			}
-			else if(AppConfigVO.district.indexOf('普陀') >= 0)
-			{
-				facade.registerMediator(new RightPanelServiceOverviewPTMediator(new RightPanelServiceOverviewPT));
-				facade.registerMediator(new RightPanelAlarmInfoMediator(new RightPanelAlarmInfo));				
-				facade.registerMediator(new RightPanelServiceCallPTMediator(new RightPanelServiceCallPT));
-				facade.registerMediator(new RightPanelServiceSearchPTMediator(new RightPanelServiceSearchPT));		
-			}
-			else
-			{
-				facade.registerMediator(new RightPanelServiceOverviewMediator(new RightPanelServiceOverview));
-				facade.registerMediator(new RightPanelAlarmInfoMediator(new RightPanelAlarmInfo));				
-				facade.registerMediator(new RightPanelServiceCallMediator(new RightPanelServiceCall));
-				facade.registerMediator(new RightPanelServiceSearchMediator(new RightPanelServiceSearch));		
-			}			
+			facade.registerMediator(new RightPanelPatrolLineMediator(new RightPanelPatrolLine));			
+			facade.registerMediator(new RightPanelServiceOverviewPTMediator(new RightPanelServiceOverviewPT));
+			facade.registerMediator(new RightPanelAlarmInfoMediator(new RightPanelAlarmInfo));				
+			facade.registerMediator(new RightPanelServiceCallPTMediator(new RightPanelServiceCallPT));
+			facade.registerMediator(new RightPanelServiceSearchPTMediator(new RightPanelServiceSearchPT));	
 		}
 		
 		private function onMapLoad(event:LayerEvent):void
