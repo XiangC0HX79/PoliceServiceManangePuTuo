@@ -22,6 +22,7 @@ package app.controller
 	import app.model.dict.DicElePolice;
 	import app.model.dict.DicExceptType;
 	import app.model.dict.DicGPSImage;
+	import app.model.dict.DicKind;
 	import app.model.dict.DicPatrolLineType;
 	import app.model.dict.DicPatrolPoint;
 	import app.model.dict.DicPatrolType;
@@ -501,6 +502,14 @@ package app.controller
 				var patrolLineType:DicPatrolLineType = new DicPatrolLineType(item);
 				DicPatrolLineType.dict[patrolLineType.id] = patrolLineType;
 			}
+			//警种
+			for each(item in xmlList.(PDICID == 181))
+			{
+				var dicKind:DicKind = new DicKind(item);
+				DicKind.dict[dicKind.label] = dicKind;
+			}
+			
+			
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：系统字典加载完成！");	
 			
 			appInit();

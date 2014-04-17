@@ -153,6 +153,15 @@ package app.model.dict
 			}
 		}
 		
+		private static function isTrans(c:uint):Boolean
+		{			
+			var a:uint = c >>> 24;
+			var r:uint = (c & 0xFF0000) >>> 16;
+			var g:uint = (c & 0xFF00) >>> 8;
+			var b:uint = c & 0xFF;
+			return (a == 0) || ((r > 250) && (g > 250) && (b > 250));
+		}
+		
 		private static function miaobian(bitmapData:BitmapData,color:uint):void
 		{
 			var bound:Array = [];
@@ -161,7 +170,7 @@ package app.model.dict
 			{
 				for(var i:int=0;i<bitmapData.width;i++)
 				{
-					if(bitmapData.getPixel32(i,j) > 0)
+					if(!isTrans(bitmapData.getPixel32(i,j)))
 					{
 						bound.push([i-1,j]);	
 						bound.push([i,j-1]);
@@ -230,7 +239,7 @@ package app.model.dict
 					if((pe[0] >= 0) && (pe[0] < bitmapData.width)
 						&& (pe[1] >= 0) && (pe[1] < bitmapData.height))
 					{
-						if(bitmapData.getPixel32(pe[0],pe[1]) == 0)
+						if(isTrans(bitmapData.getPixel32(pe[0],pe[1])))
 							break;
 					}
 					else

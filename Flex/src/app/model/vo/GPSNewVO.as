@@ -120,8 +120,9 @@ package app.model.vo
 				return false;
 			
 			//判断警种-仅普陀
-			var kind:DicKind = DicKind.getKind(this.policeKind);
-			if((kind != null) && (!kind.isMapShow))
+			var kind:DicKind = DicKind.dict[this.policeKind] as DicKind;
+			if(((kind != null) && (!kind.isMapShow))
+				|| ((kind == null) && (!DicKind.NONE.isMapShow)))
 				return false;
 			
 			return true;

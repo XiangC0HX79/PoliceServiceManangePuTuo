@@ -63,17 +63,7 @@ package app.view
 					
 					rightPanelServiceOverview.listLayer = DicLayer.listPatrol;
 										
-					rightPanelServiceOverview.listKind = DicKind.list;
-					
-					DicKind.list.addItem(DicKind.ALL);
-					
-					var gpsRealTimeInfoProxy:GPSRealTimeInfoProxy = facade.retrieveProxy(GPSRealTimeInfoProxy.NAME) as GPSRealTimeInfoProxy;
-					
-					for each(var gps:GPSNewVO in gpsRealTimeInfoProxy.listGPS)
-					{							
-						if(!DicKind.getKind(gps.policeKind))
-							DicKind.list.addItem(new DicKind(gps.policeKind));
-					}
+					rightPanelServiceOverview.listKind = DicKind.listOverview;
 					break;
 			}
 		}

@@ -146,30 +146,23 @@
 			private function onKindRendererClick(event:MouseEvent):void
 			{
 				var itemRenderer:ItemRenderer = event.currentTarget as ItemRenderer;				
-				var data:Object = itemRenderer.data;				
+				var dicKind:DicKind = itemRenderer.data as DicKind;				
 				
-				data.isMapShow = !data.isMapShow;
+				dicKind.isMapShow = !dicKind.isMapShow;
 				
-				if(data != DicKind.ALL)
+				listKind.refresh();
+			/*	if(data == DicKind.ALL)
 				{
-					var allShow:Boolean = true;
-					for each(var item:DicKind in DicKind.list)
-					{
-						if((!item.isMapShow) && (item != DicKind.ALL))
-						{
-							allShow = false;
-							break;
-						}
-					}
-					DicKind.ALL.isMapShow = allShow;
+					DicKind.allShow = DicKind.ALL.isMapShow;
+				}
+				else if(data == DicKind.OTHER)
+				{
+					
 				}
 				else
-				{					
-					for each(item in DicKind.list)
-					{
-						item.isMapShow = DicKind.ALL.isMapShow;
-					}
-				}
+				{
+					DicKind.ALL.isMapShow = DicKind.allShow;
+				}*/
 				
 				dispatchEvent(new Event(UPDATE));
 			}
