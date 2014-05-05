@@ -1,9 +1,5 @@
 package app.view
 {
-	import app.AppNotification;
-	import app.model.vo.AppConfigVO;
-	import app.view.components.MainMenu;
-	
 	import com.esri.ags.FeatureSet;
 	import com.esri.ags.Graphic;
 	import com.esri.ags.SpatialReference;
@@ -17,7 +13,13 @@ package app.view
 	import com.esri.ags.tasks.supportClasses.FindParameters;
 	import com.esri.ags.tasks.supportClasses.Query;
 	
+	import flash.filters.ColorMatrixFilter;
+	
 	import mx.rpc.AsyncResponder;
+	
+	import app.AppNotification;
+	import app.model.vo.AppConfigVO;
+	import app.view.components.MainMenu;
 	
 	import org.puremvc.as3.interfaces.IMediator;
 	import org.puremvc.as3.interfaces.INotification;
@@ -37,13 +39,21 @@ package app.view
 		{
 			super(NAME, viewComponent);
 			
-			//layerTile.addEventListener(LayerEvent.LOAD,onLayerLoad);
 			layerTile.addEventListener(LayerEvent.LOAD_ERROR,onLayerLoadError);
 			
 			queryTask = new QueryTask;
 			queryTask.useAMF = false;
 			
 			findTask = new FindTask;
+			
+		/*	var matrix:Array = new Array();
+			matrix = matrix.concat([0.3,0.59,0.11,0,0]);
+			matrix = matrix.concat([0.3,0.59,0.11,0,0]);
+			matrix = matrix.concat([0.3,0.59,0.11,0,0]);
+			matrix = matrix.concat([0,0,0,1,0]);
+			
+			var filter:ColorMatrixFilter = new ColorMatrixFilter(matrix);
+			layerTile.filters = [filter];*/
 		}
 		
 		private function get layerTile():ArcGISTiledMapServiceLayer
@@ -52,7 +62,7 @@ package app.view
 		}
 		
 		private static var mapIndex:Number = 0;
-				
+						
 		private function onLayerLoadError(event:LayerEvent):void
 		{
 			mapIndex++;

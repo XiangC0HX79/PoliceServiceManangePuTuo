@@ -44,8 +44,6 @@
 		
 		<esri:ArcGISTiledMapServiceLayer id="tileLayer"/>
 		
-		<esri:ArcGISTiledMapServiceLayer id="imageLayer"/>
-		
 		<esri:GraphicsLayer id="layerWarningArea"/>
 		
 		<esri:GraphicsLayer id="patrolAreaLayer"/>

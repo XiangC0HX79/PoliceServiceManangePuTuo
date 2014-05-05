@@ -8,12 +8,22 @@ package app.model.dict
 	public class DicKind
 	{	
 		public static const ALL:DicKind = new DicKind({DICID:'0',DICVALUE:"所有"});
+		
+		public static const VEHICLE_NORMAL:DicKind = new DicKind({DICID:'-3',DICVALUE:"普通车辆",IMAGEID:"1"});
+		public static const VEHICLE_SPECIAL:DicKind = new DicKind({DICID:'-4',DICVALUE:"特警车辆",IMAGEID:"6"});
+		public static const VEHICLE_WEAPON:DicKind = new DicKind({DICID:'-5',DICVALUE:"武装车辆",IMAGEID:"7"});
+		
+		public static const PEOPLE_TRAFFIC:DicKind = new DicKind({DICID:'0',DICVALUE:"交通",IMAGEID:"3"});
+		public static const PEOPLE_SPECIAL:DicKind = new DicKind({DICID:'0',DICVALUE:"特警",IMAGEID:"4"});
+		
 		public static const OTHER:DicKind = new DicKind({DICID:'-1',DICVALUE:"其他"});
 		public static const NONE:DicKind = new DicKind({DICID:'-2',DICVALUE:"无警种"});
 		
 		public var id:int;
 		public var label:String = "";
 		private var _isMapShow:Boolean = true;
+		
+		public var imageId:String = "";
 	
 		public static var dict:Dictionary = new Dictionary;
 		
@@ -21,6 +31,7 @@ package app.model.dict
 		{
 			this.id = int(source.DICID);
 			this.label = source.DICVALUE;
+			this.imageId = source.IMAGEID;
 		}
 		
 		public function get isMapShow():Boolean
@@ -28,6 +39,15 @@ package app.model.dict
 			if(this == ALL)
 			{				
 				if(!NONE._isMapShow)
+					return false;
+				
+				if(!VEHICLE_NORMAL._isMapShow)
+					return false;
+				
+				if(!VEHICLE_SPECIAL._isMapShow)
+					return false;
+				
+				if(!VEHICLE_WEAPON._isMapShow)
 					return false;
 				
 				for each(var item:DicKind in DicKind.dict)
@@ -67,6 +87,10 @@ package app.model.dict
 			{				
 				NONE._isMapShow = value;
 				
+				VEHICLE_NORMAL.isMapShow = value;
+				VEHICLE_SPECIAL.isMapShow = value;
+				VEHICLE_WEAPON.isMapShow = value;
+				
 				for each(var item:DicKind in DicKind.dict)
 				{
 					item._isMapShow = value;
@@ -104,6 +128,10 @@ package app.model.dict
 				arr.push(item);
 			}		
 			arr.push(OTHER);	
+			
+			arr.push(VEHICLE_NORMAL);	
+			arr.push(VEHICLE_SPECIAL);	
+			arr.push(VEHICLE_WEAPON);	
 			
 			return new ArrayCollection(arr);
 		}

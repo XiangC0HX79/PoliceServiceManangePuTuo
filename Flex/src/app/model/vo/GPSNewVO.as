@@ -77,22 +77,46 @@ package app.model.vo
 			//判断警力类型
 			if(this.policeType == null)
 				return true;
+						
+			//判断单位
+			var department:DicDepartment = DicDepartment.dict[departmentID] as DicDepartment;
+			if((department != null) && (!department.isMapShow))
+				return false;
 			
-			if(!this.policeType.isMapShow)
-				return false;		
+			//判断警种-仅普陀
+			if(this.policeType == DicPoliceType.VEHICLE)
+			{
+				if(this.hasGun)
+					return DicKind.VEHICLE_WEAPON.isMapShow;
+				
+				if((this.policeKind == DicKind.VEHICLE_SPECIAL.label) && !DicKind.VEHICLE_SPECIAL.isMapShow)
+					return false;
+				else if(!DicKind.VEHICLE_NORMAL.isMapShow)
+					return false;
+			}
+			else
+			{
+				var kind:DicKind = DicKind.dict[this.policeKind] as DicKind;
+				if(((kind != null) && (!kind.isMapShow))
+					|| ((kind == null) && (!DicKind.NONE.isMapShow)))
+					return false;
+			}
+			
+			//if(!this.policeType.isMapShow)
+			//	return false;		
 			
 			if(this.policeType.id != DicPoliceType.VEHICLE.id)
-			{
-				//武装巡逻
-				if(this.hasGun && !DicServiceType.WEAPON.isMapShow)
-					return false;
-				
+			{				
 				//非勤务				
 				if((!this.inService) && (!DicServiceType.NOSERVICE.isMapShow || !this.gpsValid))
 					return false;
 				
+				//武装巡逻
+				if(this.hasGun)
+					return DicServiceType.WEAPON.isMapShow;
+				
 				if(inService)
-				{
+				{					
 					//判断勤务类型
 					var serviceType:DicServiceType = DicServiceType.dict[serviceTypeID] as DicServiceType;				
 					if((serviceType != null) && (!serviceType.isMapShow))
@@ -104,8 +128,8 @@ package app.model.vo
 						return false;		
 					
 					//判断是否显示失效
-					//if((!this.gpsValid) && (!DicServiceType.NOGPS.isMapShow))
-					//	return false;
+					if((!this.gpsValid) && (!DicServiceType.NOGPS.isMapShow))
+						return false;
 				}
 			}
 			else
@@ -114,36 +138,36 @@ package app.model.vo
 					return false;
 			}
 			
-			//判断单位
-			var department:DicDepartment = DicDepartment.dict[departmentID] as DicDepartment;
-			if((department != null) && (!department.isMapShow))
-				return false;
-			
-			//判断警种-仅普陀
-			var kind:DicKind = DicKind.dict[this.policeKind] as DicKind;
-			if(((kind != null) && (!kind.isMapShow))
-				|| ((kind == null) && (!DicKind.NONE.isMapShow)))
-				return false;
-			
 			return true;
 		}
 			
 		override protected function GetImageSouce():Object
 		{
-			//var type:String = "1";	
+			var type:String = "1";	
 			var status:String = "0";
+			var hasGun:int = this.hasGun;
 			
 			//基地台
 			if(this.policeTypeID == DicPoliceType.BASEDMG.id)
 			{
-				//type = DicPoliceType.BASEDMG.id;
+				type = DicPoliceType.BASEDMG.id;
 			}
-			//车辆\交警\特警
-			else if((this.policeType == DicPoliceType.VEHICLE)
-				|| (this.policeType == DicPoliceType.TRAFFIC)
-				|| (this.policeType == DicPoliceType.SPECIAL))
+			//车辆
+			else if(this.policeType == DicPoliceType.VEHICLE)
 			{	
-				//type = this.policeType.id;	
+				type = this.policeType.id;	
+				
+				if(this.hasGun)
+					type = DicKind.VEHICLE_WEAPON.imageId;
+				else if(this.policeKind == DicKind.VEHICLE_SPECIAL.label)
+				{
+					type = DicKind.VEHICLE_SPECIAL.imageId;
+				}
+				else
+				{
+					type = DicKind.VEHICLE_NORMAL.imageId;					
+				}
+				
 				if(!this.gpsValid)
 				{
 					status = "99";
@@ -153,11 +177,55 @@ package app.model.vo
 					status = "98";
 				}
 			}
-			//民警
+			//交通
+			else if(this.policeKind == DicKind.PEOPLE_TRAFFIC.label)
+			{				
+				type = DicKind.PEOPLE_TRAFFIC.imageId;
+				
+				
+				if(!this.gpsValid)
+				{
+					status = "99";
+				}
+				else if(this.gpsStatus == "0")
+				{
+					status = "98";
+				}
+			}
+			//特警
+			else if(this.policeKind == DicKind.PEOPLE_SPECIAL.label)
+			{				
+				type = DicKind.PEOPLE_SPECIAL.imageId;
+				
+				
+				if(!this.gpsValid)
+				{
+					status = "99";
+				}
+				else if(this.gpsStatus == "0")
+				{
+					status = "98";
+				}
+				
+				if(!this.gpsValid)
+				{
+					status = "99";
+				}
+				else if(this.gpsStatus == "0")
+				{
+					status = "98";
+				}
+				else if(this.serviceStatus != null)
+				{
+					status = this.serviceStatus.orderNum;						
+				}		
+			}
+			//民警			
 			else
 			{
 				//人员 - 勤务 - 勤务类型		
-				//type = DicPoliceType.PEOPLE.id;	
+				type = DicPoliceType.PEOPLE.id;	
+				
 				if(this.serviceType != DicServiceType.NOSERVICE) 
 				{
 					var arr:Array = this.serviceType.imagelist.split(",");
@@ -191,7 +259,7 @@ package app.model.vo
 				}			
 			}
 						
-			return DicGPSImage.getImageClass(this.policeType.id,this.hasGun,status);
+			return DicGPSImage.getImageClass(type,hasGun,status);
 		}
 		
 		public function refresh():void

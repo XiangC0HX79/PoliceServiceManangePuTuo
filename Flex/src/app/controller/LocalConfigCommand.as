@@ -523,6 +523,16 @@ package app.controller
 				var serviceType:DicServiceType = new DicServiceType(row);
 				DicServiceType.dict[serviceType.id] = serviceType;
 			}
+			
+			for each (var item:DicServiceType in DicServiceType.dict)
+			{
+				if((item.label != "街面警力")
+					&& (item.label != "社区警力"))
+				{
+					item.isMapShow = false;
+				}
+			}
+			
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：勤务字典加载完成！");		
 			
 			appInit();

@@ -114,10 +114,9 @@ package app.model.dict
 					bitmapData.draw(source,matrix,null,null,null,true);
 					
 					miaobian(bitmapData,0x88FF0000);
-					miaobian(bitmapData,0xFFFF0000);
-					miaobian(bitmapData,0xFFFF0000);
-					miaobian(bitmapData,0xFFFF0000);
-					miaobian(bitmapData,0xFFFF0000);
+					miaobian(bitmapData,0x88FF0000);
+					miaobian(bitmapData,0x88FF0000);
+					miaobian(bitmapData,0x44FF0000);
 				}
 				else
 				{

@@ -61,6 +61,7 @@
 					
 					DicServiceType.WEAPON.isMapShow = DicServiceType.ALL.isMapShow;
 					DicServiceType.OTHER.isMapShow = DicServiceType.ALL.isMapShow;
+					DicServiceType.NOGPS.isMapShow = DicServiceType.ALL.isMapShow;
 				}
 				else if(serviceType == DicServiceType.OTHER)
 				{					
@@ -207,7 +208,7 @@
 					
 					for each(item in DicDepartment.list)
 					{
-						if(item.ZB == 120)
+						if(item.ZB == 123)
 							item.isMapShow = data.isMapShow;
 					}			
 					
@@ -307,7 +308,7 @@
 		<s:VerticalLayout/>
 	</s:layout>
 	
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+<!--	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="警力类型" width="100%" horizontalScrollPolicy="off">		
 		<s:DataGroup width="290" dataProvider="{listPoliceType}" 
 					 rendererAdd="rendererAddHandler(event)"
@@ -317,7 +318,7 @@
 							  paddingTop="2" paddingBottom="2"/>
 			</s:layout>			
 		</s:DataGroup>
-	</components:BaseSubPanel>
+	</components:BaseSubPanel>-->
 	
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="警种" width="100%" horizontalScrollPolicy="off">		

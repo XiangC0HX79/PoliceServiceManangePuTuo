@@ -11,10 +11,10 @@ package app.model.dict
 	{
 		public static const ALL:DicServiceType = new DicServiceType({QWTYPEID:"-2",QWTYPENAME:"所有",ISGISSHOW:"0",ImageName:"2"});
 		public static const NOSERVICE:DicServiceType = new DicServiceType({QWTYPEID:"-1",QWTYPENAME:"未排班警力",ISGISSHOW:"0",ImageName:"2"});
-		//public static const NOGPS:DicServiceType = new DicServiceType({QWTYPEID:"0",QWTYPENAME:"无GPS信号",ISGISSHOW:"0",ImageName:"4"});
 		
-		public static const WEAPON:DicServiceType = new DicServiceType({QWTYPEID:"98",QWTYPENAME:"武装巡逻",ISGISSHOW:"1",ImageName:"98"});
-		public static const OTHER:DicServiceType = new DicServiceType({QWTYPEID:"99",QWTYPENAME:"其他勤务",ISGISSHOW:"0",ImageName:"99"});
+		public static const OTHER:DicServiceType = new DicServiceType({QWTYPEID:"98",QWTYPENAME:"其他勤务",ISGISSHOW:"0",ImageName:"17"});
+		public static const WEAPON:DicServiceType = new DicServiceType({QWTYPEID:"99",QWTYPENAME:"武装巡逻",ISGISSHOW:"1",ImageName:"98"});
+		public static const NOGPS:DicServiceType = new DicServiceType({QWTYPEID:"100",QWTYPENAME:"无GPS信号",ISGISSHOW:"0",ImageName:"1"});
 		
 		public var id:String = "";
 		public var label:String = "";
@@ -62,20 +62,21 @@ package app.model.dict
 		public static function get listOverview():ArrayCollection
 		{
 			var arr:Array = new Array;
+			
+			arr.push(DicServiceType.ALL);			
 			for each (var item:DicServiceType in dict)
 			{
-				if((item.label == "街面警力")
-					|| (item.label == "社区警力"))
+				if((item.label == "巡逻")
+					|| (item.label == "社区"))
 				{
 					arr.push(item);
 				}
 			}			
-			
-			arr.push(DicServiceType.ALL);
+			arr.push(DicServiceType.OTHER);			
 			arr.push(DicServiceType.WEAPON);
-			arr.push(DicServiceType.OTHER);
+			arr.push(DicServiceType.NOGPS);
 			
-			arr.sortOn("id",Array.NUMERIC);
+			//arr.sortOn("id",Array.NUMERIC);
 			
 			return new ArrayCollection(arr);
 		}

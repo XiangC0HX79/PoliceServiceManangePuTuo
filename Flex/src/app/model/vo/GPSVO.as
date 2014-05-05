@@ -14,6 +14,7 @@ package app.model.vo
 	
 	import app.model.dict.DicDepartment;
 	import app.model.dict.DicGPSImage;
+	import app.model.dict.DicKind;
 	import app.model.dict.DicPatrolType;
 	import app.model.dict.DicPatrolZone;
 	import app.model.dict.DicPoliceType;
@@ -83,7 +84,7 @@ package app.model.vo
 			}
 			else
 			{
-				return null;
+				return DicPoliceType.PEOPLE;
 			}
 		}
 		
@@ -301,7 +302,16 @@ package app.model.vo
 							
 				this.userId = (source.USERID == undefined)?"":source.USERID; 
 				this.callNo = (source.CALLNO == undefined)?"":source.CALLNO;
-				this.policeKind = (source.RYBH == undefined)?"":source.RYBH;
+				
+				if(this.policeType == DicPoliceType.VEHICLE)
+				{
+					if(this.department && (this.department.ZB == DicDepartment.SPECIAL.ZB))
+						this.policeKind = DicKind.VEHICLE_SPECIAL.label;
+					else
+						this.policeKind = DicKind.VEHICLE_NORMAL.label;
+				}
+				else
+					this.policeKind = (source.RYBH == undefined)?"":source.RYBH;
 				//this.STID = (source.RADIONO == undefined)?"":source.RADIONO;
 				
 				this.radioNo = this.gpsSimCard;

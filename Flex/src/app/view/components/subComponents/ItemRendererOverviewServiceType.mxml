@@ -18,14 +18,33 @@
 				
 				groupImage.removeAllElements();
 				
-				var arr:Array = data.imagelist.split(",");
-				for each(var item:String in arr)
-				{
+				if(data.label == "武装巡逻")
+				{					
 					var image:Image = new Image;
 					image.width = 30;
 					image.height = 30;
-					image.source = DicGPSImage.getImageClass(item);
+					image.source = DicGPSImage.getImageClass("2",1);
 					groupImage.addElement(image);
+				}
+				else if(data.label == "无GPS信号")
+				{					
+					image = new Image;
+					image.width = 30;
+					image.height = 30;
+					image.source = DicGPSImage.getImageClass("2",0,"99");
+					groupImage.addElement(image);
+				}
+				else
+				{
+					var arr:Array = data.imagelist.split(",");
+					for each(var item:String in arr)
+					{
+						image = new Image;
+						image.width = 30;
+						image.height = 30;
+						image.source = DicGPSImage.getImageClass(item);
+						groupImage.addElement(image);
+					}
 				}
 			}
 		]]>

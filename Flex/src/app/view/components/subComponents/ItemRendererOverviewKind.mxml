@@ -5,9 +5,60 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
+		
+	<fx:Script>
+		<![CDATA[
+			import spark.components.Image;
 			
-	<s:HGroup verticalAlign="middle" gap="0">
-		<s:CheckBox mouseEnabled="false" selected="{data.isMapShow}"/>
-		<s:Label text="{data.label}"/>
-	</s:HGroup>
+			import app.model.dict.DicGPSImage;
+			import app.model.dict.DicKind;
+			
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				
+				var kind:DicKind = data as DicKind;
+				if(kind != null)
+				{
+					if(kind.label == "交通")
+					{								
+						image.source = DicGPSImage.getImageClass("3",0);
+					}
+					else if(kind.label == "特警")
+					{		
+						image.source = DicGPSImage.getImageClass("4",0);
+					}
+					else if((kind == DicKind.VEHICLE_NORMAL)
+						|| (kind == DicKind.VEHICLE_SPECIAL))
+					{		
+						image.source = DicGPSImage.getImageClass(kind.imageId,0);
+					}
+					else if(kind == DicKind.VEHICLE_WEAPON)
+					{		
+						image.source = DicGPSImage.getImageClass(kind.imageId,1);
+					}
+					else if(kind.label == "社区管理")
+					{								
+						image.source = DicGPSImage.getImageClass("24",0);
+					}
+					else if(kind.label == "巡警")
+					{						
+						image.source = DicGPSImage.getImageClass("13",0);
+					}
+					else
+					{							
+						image.source = DicGPSImage.getImageClass("2",0);
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:HorizontalLayout verticalAlign="middle" gap="0"/>
+	</s:layout>
+	
+	<s:CheckBox mouseEnabled="false" selected="{data.isMapShow}"/>
+	<s:Image id="image" width="30" height="30"/>
+	<s:Label text="{data.label}"/>
 </s:ItemRenderer>
