@@ -84,7 +84,7 @@ package app.controller
 	
 	public class LocalConfigCommand extends SimpleCommand implements ICommand
 	{
-		private static const INITCOUNT:Number = 12;
+		private static const INITCOUNT:Number = 13;
 		private static var init:Number = 0;
 		
 		private var arrGPSTemp:ArrayCollection = new ArrayCollection;
@@ -318,10 +318,10 @@ package app.controller
 			sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
 				["getPatrolZone",onPatrolZoneResult,[],false]);		
 			
-			//加载巡线数据
-			//sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
-			//sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
-			//	["getPatrolLine",onPatrolLineResult,[],false]);		
+			//加载卡点类型
+			sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
+			sendNotification(AppNotification.NOTIFY_WEBSERVICE_SEND,
+				["GetQwPointType",onGetQwPointTypeResult,[],false]);		
 			
 			//加载卡点数据
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGSHOW);
@@ -482,19 +482,19 @@ package app.controller
 				DicPatrolType.dict[patorl.id] = patorl;
 			}
 			//卡点等级
-			DicPointLevel.dict[DicPointLevel.ALL.id] = DicPointLevel.ALL;
+			/*DicPointLevel.dict[DicPointLevel.ALL.id] = DicPointLevel.ALL;
 			for each(item in xmlList.(PDICID == 353))
 			{
 				var pointLevel:DicPointLevel = new DicPointLevel(item);
 				DicPointLevel.dict[pointLevel.id] = pointLevel;
-			}
+			}*/
 			//卡点类型
-			DicPointType.dict[DicPointType.ALL.id] = DicPointType.ALL;
+			/*DicPointType.dict[DicPointType.ALL.id] = DicPointType.ALL;
 			for each(item in xmlList.(PDICID == 352))
 			{
 				var piontType:DicPointType = new DicPointType(item);
 				DicPointType.dict[piontType.id] = piontType;
-			}
+			}*/
 			//巡线类型
 			DicPatrolLineType.dict[DicPatrolLineType.ALL.id] = DicPatrolLineType.ALL;
 			for each(item in xmlList.(PDICID == 359))
@@ -645,19 +645,18 @@ package app.controller
 			appInit();
 		}
 		
-		/*private function onPatrolLineResult(result:ArrayCollection):void
+		private function onGetQwPointTypeResult(result:ArrayCollection):void
 		{	
-			DicPatrolLine.dict[DicPatrolLine.ALL.id] = DicPatrolLine.ALL;
-			
+			DicPointType.dict[DicPointType.ALL.id] = DicPointType.ALL;
 			for each(var row:Object in result)
 			{
-				var patrolLine:DicPatrolLine = new DicPatrolLine(row);				
-				DicPatrolLine.dict[patrolLine.id] = patrolLine;
+				var pointType:DicPointType = new DicPointType(row);		
+				DicPointType.dict[pointType.id] = pointType; 
 			}
-			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：巡线数据加载完成！");		
+			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：卡点类型数据加载完成！");		
 			
 			appInit();
-		}*/
+		}
 		
 		private function onPatrolPointResult(result:ArrayCollection):void
 		{	

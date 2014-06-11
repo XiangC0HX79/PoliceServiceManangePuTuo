@@ -9,15 +9,15 @@ package app.model.dict
 	{	
 		public static const ALL:DicKind = new DicKind({DICID:'0',DICVALUE:"所有"});
 		
-		public static const VEHICLE_NORMAL:DicKind = new DicKind({DICID:'-3',DICVALUE:"普通车辆",IMAGEID:"1"});
-		public static const VEHICLE_SPECIAL:DicKind = new DicKind({DICID:'-4',DICVALUE:"特警车辆",IMAGEID:"6"});
-		public static const VEHICLE_WEAPON:DicKind = new DicKind({DICID:'-5',DICVALUE:"武装车辆",IMAGEID:"7"});
+		public static const PEOPLE_TRAFFIC:DicKind = new DicKind({DICID:'-1',DICVALUE:"交通",IMAGEID:"3"});
+		public static const PEOPLE_SPECIAL:DicKind = new DicKind({DICID:'-2',DICVALUE:"特警",IMAGEID:"4"});
+		public static const NONE:DicKind = new DicKind({DICID:'-3',DICVALUE:"无警种"});
 		
-		public static const PEOPLE_TRAFFIC:DicKind = new DicKind({DICID:'0',DICVALUE:"交通",IMAGEID:"3"});
-		public static const PEOPLE_SPECIAL:DicKind = new DicKind({DICID:'0',DICVALUE:"特警",IMAGEID:"4"});
+		public static const OTHER:DicKind = new DicKind({DICID:'200',DICVALUE:"其他"});
 		
-		public static const OTHER:DicKind = new DicKind({DICID:'-1',DICVALUE:"其他"});
-		public static const NONE:DicKind = new DicKind({DICID:'-2',DICVALUE:"无警种"});
+		public static const VEHICLE_NORMAL:DicKind = new DicKind({DICID:'201',DICVALUE:"普通车辆",IMAGEID:"1"});
+		public static const VEHICLE_SPECIAL:DicKind = new DicKind({DICID:'202',DICVALUE:"特警车辆",IMAGEID:"6"});
+		public static const VEHICLE_WEAPON:DicKind = new DicKind({DICID:'203',DICVALUE:"武装车辆",IMAGEID:"7"});
 		
 		public var id:int;
 		public var label:String = "";
@@ -132,6 +132,8 @@ package app.model.dict
 			arr.push(VEHICLE_NORMAL);	
 			arr.push(VEHICLE_SPECIAL);	
 			arr.push(VEHICLE_WEAPON);	
+			
+			arr.sortOn("id",Array.NUMERIC);
 			
 			return new ArrayCollection(arr);
 		}

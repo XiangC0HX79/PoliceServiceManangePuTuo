@@ -13,6 +13,8 @@
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
 			
 			import spark.components.supportClasses.ItemRenderer;
 			import spark.events.GridEvent;
@@ -34,7 +36,7 @@
 			public static const GRIDCLICK:String = "gridclick";
 			public static const GRIDDOUBLECLICK:String = "griddoubleclick";
 			
-			[Bindable]public var listPointLevel:ArrayCollection = null;
+			//[Bindable]public var listPointLevel:ArrayCollection = null;
 			[Bindable]public var listPointType:ArrayCollection = null;
 			
 			[Bindable]public var listExcept:ArrayCollection = new ArrayCollection;
@@ -127,6 +129,52 @@
 				
 				dispatchEvent(new Event(POINT_TYPE_UPDATE));
 			}
+			
+			protected function trDept_creationCompleteHandler(event:FlexEvent):void
+			{
+				var trDept:Tree = event.currentTarget as Tree;
+				trDept.expandChildrenOf(listPointType[0],true);
+			}
+			
+			protected function itemClickHandler(event:ListEvent):void
+			{
+				var unit:DicPointType = event.itemRenderer.data as DicPointType;
+				
+				unit.isMapShow = !unit.isMapShow;
+				
+				updateChildren(unit);
+				
+				updateParent(unit);
+				
+				dispatchEvent(new Event(POINT_TYPE_UPDATE));
+			}
+			
+			private function updateParent(unit:DicPointType):void
+			{				
+				if(unit.parent)
+				{
+					var visible:Boolean = true;
+					
+					for each(var item:DicPointType in unit.parent.children)
+					{
+						visible &&= item.isMapShow;
+					}
+					
+					unit.parent.isMapShow = visible;
+					
+					updateParent(unit.parent);
+				}
+			}
+			
+			private function updateChildren(unit:DicPointType):void
+			{
+				for each(var item:DicPointType in unit.children)
+				{
+					item.isMapShow = unit.isMapShow;
+					
+					updateChildren(item);
+				}
+			}
 		]]>
 	</fx:Script>
 	
@@ -134,7 +182,7 @@
 		<s:VerticalLayout/>
 	</s:layout>
 	
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+	<!--<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="卡点等级" width="100%" horizontalScrollPolicy="off">	
 		<s:DataGroup width="290" dataProvider="{listPointLevel}" 
 					 rendererAdd="listPointLevel_rendererAddHandler(event)"
@@ -144,18 +192,18 @@
 							  paddingTop="2" paddingBottom="2"/>
 			</s:layout>			
 		</s:DataGroup>
-	</components:BaseSubPanel>
+	</components:BaseSubPanel>-->
 	
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="卡点类型" width="100%" horizontalScrollPolicy="off">	
-		<s:DataGroup width="290" dataProvider="{listPointType}" 
-					 rendererAdd="listPointType_rendererAddHandler(event)"
-					 itemRenderer="app.view.components.subComponents.ItemRendererPointType">
-			<s:layout>
-				<s:TileLayout columnAlign="justifyUsingWidth" 
-							  paddingTop="2" paddingBottom="2"/>
-			</s:layout>			
-		</s:DataGroup>
+		<mx:Tree  width="100%" maxHeight="240" labelField="label" creationComplete="trDept_creationCompleteHandler(event)"
+				  dataProvider="{listPointType}" itemClick="itemClickHandler(event)">
+			<mx:itemRenderer>
+				<fx:Component>
+					<subComponents:TreeItemRendererUnitSelect selectedField="isMapShow"/>
+				</fx:Component>
+			</mx:itemRenderer>			
+		</mx:Tree>
 	</components:BaseSubPanel>
 	
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 

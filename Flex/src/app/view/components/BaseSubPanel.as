@@ -82,5 +82,10 @@ package app.view.components
 		{
 			return _subpanelState;
 		}
+		
+		public function set subpanelState(value:String):void
+		{
+			_subpanelState = value;
+		}
 	}
 }

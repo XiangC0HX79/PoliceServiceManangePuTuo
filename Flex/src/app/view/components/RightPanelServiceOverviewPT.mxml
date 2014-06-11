@@ -28,7 +28,6 @@
 			
 			public static const UPDATE:String = "update";
 						
-			[Bindable]public var listPoliceType:ArrayCollection = null;
 			[Bindable]public var listServiceType:ArrayCollection = null;
 			[Bindable]public var listServiceStatus:ArrayCollection = null;
 			[Bindable]public var listDept:ArrayCollection = null;
@@ -307,19 +306,7 @@
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
-	
-<!--	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
-							 panelTitle="警力类型" width="100%" horizontalScrollPolicy="off">		
-		<s:DataGroup width="290" dataProvider="{listPoliceType}" 
-					 rendererAdd="rendererAddHandler(event)"
-					 itemRenderer="app.view.components.subComponents.ItemRendererOverviewPoliceType">
-			<s:layout>
-				<s:TileLayout columnAlign="justifyUsingWidth" 
-							  paddingTop="2" paddingBottom="2"/>
-			</s:layout>			
-		</s:DataGroup>
-	</components:BaseSubPanel>-->
-	
+		
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="警种" width="100%" horizontalScrollPolicy="off">		
 		<s:DataGroup width="290" dataProvider="{listKind}" 
@@ -344,7 +331,7 @@
 		</s:DataGroup>
 	</components:BaseSubPanel>
 	
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" subpanelState="min"
 							 panelTitle="勤务状态" width="100%" horizontalScrollPolicy="off">	
 		<s:DataGroup width="290" dataProvider="{listServiceStatus}" 
 					 rendererAdd="listServiceStatus_rendererAddHandler(event)"
@@ -356,9 +343,9 @@
 		</s:DataGroup>
 	</components:BaseSubPanel>
 	
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" minButtonShow="false"
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" subpanelState="min"
 							 panelTitle="单位列表" 
-							 width="100%" height="100%"  
+							 width="100%" 
 							 maxHeight="{tileLayout.rowCount * (tileLayout.rowHeight + tileLayout.verticalGap) + 40}"
 							 horizontalScrollPolicy="off">	
 		<s:DataGroup width="290" dataProvider="{listDept}" 
@@ -371,7 +358,7 @@
 		</s:DataGroup>
 	</components:BaseSubPanel>
 		
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" subpanelState="min"
 							 panelTitle="其他" width="100%" horizontalScrollPolicy="off">			
 		<s:DataGroup width="290" dataProvider="{listLayer}" 
 					 rendererAdd="rendererLayerAddHandler(event)"

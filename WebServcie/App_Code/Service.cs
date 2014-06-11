@@ -1735,15 +1735,16 @@ double dist(PointN p1, PointN p2) // 返回两点之间欧氏距离
     public DataTable GetQwPoint(string userId)
     {
         var clsGetData = new ClsGetData("System.Data.SqlClient", strConn);
-        var sql = "SELECT " +
-                    "DWXX.DEPID    GPSDEPID, " +
-                    "DWXX.DWMC     GPSDEPNAME, " +
-                    "JYXX.ID       USERID, " +
-                    "JYXX.RYXM     GPSNAME " +
-                    "FROM V_QWGLXT_JYXX_1 JYXX,V_DWXX DWXX " +
-                    "WHERE JYXX.ID = '" + userId + "' AND JYXX.SSGZZ = DWXX.DEPID";
+        var sql= "SELECT * FROM T_QW_POINT";
 
-        sql = "SELECT * FROM T_QW_POINT";
+        return clsGetData.GetTable(sql);
+    }
+
+    [WebMethod]
+    public DataTable GetQwPointType(string userId)
+    {
+        var clsGetData = new ClsGetData("System.Data.SqlClient", strConn);
+        var sql = "SELECT * FROM T_QW_POINTTYPEMG WHERE ISUSE = 1 ORDER BY PX";
 
         return clsGetData.GetTable(sql);
     }

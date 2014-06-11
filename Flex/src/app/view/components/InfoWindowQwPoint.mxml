@@ -29,8 +29,8 @@
 			<s:layout>
 				<s:HorizontalLayout verticalAlign="middle"/>
 			</s:layout>
-			<s:Label text="等　　级：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Level.label}" width="100%"/>
+			<!--<s:Label text="等　　级：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Level.label}" width="100%"/>-->
 			<s:Label text="类　　型：" fontWeight="bold"/>
 			<s:Label text="{qwPoint.Type.label}" width="100%"/>
 		</s:SkinnableContainer>

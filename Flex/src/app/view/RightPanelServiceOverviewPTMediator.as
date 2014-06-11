@@ -55,8 +55,7 @@ package app.view
 		{
 			switch(notification.getName())
 			{
-				case AppNotification.NOTIFY_APP_INIT:
-					rightPanelServiceOverview.listPoliceType = DicPoliceType.list;					
+				case AppNotification.NOTIFY_APP_INIT:				
 					rightPanelServiceOverview.listServiceType = DicServiceType.listOverview;
 					rightPanelServiceOverview.listServiceStatus = DicServiceStatus.listAll;
 					rightPanelServiceOverview.listDept = DicDepartment.listOverview;

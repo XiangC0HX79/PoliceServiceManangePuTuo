@@ -75,8 +75,8 @@ package app.view
 			switch(notification.getName())
 			{
 				case AppNotification.NOTIFY_APP_INIT:
-					rightPanelQwPoint.listPointLevel = DicPointLevel.listAll;
-					rightPanelQwPoint.listPointType = DicPointType.listAll;
+					//rightPanelQwPoint.listPointLevel = DicPointLevel.listAll;
+					rightPanelQwPoint.listPointType = DicPointType.list;
 					break;
 				
 				case AppNotification.NOTIFY_MENUBAR:	

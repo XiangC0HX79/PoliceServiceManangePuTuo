@@ -10,7 +10,7 @@ package app.model.vo
 	{
 		public var Id:int;
 		public var Name:String;
-		public var Level:DicPointLevel;
+		//public var Level:DicPointLevel;
 		public var Dep:String;
 		public var Note:String;
 		public var Leader:String;
@@ -27,7 +27,7 @@ package app.model.vo
 		{
 			this.Id = item.Id;
 			this.Name = item.Name;
-			this.Level = DicPointLevel.dict[item.Level];
+			//this.Level = DicPointLevel.dict[item.Level];
 			this.Dep = item.Dep;
 			this.Note = item.Note;
 			this.Leader = item.Leader;

@@ -24,7 +24,7 @@ package app.model
 		
 		private function filterFunction(item:QwPointVO):Boolean
 		{	
-			return item.Level.isMapShow && item.Type.isMapShow;
+			return item.Type.isMapShow;
 		}
 		
 		public function load():void

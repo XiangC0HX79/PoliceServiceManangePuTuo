@@ -24,7 +24,7 @@ package app.view
 			var contextMenu:ContextMenu=new ContextMenu();
 			contextMenu.hideBuiltInItems(); 
 			
-			var contextMenuItem:ContextMenuItem= new ContextMenuItem("地图版本：2.4.2");			
+			var contextMenuItem:ContextMenuItem= new ContextMenuItem("地图版本：2.4.3");			
 			contextMenu.customItems.push(contextMenuItem);
 			
 			appLoadingBar.contextMenu=contextMenu;
