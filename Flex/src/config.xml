@@ -10,6 +10,7 @@
 			<Scale>0.5/0.5/0.6/0.8</Scale>	
 			<ScaleVisible>0.6</ScaleVisible>
 			<WebServiceUrl>http://localhost:13846/WebServcie/Service.asmx?wsdl</WebServiceUrl>
+			<ModuleHide>卡点展示</ModuleHide>
 			<Image>
 				<Vehicle w="40" h="25"/>
 				<People w="40" h="40"/>

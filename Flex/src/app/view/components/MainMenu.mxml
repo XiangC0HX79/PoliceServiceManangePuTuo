@@ -44,7 +44,7 @@
 			
 			public static const WARNING:String = "分色预警";
 			
-			public static const QW_POINT:String = "卡点展示";
+			public static const QW_POINT:String = "布防展示";
 			
 			public static const PATROL_LINE:String = "巡逻工作";
 			
@@ -123,14 +123,14 @@
 				dictMenu[QW_POINT] 			= this.getChildAt(10);
 				dictMenu[PATROL_LINE] 		= this.getChildAt(11);
 				
-				/* for each(var moduleHide:String in AppConfigVO.moduleHideArr)
+				for each(var moduleHide:String in AppConfigVO.moduleHideArr)
 				{
 					if((dictMenu[moduleHide] != undefined)
 						&& this.containsElement(dictMenu[moduleHide]))
 					{
 						this.removeElement(dictMenu[moduleHide]);
 					}
-				} */
+				}
 			}
 			
 			//阻止地图对于菜单点击事件的响应

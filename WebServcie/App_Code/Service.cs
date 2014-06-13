@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Web;
@@ -1009,7 +1009,7 @@ public class Service : System.Web.Services.WebService
                 PolylineN polyline = record.Values[getFieldID(serverInfo, "道路中心线", "SHAPE")] as PolylineN;
                 Int32 l_f_door = Convert.ToInt32(record.Values[getFieldID(serverInfo, "道路中心线", "左起门牌")]);
                 Int32 l_t_door = Convert.ToInt32(record.Values[getFieldID(serverInfo, "道路中心线", "左止门牌")]);
-                Double len = Convert.ToDouble(record.Values[getFieldID(serverInfo, "道路中心线", "SHAPE.len")]);
+                Double len = Convert.ToDouble(record.Values[getFieldID(serverInfo, "道路中心线", "SHAPE_LENGTH")]);
                 if ((l_f_door == 0)
                     && (l_t_door == 0))
                 {
