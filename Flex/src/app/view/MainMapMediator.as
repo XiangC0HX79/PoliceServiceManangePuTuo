@@ -364,7 +364,7 @@ package app.view
 				case AppNotification.NOTIFY_LAYER_QWPOINT_CLICK:
 					var qwPoint:QwPointVO = notification.getBody() as QwPointVO;			
 					mainMap.infoWindowQwPoint.qwPoint = qwPoint;					
-					mainMap.map.infoWindow.label = qwPoint.Name;
+					mainMap.map.infoWindow.label = qwPoint.Type.label;
 					mainMap.infoWindowView.selectedChild = mainMap.infoWindowQwPoint;
 					mainMap.map.infoWindow.show(qwPoint.pt);
 					break;

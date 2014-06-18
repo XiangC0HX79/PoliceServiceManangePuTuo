@@ -8,6 +8,8 @@ package app.model.vo
 	[Bindable]
 	public class QwPointVO
 	{
+		public static var SHOW_NAME:Boolean = false;
+		
 		public var Id:int;
 		public var Name:String;
 		//public var Level:DicPointLevel;

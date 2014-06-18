@@ -4,6 +4,7 @@ package app.view.components
 	import flash.events.MouseEvent;
 	
 	import mx.core.FlexGlobals;
+	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
 	import mx.events.FlexEvent;
 	import mx.managers.DragManager;
@@ -28,10 +29,10 @@ package app.view.components
 	{		
 		[SkinPart(required = "true")]
 		public var minButton:Image;
-				
+						
 		[Bindable]
 		public var panelTitle:String = "";
-						
+								
 		[Bindable]
 		public var minButtonShow:Boolean = true;
 		
@@ -57,9 +58,9 @@ package app.view.components
 			
 			this.addEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
 		}
-		
+
 		private function creationCompleteHandler(event:FlexEvent):void
-		{
+		{			
 		}
 				
 		protected override function partAdded(partName:String, instance:Object):void

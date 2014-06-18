@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for a Spark SkinnableContainer container.  
+
+     @see spark.components.SkinnableContainer
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009" clipAndEnableScrolling="true"
+	height.min="{labelTitle.height + 20}">
+	<fx:Metadata>[HostComponent("app.view.components.BaseSubPanelServicePoint")]</fx:Metadata>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="min"/>
+		<s:State name="disabled"/>
+	</s:states>
+	
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:SolidColor color="0xFFFFFF"/>
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xB0B39E" weight="1"/>
+		</s:stroke>
+	</s:Rect>	
+	
+	<s:Group left="5" right="5" top="5" height="{labelTitle.height + 10}">	
+		<s:Rect left="2" right="2" top="2" bottom="2" radiusX="3">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xF0F3F8" alpha="1" ratio="0"/>
+					<s:GradientEntry color="0xA9C9F0" alpha="1" ratio="1"/>
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<s:Rect left="1" right="1" top="1" bottom="1" radiusX="3">
+			<s:stroke>
+				<s:SolidColorStroke color="0xFFFFFF" weight="1"/>
+			</s:stroke>
+		</s:Rect>
+		<s:Rect left="0" right="0" top="0" bottom="0" radiusX="3">
+			<s:stroke>
+				<s:SolidColorStroke color="0xA9C9F0" weight="1"/>
+			</s:stroke>
+		</s:Rect>
+		<s:Image id="minButton" left="5" verticalCenter="0"
+				 buttonMode="true" visible="{hostComponent.minButtonShow}"
+				 useHandCursor="true" 
+				 source.min="@Embed('assets/image/s_down.png')"
+				 source="@Embed('assets/image/s_up.png')"/>
+		
+		<s:Image left="5" verticalCenter="0"
+				 visible="{!hostComponent.minButtonShow}"
+				 source="@Embed('assets/image/s_pin.png')"/>
+		
+		<s:Label id="labelTitle" left="25" fontWeight="bold" verticalCenter="0"
+				 maxDisplayedLines="1"
+				 text="{hostComponent.panelTitle}"/>
+		
+		<s:CheckBox id="skinCheckTitle" label="显示名称" right="10" verticalCenter="0"/>
+	</s:Group>
+		
+	<s:Scroller left="5" right="5" top="{labelTitle.height + 17}" bottom="5"
+				visible="true"
+				verticalScrollPolicy="{getStyle('verticalScrollPolicy')}" 
+				horizontalScrollPolicy="{getStyle('horizontalScrollPolicy')}"
+				visible.min="false">
+		<s:VGroup id="contentGroup"
+				  gap="{getStyle('contentGap')}" 
+				  paddingTop="{getStyle('contentPaddingTop')}" 
+				  paddingBottom="{getStyle('contentPaddingBottom')}" 
+				  paddingLeft="{getStyle('contentPaddingLeft')}" 
+				  paddingRight="{getStyle('contentPaddingRight')}"/>
+	</s:Scroller>
+</s:Skin>

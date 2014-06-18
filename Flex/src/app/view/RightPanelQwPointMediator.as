@@ -30,6 +30,7 @@ package app.view
 						
 			rightPanelQwPoint.addEventListener(RightPanelQwPoint.POINT_LEVEL_UPDATE,onUpdate);
 			rightPanelQwPoint.addEventListener(RightPanelQwPoint.POINT_TYPE_UPDATE,onUpdate);
+			rightPanelQwPoint.addEventListener(RightPanelQwPoint.POINT_NAME_UPDATE,onUpdate);
 			
 			rightPanelQwPoint.addEventListener(RightPanelQwPoint.GRIDCLICK,onGridExceptClick);
 			rightPanelQwPoint.addEventListener(RightPanelQwPoint.GRIDDOUBLECLICK,onGridExceptDoubleClick);

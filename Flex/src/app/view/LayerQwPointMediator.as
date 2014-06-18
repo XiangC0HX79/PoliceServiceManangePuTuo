@@ -73,22 +73,29 @@ package app.view
 			var graphic:Graphic = new Graphic;
 			graphic.geometry = qwPoint.pt;
 			graphic.attributes = qwPoint;
-			
-			var textFormat:TextFormat = new TextFormat;
-			textFormat.bold = true;
-			textFormat.font = "黑体";
-			textFormat.size = 12;
-			
-			var textSymbol:TextSymbol = new TextSymbol;
-			textSymbol.text = qwPoint.Name;
-			textSymbol.yoffset = -10;			
-			textSymbol.textFormat = textFormat;
-			
+						
 			var symbol:PictureMarkerSymbol = new PictureMarkerSymbol;
 			symbol.source = qwPoint.ImgPath;
 			symbol.yoffset = 10;
-						
-			graphic.symbol = new CompositeSymbol([symbol,textSymbol]);
+			
+			if(QwPointVO.SHOW_NAME)
+			{
+				var textFormat:TextFormat = new TextFormat;
+				textFormat.bold = true;
+				textFormat.font = "黑体";
+				textFormat.size = 12;
+				
+				var textSymbol:TextSymbol = new TextSymbol;
+				textSymbol.text = qwPoint.Name;
+				textSymbol.yoffset = -10;			
+				textSymbol.textFormat = textFormat;
+							
+				graphic.symbol = new CompositeSymbol([symbol,textSymbol]);
+			}
+			else
+			{
+				graphic.symbol = symbol;				
+			}
 			
 			return graphic;
 		}

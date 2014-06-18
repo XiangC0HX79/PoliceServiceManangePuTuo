@@ -21,7 +21,7 @@ package app.model.dict
 		
 		public var children:Array;
 		
-		public var isMapShow:Boolean = true;
+		public var isMapShow:Boolean = false;
 		
 		public static var dict:Dictionary = new Dictionary;
 		

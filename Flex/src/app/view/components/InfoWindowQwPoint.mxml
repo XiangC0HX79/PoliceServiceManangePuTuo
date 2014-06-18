@@ -10,9 +10,28 @@
 		<![CDATA[			
 			import app.model.vo.QwPointVO;
 			
-			[Bindable]public var qwPoint:QwPointVO;
+			private var _qwPoint:QwPointVO;
+
+			[Bindable]
+			public function get qwPoint():QwPointVO
+			{
+				return _qwPoint;
+			}
+
+			public function set qwPoint(value:QwPointVO):void
+			{
+				_qwPoint = value;
+				
+				this.currentState = (_qwPoint.Type.label.indexOf("外区") < 0)?"Normal":"WaiQu";
+			}
+
 		]]>
 	</fx:Script>
+	
+	<s:states>
+		<s:State name="Normal"/>
+		<s:State name="WaiQu"/>		
+	</s:states>
 	
 	<s:VGroup gap="2" rowHeight="20" variableRowHeight="false" width="300">
 		<s:SkinnableContainer width="100%">
@@ -21,54 +40,36 @@
 			</s:layout>
 			<s:Label text="名　　称：" fontWeight="bold"/>
 			<s:Label text="{qwPoint.Name}" width="100%" color="0x0000FF" fontWeight="bold"/>
-			<s:Label text="单　　位：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Dep}" width="100%"/>
 		</s:SkinnableContainer>
 		
 	    <s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
 			<s:layout>
 				<s:HorizontalLayout verticalAlign="middle"/>
 			</s:layout>
-			<!--<s:Label text="等　　级：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Level.label}" width="100%"/>-->
-			<s:Label text="类　　型：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Type.label}" width="100%"/>
-		</s:SkinnableContainer>
-		
-		<s:SkinnableContainer width="100%">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle"/>
-			</s:layout>
-			<s:Label text="负责人：" fontWeight="bold" trackingLeft="4"/>
-			<s:Label text="{qwPoint.Leader}" width="100%"/>
-			<s:Label text="需求警力：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.PoliceNum}" width="100%"/>
-		</s:SkinnableContainer>
-		
-		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle"/>
-			</s:layout>
-			<s:Label text="邻近分局：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Neighbour}" width="100%"/>
-			<s:Label text="交接路名：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Cross}" width="100%"/>
-		</s:SkinnableContainer>
-		
-		<s:SkinnableContainer width="100%">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle"/>
-			</s:layout>
+			<s:Label text="对应单位：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Dep}" width="100%"/>
 			<s:Label text="位　　置：" fontWeight="bold"/>
 			<s:Label text="{qwPoint.Address}" width="100%"/>
 		</s:SkinnableContainer>
 		
-		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
+		<s:SkinnableContainer width="100%">
 			<s:layout>
 				<s:HorizontalLayout verticalAlign="middle"/>
 			</s:layout>
+			<s:Label text="必要力量：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.PoliceNum}" width="100%"/>
 			<s:Label text="备　　注：" fontWeight="bold"/>
 			<s:Label text="{qwPoint.Note}" width="100%"/>
+		</s:SkinnableContainer>
+		
+		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE" includeIn="WaiQu">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle"/>
+			</s:layout>
+			<s:Label text="邻　　区：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Neighbour}" width="100%"/>
+			<s:Label text="交界路名：" fontWeight="bold"/>
+			<s:Label text="{qwPoint.Cross}" width="100%"/>
 		</s:SkinnableContainer>
 	</s:VGroup>		
 </s:NavigatorContent>

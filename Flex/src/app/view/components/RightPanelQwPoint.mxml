@@ -25,6 +25,7 @@
 			import app.model.dict.DicPointType;
 			import app.model.vo.AppConfigVO;
 			import app.model.vo.GPSNewVO;
+			import app.model.vo.QwPointVO;
 			import app.view.components.skin.skinBaseSubPanel;
 			import app.view.components.subComponents.ItemRendererOverviewServiceStatus;
 			import app.view.components.subComponents.ItemRendererOverviewServiceType;
@@ -32,6 +33,7 @@
 			//public static const SEARCH:String = "search";
 			public static const POINT_LEVEL_UPDATE:String = "PointLevelUpdate";
 			public static const POINT_TYPE_UPDATE:String = "PointTypeUpdate";
+			public static const POINT_NAME_UPDATE:String = "PointNameUpdate";
 			
 			public static const GRIDCLICK:String = "gridclick";
 			public static const GRIDDOUBLECLICK:String = "griddoubleclick";
@@ -175,26 +177,22 @@
 					updateChildren(item);
 				}
 			}
+			
+			protected function basesubpanelservicepoint_checkchangeHandler(event:Event):void
+			{
+				QwPointVO.SHOW_NAME = (event.target as BaseSubPanelServicePoint).skinCheckTitle.selected;
+				
+				dispatchEvent(new Event(POINT_NAME_UPDATE));
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
-	
-	<!--<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
-							 panelTitle="卡点等级" width="100%" horizontalScrollPolicy="off">	
-		<s:DataGroup width="290" dataProvider="{listPointLevel}" 
-					 rendererAdd="listPointLevel_rendererAddHandler(event)"
-					 itemRenderer="app.view.components.subComponents.ItemRendererPointLevel">
-			<s:layout>
-				<s:TileLayout columnAlign="justifyUsingWidth"
-							  paddingTop="2" paddingBottom="2"/>
-			</s:layout>			
-		</s:DataGroup>
-	</components:BaseSubPanel>-->
-	
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
+		
+	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" subpanelState="min"
 							 panelTitle="卡点类型" width="100%" horizontalScrollPolicy="off">	
 		<mx:Tree  width="100%" maxHeight="240" labelField="label" creationComplete="trDept_creationCompleteHandler(event)"
 				  dataProvider="{listPointType}" itemClick="itemClickHandler(event)">
@@ -206,9 +204,10 @@
 		</mx:Tree>
 	</components:BaseSubPanel>
 	
-	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel" 
-							 height="100%" minButtonShow="false"
-							 panelTitle="卡点列表({listExcept.length})" width="100%">
+	<components:BaseSubPanelServicePoint skinClass="app.view.components.skin.skinBaseSubPanelServicePoint" 
+							 height="100%" minButtonShow="false" 
+							 checkchange="basesubpanelservicepoint_checkchangeHandler(event)"
+							 panelTitle="卡点列表({listExcept.length})" width="100%">	
 		<s:DataGrid height="100%" width="100%"  
 					dataProvider="{listExcept}" 
 					gridDoubleClick="datagrid1_gridDoubleClickHandler(event)"
@@ -222,5 +221,5 @@
 				</s:ArrayList>
 			</s:columns>
 		</s:DataGrid>		
-	</components:BaseSubPanel>		
+	</components:BaseSubPanelServicePoint>		
 </s:NavigatorContent>
