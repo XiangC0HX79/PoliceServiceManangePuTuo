@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					xmlns:s="library://ns.adobe.com/flex/spark" 
-					xmlns:mx="library://ns.adobe.com/flex/mx">
+					xmlns:mx="library://ns.adobe.com/flex/mx" width="400">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
@@ -23,8 +23,7 @@
 				_qwPoint = value;
 				
 				this.currentState = (_qwPoint.Type.label.indexOf("外区") < 0)?"Normal":"WaiQu";
-			}
-
+			}			
 		]]>
 	</fx:Script>
 	
@@ -33,43 +32,45 @@
 		<s:State name="WaiQu"/>		
 	</s:states>
 	
-	<s:VGroup gap="2" rowHeight="20" variableRowHeight="false" width="300">
-		<s:SkinnableContainer width="100%">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle"/>
-			</s:layout>
-			<s:Label text="名　　称：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Name}" width="100%" color="0x0000FF" fontWeight="bold"/>
-		</s:SkinnableContainer>
-		
-	    <s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle"/>
-			</s:layout>
-			<s:Label text="对应单位：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Dep}" width="100%"/>
-			<s:Label text="位　　置：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Address}" width="100%"/>
-		</s:SkinnableContainer>
-		
-		<s:SkinnableContainer width="100%">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle"/>
-			</s:layout>
-			<s:Label text="必要力量：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.PoliceNum}" width="100%"/>
-			<s:Label text="备　　注：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Note}" width="100%"/>
-		</s:SkinnableContainer>
-		
-		<s:SkinnableContainer width="100%" backgroundColor="0xEEEEEE" includeIn="WaiQu">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle"/>
-			</s:layout>
-			<s:Label text="邻　　区：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Neighbour}" width="100%"/>
-			<s:Label text="交界路名：" fontWeight="bold"/>
-			<s:Label text="{qwPoint.Cross}" width="100%"/>
-		</s:SkinnableContainer>
-	</s:VGroup>		
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="contentJustify"/>
+	</s:layout>
+	
+	<s:SkinnableContainer>
+		<s:layout>
+			<s:HorizontalLayout paddingTop="2" paddingBottom="2"/>
+		</s:layout>
+		<s:Label text="名　　称：" fontWeight="bold"/>
+		<s:Label text="{qwPoint.Name}" width="100%" color="0x0000FF" fontWeight="bold"/>
+	</s:SkinnableContainer>
+	
+	<s:SkinnableContainer backgroundColor="0xEEEEEE">
+		<s:layout>
+			<s:HorizontalLayout paddingTop="2" paddingBottom="2"/>
+		</s:layout>
+		<s:Label text="对应单位：" fontWeight="bold"/>
+		<s:Label text="{qwPoint.Dep}" width="100%"/>
+		<s:Label text="位　　置：" fontWeight="bold"/>
+		<s:Label text="{qwPoint.Address}" width="100%"/>
+	</s:SkinnableContainer>
+	
+	<s:SkinnableContainer>
+		<s:layout>
+			<s:HorizontalLayout paddingTop="2" paddingBottom="2"/>
+		</s:layout>
+		<s:Label text="必要力量：" fontWeight="bold"/>
+		<s:Label text="{qwPoint.PoliceNum}" width="100%"/>
+		<s:Label text="备　　注：" fontWeight="bold"/>
+		<s:Label text="{qwPoint.Note}" width="100%"/>
+	</s:SkinnableContainer>
+	
+	<s:SkinnableContainer backgroundColor="0xEEEEEE" includeIn="WaiQu">
+		<s:layout>
+			<s:HorizontalLayout paddingTop="2" paddingBottom="2"/>
+		</s:layout>
+		<s:Label text="邻　　区：" fontWeight="bold"/>
+		<s:Label text="{qwPoint.Neighbour}" width="100%"/>
+		<s:Label text="交界路名：" fontWeight="bold"/>
+		<s:Label text="{qwPoint.Cross}" width="100%"/>
+	</s:SkinnableContainer>
 </s:NavigatorContent>
