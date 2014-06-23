@@ -73,7 +73,7 @@ package app.view.components.subComponents
 			{
 				disclosureIcon.x = startx;
 				
-				startx += disclosureIcon.width;
+				startx += disclosureIcon.width + 2;
 				
 				disclosureIcon.setActualSize(disclosureIcon.width,disclosureIcon.height);
 				

@@ -9,6 +9,32 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 		
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace subComponents "app.view.components.subComponents.*";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace components "app.view.components.*";
+		
+		.myTree{
+			/*去掉默认文件夹图标*/
+			folderClosedIcon: ClassReference(null);
+			folderOpenIcon: ClassReference(null);
+			/*去掉叶子节点图标
+			defaultLeafIcon: ClassReference(null);
+			*/
+			/*
+			defaultLeafIcon    指定叶图标
+			disclosureClosedIcon    指定的图标旁边显示一个封闭的分支节点。默认的图标是一个黑色三角形。
+			disclosureOpenIcon    指定的图标旁边显示一个开放的分支节点。默认的图标是一个黑色三角形。
+			folderClosedIcon    关闭指定的文件夹图标的一个分支节点。
+			folderOpenIcon    指定打开的文件夹图标的一个分支节点。
+			例：三角图标修改如下代码使用即可换成自己的了：*/
+			
+			disclosureOpenIcon:Embed(source='assets/image/toggle.png');
+			disclosureClosedIcon:Embed(source='assets/image/toggle_expand.png');			
+		}
+	</fx:Style>
+	
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
@@ -134,8 +160,8 @@
 			
 			protected function trDept_creationCompleteHandler(event:FlexEvent):void
 			{
-				//var trDept:Tree = event.currentTarget as Tree;
-				//trDept.expandChildrenOf(listPointType[0],true);
+				var trDept:Tree = event.currentTarget as Tree;
+				trDept.expandItem(listPointType[0],true);
 			}
 			
 			protected function itemClickHandler(event:ListEvent):void
@@ -195,7 +221,7 @@
 	<components:BaseSubPanel skinClass="app.view.components.skin.skinBaseSubPanel"
 							 panelTitle="卡点类型" width="100%" horizontalScrollPolicy="off">	
 		<mx:Tree  width="100%" maxHeight="240" labelField="label" creationComplete="trDept_creationCompleteHandler(event)"
-				  dataProvider="{listPointType}" itemClick="itemClickHandler(event)">
+				  dataProvider="{listPointType}" itemClick="itemClickHandler(event)" styleName="myTree">
 			<mx:itemRenderer>
 				<fx:Component>
 					<subComponents:TreeItemRendererUnitSelect selectedField="isMapShow"/>
