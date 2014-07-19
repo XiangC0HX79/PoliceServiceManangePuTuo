@@ -20,6 +20,7 @@ package app.view
 	import app.AppNotification;
 	import app.model.vo.AppConfigVO;
 	import app.view.components.MainMenu;
+	import app.view.components.MainTool;
 	
 	import org.puremvc.as3.interfaces.IMediator;
 	import org.puremvc.as3.interfaces.INotification;
@@ -35,6 +36,8 @@ package app.view
 		
 		private var init:Number = 0;
 		
+		private var filter:ColorMatrixFilter;
+		
 		public function LayerTileMediator(viewComponent:Object=null)
 		{
 			super(NAME, viewComponent);
@@ -46,14 +49,13 @@ package app.view
 			
 			findTask = new FindTask;
 			
-		/*	var matrix:Array = new Array();
+			var matrix:Array = new Array();
 			matrix = matrix.concat([0.3,0.59,0.11,0,0]);
 			matrix = matrix.concat([0.3,0.59,0.11,0,0]);
 			matrix = matrix.concat([0.3,0.59,0.11,0,0]);
 			matrix = matrix.concat([0,0,0,1,0]);
 			
-			var filter:ColorMatrixFilter = new ColorMatrixFilter(matrix);
-			layerTile.filters = [filter];*/
+			filter = new ColorMatrixFilter(matrix);
 		}
 		
 		private function get layerTile():ArcGISTiledMapServiceLayer
@@ -101,7 +103,9 @@ package app.view
 			return [
 					AppNotification.NOTIFY_INIT_MAP,
 					AppNotification.NOTIFY_LAYERTILE_QUERY,
-					AppNotification.NOTIFY_LAYERTILE_FIND
+					AppNotification.NOTIFY_LAYERTILE_FIND,
+					
+					AppNotification.NOTIFY_TOOLBAR
 				];
 		}
 		
@@ -136,6 +140,17 @@ package app.view
 					returnGeometry = (arr.length > 3)?arr[3]:true;
 					showLoading = (arr.length > 4)?arr[4]:true;
 					find(layers,name,resultFunction,returnGeometry,showLoading);
+					break;
+				
+				case AppNotification.NOTIFY_TOOLBAR:
+					if(notification.getType() == MainTool.IMAGESHOW)
+					{
+						layerTile.filters = [filter];						
+					}
+					else if(notification.getType() == MainTool.IMAGEHIDE)
+					{
+						layerTile.filters = [];
+					}
 					break;
 			}
 		}

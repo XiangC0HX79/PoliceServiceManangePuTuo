@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
 		 xmlns:subComponents="app.view.components.subComponents.*" gap="10"
-		 mouseDown="vgroup1_mouseDownHandler(event)" creationComplete="init()">
+		 mouseDown="vgroup1_mouseDownHandler(event)">
 	
 	<fx:Metadata>
 		[Event(name="toolclick",type="flash.events.Event")]
@@ -40,31 +40,22 @@
 						
 			public static const REFRESHGPS:String = "刷新GPS";
 			
-			public static const IMAGESHOW:String = "显示遥感";
-			public static const IMAGEHIDE:String = "隐藏遥感";
+			public static const IMAGESHOW:String = "黑白地图";
+			public static const IMAGEHIDE:String = "彩色地图";
 			
 			public static const PRINT:String = "打印";
 			
 			public static const STATIS:String = "当前GPS在线警力";
 			
 			public var tool:String = "";
+						
+			[Embed(source="assets/image/tool/map_gray_off.gif")]
+			[Bindable]			
+			public var IMAGE_HIDE:Class;    
 			
-			private function init():void
-			{
-				switch(AppConfigVO.district)
-				{
-					/* case "普陀区":
-						this.removeElement(image);
-						break; */
-					
-					case "闵行区":
-						break;
-					
-					default:
-						this.removeElement(image);
-						break;
-				}
-			}
+			[Embed(source="assets/image/tool/map_gray_on.gif")]
+			[Bindable]			
+			public var IMAGE_SHOW:Class;    
 			
 			protected function tool_buttonDownHandler(event:FlexEvent):void
 			{
@@ -83,13 +74,17 @@
 				
 				dispatchEvent(event);
 				
-				if(image.toolTip == IMAGESHOW)
+				if(imgButton.toolTip == IMAGESHOW)
 				{
-					image.toolTip = IMAGEHIDE;
+					imgButton.toolTip = IMAGEHIDE;
+					
+					imgButton.upIcon = IMAGE_SHOW;
 				}
 				else
 				{
-					image.toolTip = IMAGESHOW;
+					imgButton.toolTip = IMAGESHOW;
+					
+					imgButton.upIcon = IMAGE_HIDE;
 				}
 			}
 			
@@ -161,9 +156,9 @@
 							   overIcon="@Embed('assets/image/tool/map_print_on.gif')"
 							   buttonDown="tool_buttonDownHandler(event)"
 							   skinClass="app.view.components.skin.skinImageButtonTool"/>
-	<subComponents:ImageButton id="image" width="30" height="30" toolTip="{IMAGESHOW}"
-							   upIcon="@Embed('assets/image/tool/map_image_off.gif')"
-							   overIcon="@Embed('assets/image/tool/map_image_on.gif')" 
+	<subComponents:ImageButton width="30" height="30" toolTip="{IMAGESHOW}"
+							   upIcon="{IMAGE_HIDE}"
+							   overIcon="{IMAGE_SHOW}" 
 							   buttonDown="image_buttonDownHandler(event)"
 							   skinClass="app.view.components.skin.skinImageButtonTool"/>
 </s:HGroup>
