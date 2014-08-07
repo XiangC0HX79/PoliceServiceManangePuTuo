@@ -432,7 +432,9 @@ package app
 		 * 巡线-闪烁
 		 */		
 		public static const NOTIFY_PATROL_LINE_FLASH:String			= "PatrolLineFlash";
-				
+		
+		public static const NOTIFY_LAYER_GPS_VISIBLE:String			= "LayerGpsVisible";
+		
 		/**
 		 * 图层-基础图层-QUERY
 		 * layerName,where,outFields,resultFunction,returnGeometry,showLoading

@@ -106,7 +106,7 @@ package app.model.vo
 			//	return false;		
 			
 			if(this.policeType.id != DicPoliceType.VEHICLE.id)
-			{				
+			{								
 				//非勤务				
 				if((!this.inService) && (!DicServiceType.NOSERVICE.isMapShow || !this.gpsValid))
 					return false;

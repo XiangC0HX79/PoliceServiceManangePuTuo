@@ -32,6 +32,8 @@ package app.view
 			rightPanelQwPoint.addEventListener(RightPanelQwPoint.POINT_TYPE_UPDATE,onUpdate);
 			rightPanelQwPoint.addEventListener(RightPanelQwPoint.POINT_NAME_UPDATE,onUpdate);
 			
+			rightPanelQwPoint.addEventListener(RightPanelQwPoint.LAYER_GPS_VISIBLE,onLayerGpsVisible);
+			
 			rightPanelQwPoint.addEventListener(RightPanelQwPoint.GRIDCLICK,onGridExceptClick);
 			rightPanelQwPoint.addEventListener(RightPanelQwPoint.GRIDDOUBLECLICK,onGridExceptDoubleClick);
 			
@@ -63,6 +65,11 @@ package app.view
 				sendNotification(AppNotification.NOTIFY_MAP_LOCATE,qwPoint.pt);
 		}
 		
+		private function onLayerGpsVisible(event:Event):void
+		{
+			sendNotification(AppNotification.NOTIFY_LAYER_GPS_VISIBLE,rightPanelQwPoint.isGpsShow);
+		}
+		
 		override public function listNotificationInterests():Array
 		{
 			return [
@@ -84,6 +91,8 @@ package app.view
 					if(notification.getType() == MainMenu.QW_POINT)
 					{						
 						qwPointProxy.load();
+						
+						sendNotification(AppNotification.NOTIFY_LAYER_GPS_VISIBLE,rightPanelQwPoint.isGpsShow);
 					}
 					break;
 			}

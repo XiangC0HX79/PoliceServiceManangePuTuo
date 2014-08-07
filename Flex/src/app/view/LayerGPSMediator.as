@@ -54,6 +54,8 @@ package app.view
 		
 		private var gpsTimer:Timer = new Timer(10000);
 				
+		private var isServicePointPanel:Boolean = false;
+		
 		public function LayerGPSMediator(viewComponent:Object=null)
 		{
 			super(NAME, viewComponent);
@@ -261,7 +263,15 @@ package app.view
 			}
 			else
 			{
-				graphic.visible = gps.isMapShow;
+				if(isServicePointPanel)
+				{
+					graphic.visible = gps.gpsValid;
+				}
+				else
+				{
+					graphic.visible = gps.isMapShow;					
+				}
+				
 				graphic.geometry = gps.mapPoint;
 				
 				//更新勤务图标
@@ -330,7 +340,9 @@ package app.view
 				
 				AppNotification.NOTIFY_LAYERGPS_FLASH,
 				
-				AppNotification.NOTIFY_TOOLBAR
+				AppNotification.NOTIFY_TOOLBAR,
+				
+				AppNotification.NOTIFY_LAYER_GPS_VISIBLE
 			];
 		}
 		
@@ -345,7 +357,11 @@ package app.view
 						//&& (notification.getType() != MainMenu.QW_POINT)
 					);
 					
+					isServicePointPanel = notification.getType() == MainMenu.QW_POINT;
+					
 					clearSelect();
+					
+					refreshAll();
 					break;
 								
 				//case AppNotification.NOTIFY_TRACKHISTORY_INFOWINDOWGETLIST:
@@ -393,6 +409,10 @@ package app.view
 					{
 						gpsRealTimeInfoProxy.RefreshAll();
 					}
+					break;
+				
+				case AppNotification.NOTIFY_LAYER_GPS_VISIBLE:
+					gpsLayer.visible = Boolean(notification.getBody());
 					break;
 			}			
 		}

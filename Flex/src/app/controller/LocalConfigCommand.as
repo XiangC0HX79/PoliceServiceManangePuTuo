@@ -526,11 +526,12 @@ package app.controller
 			
 			for each (var item:DicServiceType in DicServiceType.dict)
 			{
-				if((item.label != "街面警力")
+				item.isMapShow = false;
+				/*if((item.label != "街面警力")
 					&& (item.label != "社区警力"))
 				{
 					item.isMapShow = false;
-				}
+				}*/
 			}
 			
 			sendNotification(AppNotification.NOTIFY_APP_LOADINGHIDE,"程序初始化：勤务字典加载完成！");		
@@ -557,10 +558,10 @@ package app.controller
 						break;
 					
 					//未排班警力地图是否默认显示
-					case 12:
+					/*case 12:
 						DicServiceType.NOSERVICE.isGisShow = (row.PARAVALUE == "1");
 						DicServiceType.NOSERVICE.isMapShow = DicServiceType.NOSERVICE.isGisShow;
-						break;
+						break;*/
 					
 					//异常报警越界时间判定长度（分钟）
 					case 13:

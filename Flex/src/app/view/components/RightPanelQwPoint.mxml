@@ -61,6 +61,8 @@
 			public static const POINT_TYPE_UPDATE:String = "PointTypeUpdate";
 			public static const POINT_NAME_UPDATE:String = "PointNameUpdate";
 			
+			public static const LAYER_GPS_VISIBLE:String = "LayerGpsVisible";
+			
 			public static const GRIDCLICK:String = "gridclick";
 			public static const GRIDDOUBLECLICK:String = "griddoubleclick";
 			
@@ -70,6 +72,15 @@
 			[Bindable]public var listExcept:ArrayCollection = new ArrayCollection;
 			[Bindable]public var listExceptItem:* = null;
 								
+			public function get isGpsShow():Boolean
+			{
+				if(!panelServicePoint || !panelServicePoint.skinCheckGps)
+					return false;
+				
+				return panelServicePoint.skinCheckGps.selected;
+			}
+
+			
 			protected function datagrid1_gridClickHandler(event:GridEvent):void
 			{
 				if(event.item != null)
@@ -203,12 +214,17 @@
 					updateChildren(item);
 				}
 			}
-			
-			protected function basesubpanelservicepoint_checkchangeHandler(event:Event):void
+						
+			protected function basesubpanelservicepoint_CheckNameHandler(event:Event):void
 			{
-				QwPointVO.SHOW_NAME = (event.target as BaseSubPanelServicePoint).skinCheckTitle.selected;
+				QwPointVO.SHOW_NAME = (event.target as BaseSubPanelServicePoint).skinCheckName.selected;
 				
 				dispatchEvent(new Event(POINT_NAME_UPDATE));
+			}
+			
+			protected function basesubpanelservicepoint1_CheckGpsHandler(event:Event):void
+			{
+				dispatchEvent(new Event(LAYER_GPS_VISIBLE));				
 			}
 			
 		]]>
@@ -231,8 +247,9 @@
 	</components:BaseSubPanel>
 	
 	<components:BaseSubPanelServicePoint skinClass="app.view.components.skin.skinBaseSubPanelServicePoint" 
-							 height="100%" minButtonShow="false" 
-							 checkchange="basesubpanelservicepoint_checkchangeHandler(event)"
+							 height="100%" minButtonShow="false" id="panelServicePoint"
+							 CheckName="basesubpanelservicepoint_CheckNameHandler(event)"
+							 CheckGps="basesubpanelservicepoint1_CheckGpsHandler(event)"
 							 panelTitle="卡点列表({listExcept.length})" width="100%">	
 		<s:DataGrid height="100%" width="100%"  
 					dataProvider="{listExcept}" 

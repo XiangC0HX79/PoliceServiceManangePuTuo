@@ -72,7 +72,9 @@
 				 maxDisplayedLines="1"
 				 text="{hostComponent.panelTitle}"/>
 		
-		<s:CheckBox id="skinCheckTitle" label="显示名称" right="10" verticalCenter="0"/>
+		<s:CheckBox id="skinCheckGps" label="显示GPS" right="90" verticalCenter="0"/>
+		
+		<s:CheckBox id="skinCheckName" label="显示名称" right="10" verticalCenter="0"/>
 	</s:Group>
 		
 	<s:Scroller left="5" right="5" top="{labelTitle.height + 17}" bottom="5"
