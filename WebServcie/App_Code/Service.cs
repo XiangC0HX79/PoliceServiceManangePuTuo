@@ -1735,7 +1735,7 @@ double dist(PointN p1, PointN p2) // 返回两点之间欧氏距离
     public DataTable GetQwPoint(string userId)
     {
         var clsGetData = new ClsGetData("System.Data.SqlClient", strConn);
-        var sql= "SELECT * FROM T_QW_POINT";
+        var sql = "SELECT * FROM T_QW_POINT";
 
         return clsGetData.GetTable(sql);
     }

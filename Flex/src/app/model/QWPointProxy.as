@@ -1,6 +1,9 @@
 package app.model
 {
 	import mx.collections.ArrayCollection;
+	import mx.collections.ISort;
+	
+	import spark.collections.Sort;
 	
 	import app.AppNotification;
 	import app.model.vo.QwPointVO;
@@ -33,22 +36,41 @@ package app.model
 				[
 					"GetQwPoint",onResult,[]
 				]);
+		}
+				
+		private function onResult(table:ArrayCollection):void
+		{			
+			col.source = [];
 			
-			function onResult(table:ArrayCollection):void
-			{			
-				col.source = [];
-				
-				for each(var item:Object in table)
-				{
-					col.addItem(new QwPointVO(item));
-				}
-								
-				col.filterFunction = filterFunction;
-				
-				update();
+			for each(var item:Object in table)
+			{
+				col.addItem(new QwPointVO(item));
 			}
+			
+			var sort:ISort = new Sort();
+			sort.compareFunction = sortPoint;
+			col.sort = sort;
+			
+			col.filterFunction = filterFunction;
+			
+			update();
 		}
 		
+		private function sortPoint(a:QwPointVO, b:QwPointVO, fields:Array = null):int
+		{
+			if(a.Type.pid != b.Type.pid)
+			{
+				return a.Type.pid < b.Type.pid?-1:1;
+			}
+			
+			if(a.Dep != b.Dep)
+			{
+				return a.Dep < b.Dep?-1:1;
+			}
+			
+			return 0;
+		}
+
 		public function update():void
 		{						
 			col.refresh();			

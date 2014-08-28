@@ -260,7 +260,7 @@
 			<s:columns>
 				<s:ArrayList>
 					<s:GridColumn headerText="名称" dataField="Name"></s:GridColumn>
-					<s:GridColumn headerText="类型" dataField="Type.label" width="120"></s:GridColumn>
+					<s:GridColumn headerText="单位" dataField="Dep" width="120"></s:GridColumn>
 				</s:ArrayList>
 			</s:columns>
 		</s:DataGrid>		
